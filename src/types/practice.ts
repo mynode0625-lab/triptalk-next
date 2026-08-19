@@ -1,0 +1,78 @@
+/** 캐릭터 음성 프로필 — 클라우드 TTS 와 내장 음성 양쪽에서 씁니다. */
+export type VoiceProfile = {
+  /** OpenAI 음성 이름 */
+  oa?: string;
+  /** ElevenLabs 음성 ID */
+  el?: string;
+  rate?: number;
+  pitch?: number;
+  /** OpenAI gpt-4o-mini-tts 의 instructions */
+  inst?: string;
+};
+
+export type SceneCharacter = {
+  name: string;
+  emoji: string;
+  role: string;
+  lang: string;
+  voice: VoiceProfile;
+};
+
+export type SceneTurn = {
+  ai: string;
+  ko: string;
+  hint: string;
+  /** [영어 모범 문장, 한국어 해석] */
+  models: [string, string][];
+  keys: string[];
+};
+
+export type Scene = {
+  title: string;
+  emoji: string;
+  lv: string;
+  char: SceneCharacter;
+  desc: string;
+  turns: SceneTurn[];
+  done: string;
+};
+
+export type SceneKey = "checkin" | "immigration" | "hotel" | "restaurant" | "taxi";
+
+export type CorrectionItem = { from: string; to: string; why: string };
+
+export type ExpressionResult = {
+  items: CorrectionItem[];
+  praises: string[];
+  onTopic: boolean;
+};
+
+export type PracticeWord = {
+  word: string;
+  count: number;
+  reason: string;
+  tips: string[];
+};
+
+export type AlignOp = {
+  op: "match" | "sub" | "del" | "ins";
+  a: string | null;
+  b: string | null;
+};
+
+export type TtsOptions = {
+  provider: "" | "openai" | "eleven";
+  key: string;
+  voice: string;
+};
+
+export type PracticeOptions = {
+  rate: number;
+  auto: boolean;
+  /** 한글 해석 표시 — 기본은 꺼짐(듣기 우선) */
+  ko: boolean;
+  /** 영어 자막 항상 보기 — 기본은 꺼짐(듣기 우선) */
+  en: boolean;
+  voiceURI: string;
+  tts: TtsOptions;
+};
