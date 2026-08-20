@@ -1,7 +1,7 @@
 export type ProviderKey = "kakao" | "naver" | "google";
 
 export type Session = {
-  provider: ProviderKey | "email";
+  provider: ProviderKey;
   name: string;
   email: string;
   avatar: string;

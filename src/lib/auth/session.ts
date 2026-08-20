@@ -1,37 +1,35 @@
 "use client";
 
 /**
- * 세션 저장/복원 — login.js §3 이식.
- * 데모 단계라 브라우저 저장소만 사용합니다. 실제 서비스에서는
- * 서버가 발급한 HttpOnly 쿠키로 세션을 관리해야 합니다.
+ * 세션 — 서버에 물어봅니다.
+ *
+ * 예전에는 이 파일이 localStorage 에 세션을 직접 쓰고 읽었습니다. 그러면 개발자
+ * 도구로 값을 써넣는 것만으로 로그인 상태를 만들 수 있어서, 로그인이 무언가를
+ * 지키기 시작하는 순간 그대로 뚫립니다. 지금은 서버가 서명한 HttpOnly 쿠키가
+ * 유일한 근거이고, 브라우저 쪽 코드는 쿠키를 읽지도 쓰지도 못합니다.
  */
 import type { Session } from "@/types/session";
 
-export const SESSION_KEY = "triptalk.session";
+/** 로그인 인가 요청의 CSRF 방지용 state 보관 키 (세션 자체와는 별개) */
 export const STATE_KEY = "triptalk.oauth.state";
 
-export function saveSession(session: Session, persist = true) {
-  const store = persist ? localStorage : sessionStorage;
+export async function fetchSession(): Promise<Session | null> {
   try {
-    store.setItem(SESSION_KEY, JSON.stringify(session));
+    const res = await fetch("/api/auth/session", { cache: "no-store" });
+    if (!res.ok) return null;
+    const { session } = (await res.json()) as { session: Session | null };
+    return session;
   } catch {
-    /* 사파리 프라이빗 모드 등 저장 실패는 무시 — 화면 표시는 그대로 진행 */
+    return null;
   }
 }
 
-export function readSession(): Session | null {
-  for (const store of [localStorage, sessionStorage]) {
-    try {
-      const raw = store.getItem(SESSION_KEY);
-      if (raw) return JSON.parse(raw) as Session;
-    } catch { /* 손상된 값은 무시 */ }
+export async function logout(): Promise<void> {
+  try {
+    await fetch("/api/auth/session", { method: "DELETE" });
+  } catch {
+    /* 네트워크가 끊겨도 화면은 로그아웃 상태로 되돌립니다 */
   }
-  return null;
-}
-
-export function clearSession() {
-  try { localStorage.removeItem(SESSION_KEY); } catch { /* 무시 */ }
-  try { sessionStorage.removeItem(SESSION_KEY); } catch { /* 무시 */ }
 }
 
 export function formatTime(iso?: string): string {
