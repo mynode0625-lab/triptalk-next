@@ -1,0 +1,160 @@
+import type { Scene, SceneKey } from "@/types/practice";
+
+export const SCENES: Record<SceneKey, Scene> = {
+  checkin: {
+    title: "공항 체크인", emoji: "🛄", lv: "입문",
+    char: { name: "Emma", emoji: "👩‍✈️", role: "체크인 직원", lang: "en-US",
+      voice: { oa: "nova", rate: 1, pitch: 1.04,
+        inst: "Warm, upbeat American airline check-in agent. Friendly and clear, natural conversational rhythm, smooth connected speech — never robotic or word-by-word." } },
+    desc: "목적지, 수하물, 좌석 요청까지. 가장 무난한 첫 상황입니다.",
+    turns: [
+      { ai: "Good morning! Where are you flying to today?", ko: "안녕하세요! 오늘 어디로 가시나요?",
+        hint: "목적지를 문장으로 말해보세요. (예: 밴쿠버)",
+        models: [["I'm flying to Vancouver.", "밴쿠버로 갑니다."], ["I'm going to Vancouver, on flight KE71.", "밴쿠버로 가요, KE71편입니다."]],
+        keys: ["vancouver", "flying", "going", "flight"] },
+      { ai: "May I see your passport and booking confirmation, please?", ko: "여권과 예약 확인서를 보여주시겠어요?",
+        hint: "건네주면서 한 마디 덧붙여 보세요.",
+        models: [["Sure, here you go.", "네, 여기 있습니다."], ["Of course. Here's my passport.", "물론이죠. 제 여권입니다."]],
+        keys: ["here", "sure", "course", "passport"] },
+      { ai: "How many bags are you checking in today?", ko: "오늘 부치실 짐은 몇 개인가요?",
+        hint: "개수를 말하고, 기내용 가방이 따로 있다고 덧붙여 보세요.",
+        models: [["Just one, and this is my carry-on.", "한 개요, 이건 기내용 가방입니다."], ["Two bags, please.", "두 개 부탁드립니다."]],
+        keys: ["one", "two", "three", "bag", "just", "carry"] },
+      { ai: "Would you prefer a window or an aisle seat?", ko: "창가와 통로 중 어느 좌석이 좋으세요?",
+        hint: "원하는 좌석을 정중하게 요청해 보세요. 조건을 붙이면 더 좋습니다.",
+        models: [["An aisle seat, please. Near the front if possible.", "통로 쪽으로요. 가능하면 앞쪽으로 부탁드립니다."], ["A window seat, please.", "창가 좌석으로 부탁드려요."]],
+        keys: ["aisle", "window", "seat", "please", "front"] },
+      { ai: "All set. You board at gate 27 at 10:40. Anything else I can help with?", ko: "완료됐습니다. 27번 게이트에서 10시 40분에 탑승하세요. 더 도와드릴 게 있을까요?",
+        hint: "게이트 번호를 한 번 더 확인하거나, 정중히 마무리해 보세요.",
+        models: [["Sorry, which gate was that again?", "죄송한데, 몇 번 게이트라고 하셨죠?"], ["No, that's all. Thank you so much!", "아니요, 괜찮습니다. 정말 감사합니다!"]],
+        keys: ["gate", "sorry", "again", "no", "thank", "all"] }
+    ],
+    done: "체크인을 끝까지 통과했습니다 🎉"
+  },
+
+  immigration: {
+    title: "입국 심사", emoji: "🛂", lv: "심화",
+    char: { name: "Ryan", emoji: "👮", role: "입국심사관", lang: "en-US",
+      voice: { oa: "onyx", rate: 1.06, pitch: .94,
+        inst: "Firm, brisk US immigration officer. Businesslike and slightly clipped, but natural and human — connected speech, not word-by-word." } },
+    desc: "짧고 빠른 질문이 이어집니다. 당황하지 않고 답하는 훈련.",
+    turns: [
+      { ai: "Next. What's the purpose of your visit?", ko: "다음. 방문 목적이 무엇인가요?",
+        hint: "여행 목적을 짧고 분명하게.",
+        models: [["I'm here for sightseeing.", "관광하러 왔습니다."], ["I'm here on vacation.", "휴가차 왔습니다."]],
+        keys: ["sightseeing", "vacation", "holiday", "tourism", "travel", "visit"] },
+      { ai: "How long will you be staying?", ko: "얼마나 머무르실 예정인가요?",
+        hint: "기간을 말해보세요. (예: 열흘 정도)",
+        models: [["For about ten days.", "열흘 정도요."], ["I'll be staying for two weeks.", "2주간 머물 예정입니다."]],
+        keys: ["days", "day", "week", "weeks", "about", "ten", "two", "month"] },
+      { ai: "Where are you staying?", ko: "어디에 머무르시나요?",
+        hint: "숙소 종류와 지역을 함께 말하면 좋습니다.",
+        models: [["At a hotel in downtown Seattle.", "시애틀 시내 호텔에 머뭅니다."], ["I'm staying at an Airbnb near the city center.", "시내 근처 에어비앤비에 머뭅니다."]],
+        keys: ["hotel", "airbnb", "staying", "downtown", "center", "friend"] },
+      { ai: "Are you traveling alone?", ko: "혼자 여행하시나요?",
+        hint: "혼자인지 동행이 있는지 답해보세요.",
+        models: [["Yes, I'm traveling alone.", "네, 혼자 여행합니다."], ["No, I'm with my family.", "아니요, 가족과 함께입니다."]],
+        keys: ["alone", "family", "friend", "yes", "no", "wife", "husband"] },
+      { ai: "Do you have a return ticket?", ko: "돌아가는 항공권이 있나요?",
+        hint: "있다고 답하고 날짜를 덧붙여 보세요.",
+        models: [["Yes, I'm flying back on the 21st.", "네, 21일에 돌아갑니다."], ["Yes, here's my return ticket.", "네, 여기 왕복 항공권입니다."]],
+        keys: ["yes", "return", "ticket", "back", "flying", "here"] }
+    ],
+    done: "입국 심사를 무사히 통과했습니다 🎉"
+  },
+
+  hotel: {
+    title: "호텔 컴플레인", emoji: "🏨", lv: "중급",
+    char: { name: "Aisha", emoji: "🧕", role: "프런트 매니저", lang: "en-GB",
+      voice: { oa: "shimmer", rate: .97, pitch: 1.02,
+        inst: "Polite, calm British hotel front-desk manager with a refined RP accent. Gentle, apologetic, smooth and flowing — like a real person, never robotic." } },
+    desc: "문제를 정중하게 말하고 원하는 해결책을 요청합니다. (영국식 발음)",
+    turns: [
+      { ai: "Good evening. How may I help you?", ko: "안녕하세요. 무엇을 도와드릴까요?",
+        hint: "방의 문제(에어컨이 작동하지 않음)를 설명해 보세요.",
+        models: [["The air conditioning in my room isn't working.", "제 방 에어컨이 작동하지 않습니다."], ["Excuse me, my room is far too hot.", "실례합니다, 제 방이 너무 덥습니다."]],
+        keys: ["air", "conditioning", "hot", "working", "room", "broken"] },
+      { ai: "I'm terribly sorry about that. Could I have your room number?", ko: "정말 죄송합니다. 객실 번호를 알려주시겠어요?",
+        hint: "객실 번호를 또박또박 말해보세요.",
+        models: [["It's room 512.", "512호입니다."], ["Room five one two.", "5-1-2호요."]],
+        keys: ["room", "512", "five", "one", "two"] },
+      { ai: "Thank you. Would you like maintenance to come up, or would you prefer another room?", ko: "감사합니다. 정비 직원을 보내드릴까요, 아니면 다른 방으로 옮겨드릴까요?",
+        hint: "원하는 쪽을 정중하게 요청해 보세요.",
+        models: [["I'd prefer another room, if that's possible.", "가능하다면 다른 방으로 옮기고 싶습니다."], ["Could you send someone up, please?", "직원 한 분 보내주시겠어요?"]],
+        keys: ["another", "room", "prefer", "send", "someone", "maintenance", "move"] },
+      { ai: "Of course. I can move you to room 812. Would you like help with your luggage?", ko: "물론이죠. 812호로 옮겨드릴게요. 짐 옮기는 걸 도와드릴까요?",
+        hint: "도움을 받을지 정중히 답해보세요.",
+        models: [["That would be great, thank you.", "그러면 정말 좋겠어요, 감사합니다."], ["No, thank you. I can manage.", "괜찮습니다. 제가 할 수 있어요."]],
+        keys: ["thank", "great", "manage", "no", "yes", "please"] },
+      { ai: "Certainly. And please accept a complimentary breakfast for the inconvenience.", ko: "알겠습니다. 불편을 드린 데 대해 조식을 무료로 제공해 드리겠습니다.",
+        hint: "고마움을 표현하며 마무리해 보세요.",
+        models: [["That's very kind of you. Thank you.", "정말 친절하시네요. 감사합니다."], ["Thank you, I really appreciate it.", "감사합니다, 정말 고맙습니다."]],
+        keys: ["thank", "kind", "appreciate", "great"] }
+    ],
+    done: "컴플레인 상황을 끝까지 해냈습니다 🎉"
+  },
+
+  restaurant: {
+    title: "레스토랑 주문", emoji: "🍽", lv: "중급",
+    char: { name: "Marco", emoji: "🧑‍🍳", role: "웨이터", lang: "en-US",
+      voice: { oa: "ash", rate: 1, pitch: 1,
+        inst: "Cheerful Italian waiter speaking English with a light Italian accent. Warm, welcoming, expressive and natural." } },
+    desc: "자리 잡기, 추천 요청, 알레르기 전달, 계산까지.",
+    turns: [
+      { ai: "Welcome! A table for how many?", ko: "어서 오세요! 몇 분이신가요?",
+        hint: "인원 수를 말해보세요.",
+        models: [["A table for two, please.", "두 명이요."], ["Just one, please.", "한 명입니다."]],
+        keys: ["two", "one", "three", "table", "please"] },
+      { ai: "Here's the menu. Can I start you off with something to drink?", ko: "메뉴 여기 있습니다. 먼저 음료부터 주문하시겠어요?",
+        hint: "마실 것을 정중하게 요청해 보세요.",
+        models: [["Could I have a glass of water, please?", "물 한 잔 주시겠어요?"], ["Just water for now, thank you.", "일단 물만 주세요, 감사합니다."]],
+        keys: ["water", "coffee", "wine", "beer", "drink", "please", "juice"] },
+      { ai: "Are you ready to order, or would you like a few more minutes?", ko: "주문하시겠어요, 아니면 시간이 좀 더 필요하세요?",
+        hint: "추천을 부탁하거나, 메뉴를 골라 주문해 보세요.",
+        models: [["What would you recommend?", "뭘 추천하시나요?"], ["I'd like the seafood pasta, please.", "해산물 파스타로 주세요."]],
+        keys: ["recommend", "like", "pasta", "order", "minutes", "have"] },
+      { ai: "Great choice. Any allergies I should know about?", ko: "좋은 선택이세요. 알레르기가 있으신가요?",
+        hint: "알레르기가 있다면 재료를 정확히 말해주세요.",
+        models: [["I'm allergic to peanuts.", "저는 땅콩 알레르기가 있습니다."], ["No allergies, thank you.", "알레르기는 없습니다, 감사합니다."]],
+        keys: ["allergic", "allergy", "allergies", "peanut", "no", "nuts", "seafood"] },
+      { ai: "Perfect. Would you like the bill together or separately?", ko: "알겠습니다. 계산은 함께 하시겠어요, 따로 하시겠어요?",
+        hint: "계산 방법을 말해보세요.",
+        models: [["Could we split the bill, please?", "따로 계산할 수 있을까요?"], ["Together, please. I'll pay by card.", "함께요. 카드로 결제할게요."]],
+        keys: ["split", "together", "bill", "separate", "card", "cash"] }
+    ],
+    done: "식사 주문을 끝까지 마쳤습니다 🎉"
+  },
+
+  taxi: {
+    title: "택시 타기", emoji: "🚕", lv: "고급",
+    char: { name: "Dave", emoji: "🚕", role: "택시 기사", lang: "en-US",
+      voice: { oa: "echo", rate: 1.12, pitch: .98,
+        inst: "Fast-talking, easygoing American taxi driver. Casual and chatty, heavy use of contractions, relaxed natural flow." } },
+    desc: "빠른 구어체가 쏟아집니다. 되묻는 표현이 핵심.",
+    turns: [
+      { ai: "Hop in! Where ya headed?", ko: "타세요! 어디로 가세요?",
+        hint: "목적지를 말하거나, 주소를 보여주며 부탁해 보세요.",
+        models: [["Could you take me to this address, please?", "이 주소로 가주시겠어요?"], ["Central Station, please.", "중앙역으로 가주세요."]],
+        keys: ["address", "station", "take", "please", "hotel", "airport"] },
+      { ai: "Sure thing. Rush hour's kickin' in, so it might take a bit longer. That alright?", ko: "알겠습니다. 퇴근 시간이라 좀 더 걸릴 수 있는데, 괜찮으세요?",
+        hint: "못 알아들었다면 되물어보세요. 이 표현이 실전에서 가장 유용합니다.",
+        models: [["Sorry, could you say that again more slowly?", "죄송한데, 조금 천천히 다시 말씀해 주시겠어요?"], ["That's fine. How long will it take?", "괜찮습니다. 얼마나 걸릴까요?"]],
+        keys: ["sorry", "again", "slowly", "fine", "long", "okay", "repeat"] },
+      { ai: "'Bout twenty-five minutes. First time in town?", ko: "25분쯤 걸려요. 이 동네는 처음이세요?",
+        hint: "처음인지 아닌지 답해보세요.",
+        models: [["Yes, it's my first time here.", "네, 여기는 처음입니다."], ["No, I've been here before.", "아니요, 전에 와본 적 있어요."]],
+        keys: ["first", "time", "yes", "no", "before", "here"] },
+      { ai: "Nice! Anywhere you're plannin' to check out while you're here?", ko: "좋네요! 여기 있는 동안 가볼 만한 곳은 정하셨어요?",
+        hint: "가고 싶은 곳을 말하거나, 추천을 부탁해 보세요.",
+        models: [["Do you know any good local restaurants?", "괜찮은 현지 식당 아시는 곳 있나요?"], ["I'd love to see the old town.", "구시가지를 보고 싶어요."]],
+        keys: ["restaurant", "see", "visit", "recommend", "know", "want", "old"] },
+      { ai: "You got it. Alright, here we are. That'll be eighteen fifty.", ko: "알겠습니다. 자, 도착했어요. 18달러 50센트입니다.",
+        hint: "결제 방법을 말해보세요.",
+        models: [["Card, please. Do you take contactless?", "카드로요. 비접촉 결제 되나요?"], ["Here's twenty. Keep the change.", "20달러요. 잔돈은 됐습니다."]],
+        keys: ["card", "cash", "contactless", "change", "twenty", "keep", "here"] }
+    ],
+    done: "택시 대화를 끝까지 해냈습니다 🎉"
+  }
+};
+
+export const SCENE_KEYS = Object.keys(SCENES) as SceneKey[];

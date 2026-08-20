@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TripTalk (Next.js)
 
-## Getting Started
+AI 캐릭터와 상황별 여행영어를 연습하는 데모 서비스.
+순수 HTML/CSS/JS로 만들어진 원본(`triptalk`)을 기능 손실 없이 Next.js로 이전한 저장소입니다.
+이전 계획과 진행 상황은 [plan.md](./plan.md)에 있습니다.
 
-First, run the development server:
+## 실행
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Node 20.9 이상이 필요합니다 (Next.js 16 요구사항).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 화면
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| 경로 | 내용 |
+|---|---|
+| `/` | 랜딩 — 히어로 채팅, AI 캐릭터 8명, 상황별 학습 탭, 인터랙티브 데모, 요금제, FAQ |
+| `/practice` | 말하기 연습실 — 캐릭터와 1:1 대화, 음성 인식 받아쓰기 · 직접 수정 · 발음 교정 · 표현 교정 · 리포트 |
+| `/login` | 카카오 / 네이버 / Google 소셜 로그인 + 이메일 로그인 |
+| `/api/auth/[provider]` | OAuth 인가코드 → 토큰 교환 → 프로필 조회 (Route Handler) |
+| `/api/tts` | 서버 TTS — 자연스러운 미국식 음성 (`OPENAI_API_KEY` 있을 때) |
 
-## Learn More
+## 구조
 
-To learn more about Next.js, take a look at the following resources:
+애플리케이션 코드는 `src/` 안에 있습니다. 설정 파일과 `public/` 은 루트에 그대로 둡니다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/app/                    라우트 · 레이아웃 · 전역 CSS · Route Handler
+src/components/landing/     랜딩 섹션 (정적 섹션은 서버 컴포넌트)
+src/components/practice/    연습실 화면 트리
+src/components/login/       로그인 화면
+src/components/ui/          Button · Logo · Badge · Container
+src/lib/data/               캐릭터 · 상황 · FAQ · 데모 · 연습 시나리오
+src/lib/correction/         발음 사전 · 표현 교정 규칙 · 텍스트 비교
+src/lib/speech/             TTS 엔진 · 음성 인식 훅 · 마이크 레벨 · 설정 저장소
+src/lib/auth/               제공자 메타 · 세션 유틸
+src/types/                  공용 타입
+public/                     파비콘 등 정적 파일 (루트 유지)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`@/*` 별칭은 `src/*` 를 가리킵니다 (`tsconfig.json`).
 
-## Deploy on Vercel
+## 연습실 — 캐릭터와 1:1 대화
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+캐릭터가 말을 걸면 소리로 먼저 듣고, 마이크를 눌러 소리 내어 답합니다.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **영어 자막과 한글 해석 모두 기본으로 꺼져 있습니다.** 못 알아들었으면 `👁 영어 자막 보기` 로
+  이번 턴만 펼치거나, 상황 선택 화면의 `영어 자막 항상 보기` 를 켜두면 계속 보입니다.
+  한글 해석은 `해석 보기` 로 따로 켭니다.
+- 무엇을 말해야 하는지는 힌트 영역이 한국어로 계속 안내하므로 자막 없이도 대화가 이어집니다.
+- 지금 캐릭터가 하는 말은 화면 위에 고정되어, 아래 피드백을 읽는 동안에도 계속 보입니다.
+- 답변 직후의 발음·표현 피드백은 무대 아래에 남고, 전체 기록은 `지난 대화 · 피드백` 에서 펼쳐 봅니다.
+
+## 음성 기능
+
+- **음성 인식(STT)** 은 Chrome / Edge / Safari 에서 동작합니다.
+  지원하지 않는 브라우저나 HTTPS가 아닌 환경에서는 **타이핑 모드로 자동 전환**됩니다.
+- **음성 합성(TTS)** 은 아래 순서로 내려갑니다.
+  1. 연습실 설정의 `🎧 더 사람 같은 목소리로 듣기` 에 넣은 **개인 API 키** —
+     키는 이 브라우저의 localStorage 에만 저장되고 해당 업체 서버로만 전송됩니다.
+     공용 기기나 공개 배포본에는 넣지 마세요.
+  2. **서버 TTS** (`/api/tts`) — `.env.local` 에 `OPENAI_API_KEY` 가 있으면
+     방문자가 키를 넣지 않아도 자연스러운 미국식 발음으로 읽어줍니다.
+  3. **브라우저 내장 음성** — 위 둘이 없을 때. 기기에 설치된 음성 품질에 좌우됩니다.
+
+> **내장 음성이 기계처럼 들린다면** 기기에 기본 음성만 설치된 경우입니다.
+> 맥은 `시스템 설정 → 손쉬운 사용 → 말하기 → 시스템 음성 → 영어(미국)` 에서
+> **Samantha(향상됨)** 또는 **Ava(프리미엄)** 를 내려받으면 확연히 달라집니다 (무료).
+> 이 상태를 앱이 감지하면 상황 선택 화면에 안내가 뜹니다.
+
+## 소셜 로그인 설정
+
+키를 하나도 설정하지 않으면 로그인 페이지는 **데모 모드**로 동작합니다 (흐름만 시연, 외부 전송 없음).
+실제 로그인을 켜려면 [.env.example](./.env.example)을 `.env.local` 로 복사해 값을 채우고,
+각 개발자 콘솔에 Redirect URI를 등록하세요.
+
+```
+https://<배포-도메인>/login
+http://localhost:3000/login
+```
+
+클라이언트 ID는 `NEXT_PUBLIC_*` (브라우저 노출), 시크릿은 서버 전용 변수로 둡니다.
+시크릿은 Route Handler 안에서만 읽습니다.
+
+## 보안
+
+공개 배포를 전제로 아래를 걸어 두었습니다. 자세한 배경은 [plan.md](./plan.md) 9.5장에 있습니다.
+
+- **응답 헤더** — CSP `frame-ancestors` · `X-Frame-Options` · `nosniff` · `Referrer-Policy` ·
+  `Permissions-Policy: microphone=(self)`. `next.config.ts` 에서 모든 경로에 적용합니다.
+  `Referrer-Policy` 는 로그인 콜백 주소의 **OAuth 인가 코드가 Referer 로 새는 것**을 막습니다.
+- **`/api/tts` 호출 제한** — 같은 출처 요청만 받고, IP 당 1분 20회로 끊습니다.
+  서버 키로 실제 비용이 나가는 엔드포인트라서 필요합니다.
+  카운터는 인스턴스 메모리에 있어 전역 상한은 아닙니다 — 트래픽이 늘면 공유 저장소로 옮기세요.
+- **`/api/auth/[provider]`** — `redirectUri` 가 이 사이트의 출처와 다르면 거부합니다.
+  액세스 토큰은 클라이언트로 내려보내지 않고 정규화한 프로필만 돌려줍니다.
+- **시크릿** — `.env*` 는 커밋하지 않습니다 (`.env.example` 만 예외). 시크릿은 Route Handler 안에서만 읽습니다.
+
+세션을 브라우저 저장소에 두는 것은 데모 단계의 의도된 설계입니다.
+실제 서비스로 가면 서버가 발급하는 HttpOnly 쿠키로 옮겨야 합니다.
+
+## 참고
+
+이 사이트는 데모용으로 제작된 가상의 서비스 소개 페이지입니다.
+랜딩 페이지의 이용자 수 · 후기 · 요금은 실제 수치가 아닙니다.
