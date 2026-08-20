@@ -23,6 +23,40 @@ const DEFAULT_INSTRUCTIONS =
 /** 한 문장짜리 대사만 읽습니다. 긴 본문을 밀어 넣는 것을 막는 상한선입니다. */
 const MAX_CHARS = 400;
 
+/* ── 호출 제한 ──────────────────────────────────────────────────
+ * 이 엔드포인트는 호출될 때마다 서버의 OpenAI 키로 실제 비용이 나갑니다.
+ * 공개 배포본에서 아무나 반복 호출하면 그대로 청구되므로 두 겹으로 막습니다.
+ *
+ *   1. 같은 출처에서 온 요청만 받는다 (브라우저를 통한 타 사이트 남용 차단)
+ *   2. IP 당 시간창 호출 수 제한
+ *
+ * 상태는 서버 인스턴스 메모리에 둡니다. 서버리스에서는 인스턴스마다 따로
+ * 세므로 전역 상한은 아니지만, 한 클라이언트의 연속 호출은 확실히 끊습니다.
+ * 더 엄격한 제한이 필요해지면 Vercel KV 같은 공유 저장소로 옮기세요.
+ */
+const WINDOW_MS = 60_000;
+const MAX_PER_WINDOW = 20;
+const hits = new Map<string, { count: number; resetAt: number }>();
+
+function rateLimited(ip: string, now: number): boolean {
+  const entry = hits.get(ip);
+  if (!entry || now >= entry.resetAt) {
+    hits.set(ip, { count: 1, resetAt: now + WINDOW_MS });
+    // 만료된 항목을 걷어내 Map 이 무한히 커지지 않게 합니다.
+    if (hits.size > 1000) {
+      for (const [key, value] of hits) if (now >= value.resetAt) hits.delete(key);
+    }
+    return false;
+  }
+  entry.count += 1;
+  return entry.count > MAX_PER_WINDOW;
+}
+
+function clientIp(request: NextRequest): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  return forwarded?.split(",")[0]?.trim() || "unknown";
+}
+
 type Body = { text?: string; voice?: string; instructions?: string };
 
 /** 서버에 키가 있는지만 알려줍니다. 오디오를 만들지 않으므로 비용이 들지 않습니다. */
@@ -35,6 +69,20 @@ export async function POST(request: NextRequest) {
   if (!apiKey) {
     // 501 = 서버에 키가 없음. 클라이언트가 이 응답을 보고 내장 음성으로 넘어갑니다.
     return Response.json({ error: "서버 TTS 키가 설정되지 않았습니다." }, { status: 501 });
+  }
+
+  // Origin 이 붙어 있으면 이 사이트의 것이어야 합니다.
+  // (같은 출처 fetch 에는 브라우저가 항상 붙입니다.)
+  const origin = request.headers.get("origin");
+  if (origin && origin !== request.nextUrl.origin) {
+    return Response.json({ error: "허용되지 않은 요청입니다." }, { status: 403 });
+  }
+
+  if (rateLimited(clientIp(request), Date.now())) {
+    return Response.json(
+      { error: "요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요." },
+      { status: 429, headers: { "Retry-After": String(WINDOW_MS / 1000) } }
+    );
   }
 
   let body: Body;

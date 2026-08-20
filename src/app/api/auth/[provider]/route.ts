@@ -99,6 +99,16 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ provid
   const { code, state, redirectUri } = body;
   if (!code || !redirectUri) return fail("code 와 redirectUri 가 필요합니다.", 400);
 
+  // redirectUri 는 클라이언트가 보낸 값이라 그대로 믿지 않습니다. 이 사이트의
+  // 출처와 같을 때만 토큰 교환에 씁니다. (제공자 콘솔의 화이트리스트와 이중 방어)
+  const selfOrigin = request.headers.get("origin") ?? request.nextUrl.origin;
+  let redirectOrigin: string;
+  try { redirectOrigin = new URL(redirectUri).origin; }
+  catch { return fail("redirectUri 형식이 올바르지 않습니다.", 400); }
+  if (redirectOrigin !== selfOrigin) {
+    return fail("허용되지 않은 redirectUri 입니다.", 400);
+  }
+
   /* ── 1. 인가 코드 → 액세스 토큰 ─────────────────── */
   const form = new URLSearchParams({
     grant_type: "authorization_code",
@@ -120,7 +130,12 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ provid
   const accessToken = tokenJson.access_token;
 
   if (!tokenRes.ok || typeof accessToken !== "string") {
-    console.error("[TripTalk] 토큰 교환 실패", provider, tokenRes.status, tokenJson);
+    // 응답 본문에는 토큰이 들어 있을 수 있어 통째로 로그에 남기지 않습니다.
+    // (Vercel 로그는 대시보드에서 그대로 읽힙니다.)
+    console.error(
+      "[TripTalk] 토큰 교환 실패", provider, tokenRes.status,
+      typeof tokenJson.error === "string" ? tokenJson.error : "unknown_error"
+    );
     return fail("토큰 교환에 실패했습니다.", 502);
   }
 

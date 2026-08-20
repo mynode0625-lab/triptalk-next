@@ -87,6 +87,23 @@ http://localhost:3000/login
 클라이언트 ID는 `NEXT_PUBLIC_*` (브라우저 노출), 시크릿은 서버 전용 변수로 둡니다.
 시크릿은 Route Handler 안에서만 읽습니다.
 
+## 보안
+
+공개 배포를 전제로 아래를 걸어 두었습니다. 자세한 배경은 [plan.md](./plan.md) 9.5장에 있습니다.
+
+- **응답 헤더** — CSP `frame-ancestors` · `X-Frame-Options` · `nosniff` · `Referrer-Policy` ·
+  `Permissions-Policy: microphone=(self)`. `next.config.ts` 에서 모든 경로에 적용합니다.
+  `Referrer-Policy` 는 로그인 콜백 주소의 **OAuth 인가 코드가 Referer 로 새는 것**을 막습니다.
+- **`/api/tts` 호출 제한** — 같은 출처 요청만 받고, IP 당 1분 20회로 끊습니다.
+  서버 키로 실제 비용이 나가는 엔드포인트라서 필요합니다.
+  카운터는 인스턴스 메모리에 있어 전역 상한은 아닙니다 — 트래픽이 늘면 공유 저장소로 옮기세요.
+- **`/api/auth/[provider]`** — `redirectUri` 가 이 사이트의 출처와 다르면 거부합니다.
+  액세스 토큰은 클라이언트로 내려보내지 않고 정규화한 프로필만 돌려줍니다.
+- **시크릿** — `.env*` 는 커밋하지 않습니다 (`.env.example` 만 예외). 시크릿은 Route Handler 안에서만 읽습니다.
+
+세션을 브라우저 저장소에 두는 것은 데모 단계의 의도된 설계입니다.
+실제 서비스로 가면 서버가 발급하는 HttpOnly 쿠키로 옮겨야 합니다.
+
 ## 참고
 
 이 사이트는 데모용으로 제작된 가상의 서비스 소개 페이지입니다.
