@@ -8,8 +8,14 @@
  *   NEXT_PUBLIC_KAKAO_CLIENT_ID   KAKAO_CLIENT_SECRET   (선택 — 카카오는 시크릿이 없을 수 있음)
  *   NEXT_PUBLIC_NAVER_CLIENT_ID   NAVER_CLIENT_SECRET
  *   NEXT_PUBLIC_GOOGLE_CLIENT_ID  GOOGLE_CLIENT_SECRET
+ *   AUTH_SECRET                   (세션 쿠키 서명 — 배포본에서는 필수)
+ *
+ * 성공하면 서명된 HttpOnly 세션 쿠키를 발급합니다. 프로필은 화면 표시용으로만
+ * 돌려주고, 로그인 여부의 근거는 언제나 쿠키입니다.
  */
 import type { NextRequest } from "next/server";
+import { hasStableSecret, issueSession } from "@/lib/auth/cookie";
+import { PROVIDERS } from "@/lib/auth/providers";
 import type { NormalizedProfile, ProviderKey } from "@/types/session";
 
 type Body = { code?: string; state?: string; redirectUri?: string };
@@ -92,6 +98,13 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ provid
     return fail("이 제공자의 서버 키가 설정되지 않았습니다.", 501);
   }
 
+  // 실제 로그인을 켜 두고 AUTH_SECRET 을 빠뜨리면, 인스턴스가 바뀔 때마다 세션이
+  // 풀려 로그인이 된 듯 안 된 듯 굴러갑니다. 조용히 넘기지 않고 여기서 막습니다.
+  if (!hasStableSecret()) {
+    console.error("[TripTalk] AUTH_SECRET 이 없습니다. 세션 쿠키를 안정적으로 발급할 수 없습니다.");
+    return fail("서버 세션 설정이 완료되지 않았습니다.", 500);
+  }
+
   let body: Body;
   try { body = (await request.json()) as Body; }
   catch { return fail("잘못된 요청 본문입니다.", 400); }
@@ -151,5 +164,21 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ provid
   }
 
   const raw = (await profileRes.json()) as Record<string, unknown>;
-  return Response.json(normalize(provider, raw));
+  const profile = normalize(provider, raw);
+
+  /* ── 3. 세션 쿠키 발급 ──────────────────────────── */
+  const session = {
+    provider,
+    name: profile.name,
+    email: profile.email,
+    avatar: PROVIDERS[provider].avatar,
+    loginAt: new Date().toISOString(),
+    demo: false
+  };
+  await issueSession(session);
+
+  return Response.json(
+    { session },
+    { headers: { "Cache-Control": "no-store" } }
+  );
 }

@@ -5,11 +5,9 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import { Logo } from "@/components/ui/Logo";
 import {
-  API_BASE, CLIENT_IDS, PROVIDERS, PROVIDER_KEYS, anyConfigured, isConfigured
+  API_BASE, CLIENT_IDS, PROVIDERS, PROVIDER_KEYS, isConfigured
 } from "@/lib/auth/providers";
-import {
-  STATE_KEY, clearSession, formatTime, readSession, saveSession
-} from "@/lib/auth/session";
+import { STATE_KEY, fetchSession, formatTime, logout } from "@/lib/auth/session";
 import type { ProviderKey, Session } from "@/types/session";
 import { PROVIDER_ICONS } from "./SocialIcons";
 
@@ -17,17 +15,12 @@ export function LoginApp() {
   const [session, setSession] = useState<Session | null>(null);
   const [busy, setBusy] = useState(false);
   const [loadingProvider, setLoadingProvider] = useState<ProviderKey | null>(null);
-  const [formError, setFormError] = useState<string | null>(null);
-  const [showPw, setShowPw] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState(true);
   const [toast, setToast] = useState<string>("");
   const [toastOn, setToastOn] = useState(false);
-  const [demoNotice, setDemoNotice] = useState(false);
+  /** 키가 없어 데모로 동작하는 서비스 목록 — 서버에 물어볼 것 없이 공개 ID 로 판단합니다 */
+  const [demoProviders, setDemoProviders] = useState<ProviderKey[]>([]);
 
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pwRef = useRef<HTMLInputElement>(null);
   const initialised = useRef(false);
 
   const showToast = useCallback((message: string) => {
@@ -76,16 +69,9 @@ export function LoginApp() {
 
       if (!res.ok) throw new Error(`토큰 교환 실패 (${res.status})`);
 
-      const profile = (await res.json()) as { name?: string; email?: string };
-      const next: Session = {
-        provider,
-        name: profile.name || PROVIDERS[provider].label + " 사용자",
-        email: profile.email || "—",
-        avatar: PROVIDERS[provider].avatar,
-        loginAt: new Date().toISOString(),
-        demo: false
-      };
-      saveSession(next);
+      // 로그인의 근거는 이 응답이 아니라 서버가 함께 내려준 세션 쿠키입니다.
+      // 화면에 뿌릴 값만 받아 씁니다.
+      const { session: next } = (await res.json()) as { session: Session };
       showToast(`${PROVIDERS[provider].label} 계정으로 로그인했습니다`);
       setSession(next);
       return true;
@@ -103,13 +89,13 @@ export function LoginApp() {
     if (initialised.current) return;
     initialised.current = true;
 
-    // 설정된 서비스가 하나도 없으면 데모 모드임을 안내합니다.
-    setDemoNotice(!anyConfigured());
+    // 키가 없는 서비스는 데모로 동작합니다 — 화면에 그대로 밝힙니다.
+    setDemoProviders(PROVIDER_KEYS.filter(p => !isConfigured(p)));
 
     void (async () => {
       const handled = await handleOAuthCallback();
       if (handled) return;
-      const s = readSession();
+      const s = await fetchSession();
       if (s) setSession(s);
     })();
 
@@ -141,66 +127,41 @@ export function LoginApp() {
     window.location.assign(`${meta.authUrl}?${params}`);
   };
 
-  /** 데모 로그인: 실제 통신 없이 로그인 흐름만 재현합니다. */
-  const startDemoLogin = (provider: ProviderKey) => {
+  /**
+   * 데모 로그인: 외부 통신 없이 흐름만 재현합니다.
+   * 세션은 여기서 만들지 않고 서버에 요청합니다 — 실제 키가 설정된 서비스라면
+   * 서버가 409 로 거절하므로, 데모로 진짜 로그인을 우회할 수 없습니다.
+   */
+  const startDemoLogin = async (provider: ProviderKey) => {
     const meta = PROVIDERS[provider];
     setLoadingProvider(provider);
     setBusy(true);
-
-    setTimeout(() => {
-      setLoadingProvider(null);
-      setBusy(false);
-      const next: Session = {
-        provider,
-        name: meta.demo.name,
-        email: meta.demo.email,
-        avatar: meta.avatar,
-        loginAt: new Date().toISOString(),
-        demo: true
-      };
-      saveSession(next);
+    try {
+      const res = await fetch("/api/auth/demo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ provider })
+      });
+      if (!res.ok) throw new Error(`데모 세션 발급 실패 (${res.status})`);
+      const { session: next } = (await res.json()) as { session: Session };
       showToast(`${meta.label} 계정으로 로그인했습니다 (데모)`);
       setSession(next);
-    }, 900);
+    } catch (err) {
+      console.error("[TripTalk] 데모 로그인 실패:", err);
+      showToast("로그인 처리 중 문제가 발생했습니다.");
+    } finally {
+      setLoadingProvider(null);
+      setBusy(false);
+    }
   };
 
   const onSocial = (provider: ProviderKey) => {
     if (isConfigured(provider)) startRealLogin(provider);
-    else startDemoLogin(provider);
+    else void startDemoLogin(provider);
   };
 
-  /* ── 이메일 로그인 — 서버가 없으므로 형식 검증만 하고 데모 세션을 만듭니다 ── */
-  const onEmailSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setFormError(null);
-
-    const mail = email.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) {
-      setFormError("이메일 주소를 다시 확인해 주세요.");
-      return;
-    }
-    if (password.length < 8) {
-      setFormError("비밀번호는 8자 이상이어야 합니다.");
-      return;
-    }
-
-    const next: Session = {
-      provider: "email",
-      name: mail.split("@")[0],
-      email: mail,
-      avatar: "📧",
-      loginAt: new Date().toISOString(),
-      demo: true
-    };
-    saveSession(next, remember);
-    showToast("로그인했습니다 (데모)");
-    setSession(next);
-  };
-
-  const onLogout = () => {
-    clearSession();
-    setEmail("");
-    setPassword("");
+  const onLogout = async () => {
+    await logout();               // 쿠키는 서버만 지울 수 있습니다
     setSession(null);
     showToast("로그아웃되었습니다");
   };
@@ -210,9 +171,7 @@ export function LoginApp() {
     showToast("데모 사이트라 아직 준비되지 않은 화면입니다.");
   };
 
-  const providerMeta = session && session.provider !== "email"
-    ? PROVIDERS[session.provider]
-    : null;
+  const providerMeta = session ? PROVIDERS[session.provider] : null;
 
   return (
     <>
@@ -274,69 +233,16 @@ export function LoginApp() {
                       <span className="social__icon" aria-hidden="true"><Icon /></span>
                       <span className="social__label">
                         {p === "google" ? "Google로 시작하기" : `${PROVIDERS[p].label}로 시작하기`}
+                        {demoProviders.includes(p) ? " (데모)" : ""}
                       </span>
                     </button>
                   );
                 })}
               </div>
 
-              <div className="divider"><span>또는 이메일로</span></div>
-
-              <form className="auth__form" id="emailForm" noValidate onSubmit={onEmailSubmit}>
-                <label className="field">
-                  <span className="field__label">이메일</span>
-                  <input
-                    type="email" id="email" name="email" placeholder="you@example.com"
-                    autoComplete="email" required
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                  />
-                </label>
-
-                <label className="field">
-                  <span className="field__label">비밀번호</span>
-                  <span className="field__wrap">
-                    <input
-                      ref={pwRef}
-                      type={showPw ? "text" : "password"}
-                      id="password" name="password" placeholder="8자 이상"
-                      autoComplete="current-password" required minLength={8}
-                      value={password}
-                      onChange={e => setPassword(e.target.value)}
-                    />
-                    <button
-                      type="button" className="field__toggle" id="pwToggle"
-                      aria-label={showPw ? "비밀번호 숨기기" : "비밀번호 표시"}
-                      onClick={() => { setShowPw(v => !v); pwRef.current?.focus(); }}
-                    >
-                      👁
-                    </button>
-                  </span>
-                </label>
-
-                <div className="auth__row">
-                  <label className="check">
-                    <input
-                      type="checkbox" id="remember"
-                      checked={remember}
-                      onChange={e => setRemember(e.target.checked)}
-                    />
-                    <span>로그인 상태 유지</span>
-                  </label>
-                  <a href="#" className="auth__link" onClick={noop}>비밀번호를 잊으셨나요?</a>
-                </div>
-
-                {formError ? (
-                  <p className="auth__error" id="formError" role="alert">{formError}</p>
-                ) : null}
-
-                <button type="submit" className="btn btn--primary btn--block btn--lg">
-                  이메일로 로그인
-                </button>
-              </form>
-
               <p className="auth__switch">
-                아직 계정이 없으신가요? <a href="#" className="auth__link" onClick={noop}>회원가입</a>
+                처음이신가요? 위 서비스로 시작하면 <b>그 자리에서 가입까지 끝납니다.</b><br />
+                따로 만들 비밀번호도, 외울 아이디도 없습니다.
               </p>
 
               <p className="auth__terms">
@@ -344,11 +250,12 @@ export function LoginApp() {
                 <a href="#" onClick={noop}>개인정보처리방침</a>에 동의하는 것으로 간주됩니다.
               </p>
 
-              {demoNotice ? (
+              {demoProviders.length ? (
                 <p className="auth__demo" id="demoNotice">
                   <b>데모 모드</b>
-                  실제 소셜 로그인 키가 설정되지 않아 로그인 흐름만 시연합니다.
-                  입력한 정보는 이 브라우저 밖으로 전송되지 않습니다.
+                  {demoProviders.length === PROVIDER_KEYS.length
+                    ? "실제 소셜 로그인 키가 설정되지 않아 로그인 흐름만 시연합니다. 외부로 전송되는 정보가 없습니다."
+                    : `${demoProviders.map(p => PROVIDERS[p].label).join(" · ")} — 키가 설정되지 않아 흐름만 시연합니다.`}
                 </p>
               ) : null}
             </section>
@@ -369,7 +276,7 @@ export function LoginApp() {
               <dl className="done__meta">
                 <div>
                   <dt>로그인 방식</dt>
-                  <dd id="doneProvider">{providerMeta ? `${providerMeta.label} 계정` : "이메일"}</dd>
+                  <dd id="doneProvider">{providerMeta ? `${providerMeta.label} 계정` : "—"}</dd>
                 </div>
                 <div><dt>이메일</dt><dd id="doneEmail">{session.email || "—"}</dd></div>
                 <div><dt>로그인 시각</dt><dd id="doneAt">{formatTime(session.loginAt)}</dd></div>
@@ -381,7 +288,7 @@ export function LoginApp() {
                 </Link>
                 <button
                   type="button" className="btn btn--outline btn--block" id="logoutBtn"
-                  onClick={onLogout}
+                  onClick={() => void onLogout()}
                 >
                   로그아웃
                 </button>
