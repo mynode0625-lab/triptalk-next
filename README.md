@@ -107,9 +107,17 @@ AUTH_SECRET=$(openssl rand -base64 32)   # 세션 쿠키 서명 키
 
 공개 배포를 전제로 아래를 걸어 두었습니다. 자세한 배경은 [plan.md](./plan.md) 9.5장에 있습니다.
 
-- **응답 헤더** — CSP `frame-ancestors` · `X-Frame-Options` · `nosniff` · `Referrer-Policy` ·
+- **CSP** — `default-src 'self'` 기준으로, 나갈 수 있는 곳을 `connect-src` 로 우리 서버 ·
+  OpenAI · ElevenLabs 셋만 허용합니다. 연습실에 넣은 개인 API 키가 스크립트 주입으로 읽히더라도
+  **바깥으로 빠져나갈 경로가 없습니다** (fetch · 이미지 · 외부 스크립트 · WebSocket 모두 차단 확인).
+  `script-src` 의 `'unsafe-inline'` 은 Next 의 하이드레이션 인라인 스크립트 때문이며,
+  nonce 로 올리려면 정적 프리렌더를 포기해야 해서 지금은 두었습니다.
+- **그 밖의 헤더** — HSTS · `X-Frame-Options` · `nosniff` · `Referrer-Policy` ·
   `Permissions-Policy: microphone=(self)`. `next.config.ts` 에서 모든 경로에 적용합니다.
   `Referrer-Policy` 는 로그인 콜백 주소의 **OAuth 인가 코드가 Referer 로 새는 것**을 막습니다.
+- **마이크 고지** — 음성 인식은 브라우저 기능이고 브라우저는 오디오를 자사 서버
+  (Chrome→Google, Safari→Apple)로 보냅니다. 연습실 상황 선택 화면에서 이 사실을 밝히고
+  타이핑이라는 선택지를 함께 제시합니다. TripTalk 서버는 음성도 발화 내용도 저장하지 않습니다.
 - **`/api/tts` 호출 제한** — 같은 출처 요청만 받고, IP 당 1분 20회로 끊습니다.
   서버 키로 실제 비용이 나가는 엔드포인트라서 필요합니다.
   카운터는 인스턴스 메모리에 있어 전역 상한은 아닙니다 — 트래픽이 늘면 공유 저장소로 옮기세요.
