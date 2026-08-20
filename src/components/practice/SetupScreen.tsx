@@ -43,6 +43,18 @@ export function SetupScreen({
           캐릭터가 영어로 말을 걸면, <b>마이크를 누르고 소리 내어 답하면</b> 됩니다.
         </p>
 
+        {/*
+          음성 인식은 브라우저가 제공하는 기능이고, 브라우저는 오디오를 자사 서버로
+          보내 글자로 바꿉니다. 우리가 만든 동작은 아니지만 사용자의 목소리가 나가는
+          일이므로, 마이크를 켜기 전에 화면에서 밝힙니다.
+        */}
+        <p className="setup__privacy">
+          🎙 <b>마이크를 누르면</b> 음성이 브라우저의 음성 인식 서비스
+          (Chrome은 Google, Safari는 Apple)로 전송되어 글자로 바뀝니다.
+          TripTalk 서버는 음성도, 말한 내용도 저장하지 않습니다.
+          마이크를 쓰고 싶지 않다면 <b>⌨️ 타이핑으로</b> 답해도 연습은 그대로 진행됩니다.
+        </p>
+
         <div className="setup__grid" id="setupGrid">
           {SCENE_KEYS.map(k => {
             const s = SCENES[k];

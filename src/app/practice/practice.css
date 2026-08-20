@@ -40,6 +40,14 @@ body:has(.practice-page) { background: var(--bg-tint); }
 .link-btn { font-size: 13px; font-weight: 700; color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
 
 /* ── 경고 배너 ──────────────────────────────────── */
+/* 마이크·음성 처리 고지 — 경고가 아니라 사실 안내라 톤을 낮춥니다 */
+.setup__privacy {
+  margin: 0 0 18px; padding: 11px 14px;
+  border-radius: 12px; border: 1px solid var(--line); background: var(--bg-tint);
+  color: var(--ink-3); font-size: 12.5px; line-height: 1.7;
+}
+.setup__privacy b { color: var(--ink-2); }
+
 .warn {
   width: min(100% - 32px, 1240px); margin: 14px auto 0;
   padding: 13px 17px; border-radius: 14px;
