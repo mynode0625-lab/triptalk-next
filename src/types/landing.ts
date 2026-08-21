@@ -10,7 +10,7 @@ export type Character = {
   ko: string;
 };
 
-export type SituationKey = "basics" | "airport" | "hotel" | "food" | "city" | "trouble";
+export type SituationKey = "basics" | "airport" | "hotel" | "food" | "city" | "shopping" | "trouble";
 
 export type Situation = {
   emoji: string;

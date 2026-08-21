@@ -6,6 +6,7 @@ export const SITUATION_TABS: { key: SituationKey; label: string }[] = [
   { key: "hotel", label: "🏨 숙소" },
   { key: "food", label: "🍽 식당 · 카페" },
   { key: "city", label: "🚕 이동 · 관광" },
+  { key: "shopping", label: "🛍 쇼핑" },
   { key: "trouble", label: "🚨 돌발 상황" }
 ];
 
@@ -79,11 +80,23 @@ export const SITUATIONS: Record<SituationKey, Situation[]> = {
       en: "Sorry, could you say that again more slowly?", ko: "죄송한데, 조금 더 천천히 다시 말씀해 주시겠어요?" },
     { emoji: "🎟", lv: 2, title: "티켓 구매 · 투어", desc: "입장권, 오디오 가이드, 할인 문의.",
       en: "Do you offer a student discount?", ko: "학생 할인이 있나요?" },
-    { emoji: "🛍", lv: 2, title: "쇼핑과 흥정", desc: "사이즈 교환, 환불, 가격 협상.",
-      en: "Do you have this in a smaller size?", ko: "이거 더 작은 사이즈 있나요?" },
     { emoji: "📸", lv: 1, title: "사진 부탁하기", desc: "지나가는 사람에게 정중히 부탁하기.",
       en: "Would you mind taking a photo of us?", ko: "저희 사진 한 장 찍어주실 수 있을까요?" }
   ],
+  /* 책들이 독립된 장으로 두는 구간. 매장 문의 → 계산 → 반품·교환 순. */
+  shopping: [
+    { emoji: "👕", lv: 1, title: "사이즈와 색상", desc: "다른 사이즈·색 문의하고 입어보기.",
+      en: "A medium, please. Can I try it on?", ko: "미디엄으로요. 입어봐도 될까요?", scene: "fitting" },
+    { emoji: "🧺", lv: 1, title: "계산과 포장", desc: "봉투, 선물 포장, 영수증 따로 받기.",
+      en: "Could you gift-wrap this one?", ko: "이건 선물 포장 해주시겠어요?", scene: "checkout" },
+    { emoji: "🔄", lv: 3, title: "반품과 교환", desc: "영수증 제시하고 이유 설명하기.",
+      en: "An exchange, if possible. A size up.", ko: "가능하면 교환이요. 한 사이즈 큰 걸로요.", scene: "refund" },
+    { emoji: "🛍", lv: 2, title: "가격 흥정", desc: "시장에서 값을 깎아보는 표현.",
+      en: "Would you take twenty for it?", ko: "20달러에 해주실 수 있나요?" },
+    { emoji: "🎁", lv: 2, title: "면세점 쇼핑", desc: "면세 한도와 수령 장소 확인.",
+      en: "Where do I pick this up before boarding?", ko: "탑승 전에 어디서 수령하나요?" }
+  ],
+
   trouble: [
     { emoji: "🚑", lv: 3, title: "병원 · 약국", desc: "증상 설명, 처방약 요청, 보험 서류.",
       en: "I've had a fever since last night.", ko: "어젯밤부터 열이 납니다." },
