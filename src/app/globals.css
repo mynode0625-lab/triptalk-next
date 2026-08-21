@@ -466,22 +466,6 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
 .review figcaption span { color: var(--ink-3); margin-left: 5px; }
 
 /* ── 요금제 ─────────────────────────────────────── */
-.toggle { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 34px; }
-.toggle__label { font-size: 15px; font-weight: 700; color: var(--ink-3); transition: color .2s; }
-.toggle__label.is-active { color: var(--ink); }
-.toggle__label b { color: var(--mint); font-size: 13px; }
-.switch {
-  width: 52px; height: 30px; border-radius: 999px; background: var(--line);
-  position: relative; transition: background .25s;
-}
-.switch.is-on { background: linear-gradient(135deg, var(--brand), var(--brand-2)); }
-.switch span {
-  position: absolute; top: 3px; left: 3px; width: 24px; height: 24px;
-  border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.18);
-  transition: transform .25s cubic-bezier(.3,1.4,.5,1);
-}
-.switch.is-on span { transform: translateX(22px); }
-
 .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: start; }
 .plan {
   position: relative; padding: 32px 28px; border-radius: var(--radius);

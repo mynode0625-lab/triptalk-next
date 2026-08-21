@@ -1,12 +1,14 @@
-"use client";
-
-import { useState } from "react";
-
-/** 시나리오 개수는 서버(page.tsx)에서 세어 내려준다 — lib/data/stats.ts 참고 */
+/**
+ * 요금제.
+ *
+ * 연간 결제 토글은 내렸다. 연간을 받는다는 것은 "1년 쓸 만하다" 는 약속인데,
+ * 지금은 같은 시나리오가 매번 같은 대본이고 학습 기록도 브라우저에만 남아
+ * 그 약속을 지킬 수 없다. 실제 AI 대화와 학습 기록 서버 저장이 붙은 뒤에
+ * 다시 올린다 (plan.md 10장).
+ *
+ * 시나리오 개수는 서버(page.tsx)에서 세어 내려준다 — lib/data/stats.ts 참고
+ */
 export function Pricing({ sceneCount }: { sceneCount: number }) {
-  const [yearly, setYearly] = useState(false);
-  const price = (monthly: string, yearlyPrice: string) => (yearly ? yearlyPrice : monthly);
-
   return (
     <section className="section" id="pricing">
       <div className="container">
@@ -14,22 +16,6 @@ export function Pricing({ sceneCount }: { sceneCount: number }) {
           <span className="eyebrow">요금제</span>
           <h2>여행 한 번 값보다 쌉니다</h2>
           <p>모든 요금제는 3일 무료 체험으로 시작합니다.</p>
-        </div>
-
-        <div className="toggle reveal">
-          <span className={"toggle__label" + (!yearly ? " is-active" : "")} id="labelMonthly">월간</span>
-          <button
-            className={"switch" + (yearly ? " is-on" : "")}
-            id="planSwitch"
-            aria-label="요금제 주기 전환"
-            aria-pressed={yearly}
-            onClick={() => setYearly(v => !v)}
-          >
-            <span></span>
-          </button>
-          <span className={"toggle__label" + (yearly ? " is-active" : "")} id="labelYearly">
-            연간 <b>2개월 무료</b>
-          </span>
         </div>
 
         <div className="plans">
@@ -52,7 +38,7 @@ export function Pricing({ sceneCount }: { sceneCount: number }) {
             <h3>Traveler</h3>
             <p className="plan__desc">출국 전 한 달 집중</p>
             <div className="plan__price">
-              <b data-monthly="₩12,900" data-yearly="₩10,750">{price("₩12,900", "₩10,750")}</b>
+              <b>₩12,900</b>
               <small>/월</small>
             </div>
             <ul>
@@ -69,7 +55,7 @@ export function Pricing({ sceneCount }: { sceneCount: number }) {
             <h3>Family</h3>
             <p className="plan__desc">함께 가는 사람들과</p>
             <div className="plan__price">
-              <b data-monthly="₩24,900" data-yearly="₩20,750">{price("₩24,900", "₩20,750")}</b>
+              <b>₩24,900</b>
               <small>/월</small>
             </div>
             <ul>
