@@ -12,6 +12,5 @@ export const HERO_SCRIPT: HeroLine[] = [
 export const STATS: { count: number; label: string }[] = [
   { count: 62, label: "학습 상황" },
   { count: 8, label: "AI 캐릭터" },
-  { count: 1200, label: "핵심 표현" },
-  { count: 38, label: "누적 학습자(만명)" }
+  { count: 1200, label: "핵심 표현" }
 ];
