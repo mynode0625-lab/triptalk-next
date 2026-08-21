@@ -8,10 +8,3 @@ export const HERO_SCRIPT: HeroLine[] = [
   { who: "tip", text: "💡 좋아요! 'Could I get an aisle seat?'라고 하면 더 정중하게 들려요." },
   { who: "ai",  text: "Of course. Seat 14C. Enjoy your flight!", sub: "물론이죠. 14C입니다. 즐거운 비행 되세요!" }
 ];
-
-export const STATS: { count: number; label: string }[] = [
-  { count: 62, label: "학습 상황" },
-  { count: 8, label: "AI 캐릭터" },
-  { count: 1200, label: "핵심 표현" },
-  { count: 38, label: "누적 학습자(만명)" }
-];

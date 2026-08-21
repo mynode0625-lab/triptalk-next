@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/Badge";
+import { STATS } from "@/lib/data/stats";
 import { HeroChat } from "./HeroChat";
 import { Stats } from "./Stats";
 
@@ -64,7 +65,7 @@ export function Hero() {
         </div>
       </div>
 
-      <Stats />
+      <Stats stats={STATS} />
     </section>
   );
 }
