@@ -46,6 +46,8 @@ export class SpeechEngine {
   private curAudio: HTMLAudioElement | null = null;
   /** 서버 TTS 사용 가능 여부 — null: 아직 확인 전, false: 서버에 키 없음 */
   private serverTts: boolean | null = null;
+  /** 서버가 429(호출 제한)를 준 시각 이후로 이때까지는 서버 TTS 를 건너뜁니다. */
+  private serverTtsPausedUntil = 0;
 
   private voiceListeners = new Set<() => void>();
   /** useSyncExternalStore 용 캐시 — 같은 목록이면 같은 배열 참조를 돌려줍니다. */
@@ -224,6 +226,13 @@ export class SpeechEngine {
       this.serverTts = false;              // 서버에 키가 없음 — 앞으로 건너뜁니다
       throw new Error("server-tts-unavailable");
     }
+    if (res.status === 429) {
+      // 호출 제한. 상한은 시간이 지나야 풀리므로, 그때까지는 요청 자체를 보내지
+      // 않습니다. 이게 없으면 대사마다 실패할 요청을 계속 보내게 됩니다.
+      const retryAfter = Number(res.headers.get("Retry-After")) || 60;
+      this.serverTtsPausedUntil = Date.now() + retryAfter * 1000;
+      throw new Error("server-tts-rate-limited");
+    }
     if (!res.ok) throw new Error(`${res.status}`);
 
     this.serverTts = true;
@@ -287,7 +296,7 @@ export class SpeechEngine {
     }
 
     /* 2. 서버 TTS */
-    if (this.serverTts !== false) {
+    if (this.serverTts !== false && Date.now() >= this.serverTtsPausedUntil) {
       try {
         this.synth?.cancel();
         await this.playUrl(await this.serverAudio(body, prof), r, onEnd);
