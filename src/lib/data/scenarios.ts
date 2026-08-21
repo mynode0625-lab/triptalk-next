@@ -287,6 +287,105 @@ export const SCENES: Record<SceneKey, Scene> = {
     done: "택시 대화를 끝까지 해냈습니다 🎉"
   },
 
+  /* ── 🛍 쇼핑 ────────────────────────────────────────────────
+   * 책들은 쇼핑을 독립된 장으로 둔다. 매장 문의 → 계산 → 반품·교환 순으로
+   * 실제 순서를 따른다. 계산은 돈 트랙의 '카드 결제 거절' 과 겹치지 않게
+   * 봉투·포장·영수증 쪽으로 잡았다.
+   */
+
+  fitting: {
+    title: "사이즈와 색상", emoji: "👕", lv: "입문",
+    char: { name: "Chloe", emoji: "👩‍🦰", role: "옷가게 점원", lang: "en-US",
+      voice: { oa: "fable", rate: 1.03, pitch: 1.03,
+        inst: "Cheerful American clothing-store assistant. Chatty and helpful, easy natural rhythm with contractions — never stiff." } },
+    desc: "다른 사이즈와 색을 직접 물어봅니다. 입어봐도 되는지 묻는 것부터.",
+    turns: [
+      { ai: "Hi there! Let me know if you need any help.", ko: "안녕하세요! 도움 필요하시면 말씀해 주세요.",
+        hint: "찾고 있는 것을 말해보세요.",
+        models: [["I'm looking for a jacket like this one.", "이런 재킷을 찾고 있어요."], ["Do you have this in a medium?", "이거 미디엄 사이즈 있나요?"]],
+        keys: ["looking", "for", "jacket", "have", "this", "medium", "size"] },
+      { ai: "Sure. What size are you looking for?", ko: "네. 어떤 사이즈 찾으세요?",
+        hint: "사이즈를 말하고, 입어봐도 되는지 물어보세요.",
+        models: [["A medium, please. Can I try it on?", "미디엄으로요. 입어봐도 될까요?"], ["Do you have a small?", "스몰 있나요?"]],
+        keys: ["medium", "small", "large", "try", "on", "please", "have"] },
+      { ai: "Of course. The fitting rooms are just over there.", ko: "물론이죠. 탈의실은 저쪽에 있습니다.",
+        hint: "다른 색도 있는지 물어보세요.",
+        models: [["Thanks. Does it come in black?", "감사합니다. 검은색도 있나요?"], ["Do you have any other colors?", "다른 색도 있나요?"]],
+        keys: ["black", "color", "colors", "come", "other", "thanks", "any"] },
+      { ai: "We have it in black and navy. Shall I grab both?", ko: "검은색과 남색이 있어요. 둘 다 가져다 드릴까요?",
+        hint: "원하는 것을 고르거나 둘 다 부탁해 보세요.",
+        models: [["Yes, please. Both would be great.", "네, 둘 다 부탁드려요."], ["Just the black one, thanks.", "검은색만 주세요, 감사합니다."]],
+        keys: ["yes", "both", "please", "just", "black", "navy", "one"] },
+      { ai: "No problem. I'll bring them right over.", ko: "알겠습니다. 바로 가져다 드릴게요.",
+        hint: "감사 인사로 마무리해 보세요.",
+        models: [["Thank you so much.", "정말 감사합니다."], ["Great, thanks for your help.", "좋아요, 도와주셔서 감사합니다."]],
+        keys: ["thank", "thanks", "much", "great", "help"] }
+    ],
+    done: "원하는 사이즈와 색을 직접 물어봤습니다 👕"
+  },
+
+  checkout: {
+    title: "계산과 포장", emoji: "🧺", lv: "입문",
+    char: { name: "Ethan", emoji: "🧑‍💼", role: "계산대 직원", lang: "en-US",
+      voice: { oa: "alloy", rate: 1.05, pitch: .99,
+        inst: "Efficient, polite American cashier. Quick and routine but friendly, clear on numbers, natural connected speech." } },
+    desc: "봉투, 선물 포장, 영수증까지. 세금 환급에 필요한 것도 챙깁니다.",
+    turns: [
+      { ai: "Hi! Did you find everything you were looking for?", ko: "안녕하세요! 찾으시는 건 다 있으셨나요?",
+        hint: "짧게 답해보세요. 계산대에서 늘 듣는 인사입니다.",
+        models: [["Yes, thank you.", "네, 감사합니다."], ["Yes, I did. Just these, please.", "네. 이것들만 계산할게요."]],
+        keys: ["yes", "thank", "did", "just", "these", "please"] },
+      { ai: "Great. Would you like a bag?", ko: "좋습니다. 봉투 필요하세요?",
+        hint: "필요 여부를 답해보세요. 유료인지 물어봐도 좋습니다.",
+        models: [["Yes, please. Is there a charge for it?", "네, 주세요. 유료인가요?"], ["No, thanks. I have my own.", "괜찮아요. 제 가방 있어요."]],
+        keys: ["yes", "please", "charge", "no", "thanks", "own", "bag"] },
+      { ai: "It's twenty cents. Anything else?", ko: "20센트입니다. 더 필요하신 건 있으세요?",
+        hint: "선물 포장을 부탁해 보세요.",
+        models: [["Could you gift-wrap this one?", "이건 선물 포장 해주시겠어요?"], ["No, that's all. Thank you.", "아니요, 그게 다입니다. 감사합니다."]],
+        keys: ["gift", "wrap", "this", "one", "no", "all", "thank"] },
+      { ai: "Certainly. That'll be forty-two fifty altogether.", ko: "물론이죠. 전부 해서 42달러 50센트입니다.",
+        hint: "금액을 확인하고 결제 방법을 말해보세요.",
+        models: [["Forty-two fifty? Card, please.", "42달러 50센트요? 카드로 할게요."], ["I'll pay by card.", "카드로 결제할게요."]],
+        keys: ["forty", "fifty", "card", "pay", "cash", "please"] },
+      { ai: "All set. Would you like the receipt in the bag?", ko: "완료됐습니다. 영수증은 봉투에 넣어드릴까요?",
+        hint: "따로 달라고 해보세요. 세금 환급 받으려면 영수증이 필요합니다.",
+        models: [["Could I have it separately? I need it for the tax refund.", "따로 주시겠어요? 세금 환급에 필요해서요."], ["In the bag is fine, thanks.", "봉투에 넣어주셔도 괜찮아요, 감사합니다."]],
+        keys: ["separately", "need", "tax", "refund", "bag", "fine", "thanks"] }
+    ],
+    done: "봉투부터 영수증까지 챙겨서 계산했습니다 🧺"
+  },
+
+  refund: {
+    title: "반품과 교환", emoji: "🔄", lv: "심화",
+    char: { name: "Priya", emoji: "👩‍💼", role: "고객 서비스 데스크", lang: "en-US",
+      voice: { oa: "coral", rate: 1, pitch: .98,
+        inst: "Measured, professional American customer-service agent. Polite and neutral, neither warm nor cold — handles complaints calmly. Natural pacing." } },
+    desc: "산 물건을 무르는 대화. 영수증과 이유를 영어로 설명해야 합니다.",
+    turns: [
+      { ai: "Hello. How can I help you today?", ko: "안녕하세요. 무엇을 도와드릴까요?",
+        hint: "반품하러 왔다고 먼저 분명히 말하세요.",
+        models: [["I'd like to return this, please.", "이거 반품하고 싶습니다."], ["I bought this yesterday, but it doesn't fit.", "어제 샀는데 사이즈가 안 맞아요."]],
+        keys: ["return", "this", "please", "bought", "fit", "doesn't", "exchange"] },
+      { ai: "I see. Do you have the receipt with you?", ko: "네. 영수증 갖고 계신가요?",
+        hint: "있으면 건네고, 없으면 없다고 말해보세요.",
+        models: [["Yes, here it is.", "네, 여기 있습니다."], ["I'm afraid I don't have it.", "죄송하지만 없습니다."]],
+        keys: ["yes", "here", "it", "is", "don't", "have", "afraid"] },
+      { ai: "Thank you. Would you like a refund or an exchange?", ko: "감사합니다. 환불과 교환 중 어느 쪽을 원하세요?",
+        hint: "원하는 쪽을 말하고, 교환이면 어떤 걸로인지 덧붙이세요.",
+        models: [["An exchange, if possible. A size up.", "가능하면 교환이요. 한 사이즈 큰 걸로요."], ["A refund, please.", "환불로 부탁드립니다."]],
+        keys: ["exchange", "refund", "size", "up", "possible", "please", "bigger"] },
+      { ai: "Let me check if we have your size in stock.", ko: "재고가 있는지 확인해 보겠습니다.",
+        hint: "기다리겠다고 하거나, 없으면 어떻게 되는지 물어보세요.",
+        models: [["Sure, take your time.", "네, 천천히 하세요."], ["What happens if you don't have it?", "없으면 어떻게 되나요?"]],
+        keys: ["sure", "take", "time", "what", "happens", "don't", "have"] },
+      { ai: "We do have it. I'll swap it out for you right now.", ko: "있습니다. 바로 교환해 드릴게요.",
+        hint: "감사 인사로 마무리해 보세요.",
+        models: [["That's great. Thank you so much.", "잘됐네요. 정말 감사합니다."], ["Perfect, thanks for your help.", "완벽해요, 도와주셔서 감사합니다."]],
+        keys: ["great", "thank", "much", "perfect", "thanks", "help"] }
+    ],
+    done: "반품과 교환을 영어로 해결했습니다 🔄"
+  },
+
   /* ── 💳 돈 트랙 ─────────────────────────────────────────────
    * 여행영어 책들은 돈 관련 상황을 여행 순서에 맞춰 흩어 놓습니다.
    * (환전은 '도착', 세금 환급은 '쇼핑', 카드는 '계산' 장)

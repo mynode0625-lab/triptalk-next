@@ -41,6 +41,8 @@ export type SceneKey =
   /* 🗣 기본 표현 — 상황별 표현보다 먼저 필요한 것들 (되묻기·숫자·인사·부탁) */
   | "askagain" | "numbers" | "greeting" | "askhelp"
   | "checkin" | "immigration" | "hotel" | "restaurant" | "taxi"
+  /* 🛍 쇼핑 — 책들이 독립된 장으로 두는 구간 */
+  | "fitting" | "checkout" | "refund"
   /* 💳 돈 트랙 — 여행영어 책들이 여러 장에 흩어 놓는 금융 상황을 모은 묶음 */
   | "carddecline" | "atm" | "exchange" | "taxrefund" | "lostcard";
 
