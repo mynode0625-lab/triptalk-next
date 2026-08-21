@@ -1,6 +1,137 @@
 import type { Scene, SceneKey } from "@/types/practice";
 
 export const SCENES: Record<SceneKey, Scene> = {
+  /* ── 🗣 기본 표현 ────────────────────────────────────────────
+   * 여행영어 책들이 예외 없이 1장에 두는 내용이다. 상황별 표현을 아무리
+   * 외워도 상대의 말이 안 들리면 대화가 거기서 끊긴다. 되묻기·숫자 확인이
+   * 실전에서 가장 많이 쓰이는 이유고, 초보가 이탈하는 지점이기도 하다.
+   * 선택 화면 맨 앞에 오도록 SCENES 의 첫머리에 둔다.
+   */
+
+  askagain: {
+    title: "못 알아들었을 때", emoji: "🔁", lv: "입문",
+    char: { name: "Ben", emoji: "🧑", role: "길에서 만난 현지인", lang: "en-US",
+      voice: { oa: "echo", rate: 1.14, pitch: 1,
+        inst: "Fast, friendly American local giving directions on the street. Casual and quick, heavy contractions, runs words together — natural, never word-by-word." } },
+    desc: "상대가 빠르게 말합니다. 되묻는 표현만으로 끝까지 알아듣는 훈련.",
+    turns: [
+      { ai: "Oh, the museum? Yeah, go down this street, take the second left, and it's right past the pharmacy.", ko: "아, 박물관이요? 이 길로 쭉 가서 두 번째 골목에서 왼쪽, 약국 지나면 바로예요.",
+        hint: "한 번에 못 알아들었을 때 쓰는 가장 기본 문장입니다. 천천히 다시 말해달라고 해보세요.",
+        models: [["Sorry, could you say that again more slowly?", "죄송한데, 조금 천천히 다시 말씀해 주시겠어요?"], ["Sorry, I didn't catch that.", "죄송해요, 못 알아들었어요."]],
+        keys: ["sorry", "again", "slowly", "catch", "repeat", "didn't"] },
+      { ai: "No problem. Go down this street... then take the second left.", ko: "그럼요. 이 길로 쭉 가서… 두 번째 골목에서 왼쪽이에요.",
+        hint: "들은 것을 되짚어 확인해 보세요. 확인하면 실수가 줄어듭니다.",
+        models: [["The second left, right?", "두 번째 골목에서 왼쪽, 맞죠?"], ["Do you mean the second street?", "두 번째 길 말씀이신가요?"]],
+        keys: ["second", "left", "right", "mean", "street", "correct"] },
+      { ai: "Exactly. It's next to a place called Thornbury Café.", ko: "맞아요. Thornbury Café라는 곳 옆에 있어요.",
+        hint: "이름을 못 들었을 때는 철자를 물어보세요.",
+        models: [["How do you spell that?", "철자가 어떻게 되나요?"], ["Sorry, what was the name again?", "죄송한데, 이름이 뭐라고 하셨죠?"]],
+        keys: ["spell", "name", "again", "what", "sorry", "how"] },
+      { ai: "T-H-O-R-N-B-U-R-Y. Thornbury. It's about a five-minute walk.", ko: "T-H-O-R-N-B-U-R-Y, 손베리요. 걸어서 5분쯤 됩니다.",
+        hint: "얼마나 걸리는지 확인해 보세요.",
+        models: [["Five minutes on foot?", "걸어서 5분이요?"], ["Is it far from here?", "여기서 먼가요?"]],
+        keys: ["five", "minutes", "foot", "walk", "far", "here"] },
+      { ai: "Yep, real close. You can't miss it.", ko: "네, 아주 가까워요. 못 찾을 수가 없어요.",
+        hint: "감사 인사로 마무리해 보세요.",
+        models: [["Thank you so much for your help.", "도와주셔서 정말 감사합니다."], ["Great, thanks a lot!", "좋아요, 정말 감사해요!"]],
+        keys: ["thank", "thanks", "help", "lot", "much", "great"] }
+    ],
+    done: "되묻기만으로 길 안내를 끝까지 알아들었습니다 🔁"
+  },
+
+  numbers: {
+    title: "숫자와 가격", emoji: "🔢", lv: "입문",
+    char: { name: "Grace", emoji: "👩", role: "호텔 안내 데스크", lang: "en-US",
+      voice: { oa: "shimmer", rate: 1, pitch: 1.02,
+        inst: "Polite American front-desk clerk. Crisp, clear numbers but still natural and conversational — not dictation-slow." } },
+    desc: "가격·시간·번호가 쏟아집니다. 흘려듣지 않고 되짚어 확인하는 훈련.",
+    turns: [
+      { ai: "Your room is 1418, on the fourteenth floor.", ko: "객실은 1418호, 14층입니다.",
+        hint: "방 번호를 다시 한 번 확인해 보세요.",
+        models: [["Room 1418, is that right?", "1418호, 맞나요?"], ["Sorry, could you repeat the room number?", "죄송한데, 객실 번호를 다시 말씀해 주시겠어요?"]],
+        keys: ["room", "1418", "right", "repeat", "number", "sorry"] },
+      { ai: "That's right. Breakfast is served from 6:30 to 10:30.", ko: "맞습니다. 조식은 6시 30분부터 10시 30분까지입니다.",
+        hint: "시간을 확인하거나, 몇 시에 끝나는지 되물어 보세요.",
+        models: [["From six thirty to ten thirty?", "6시 30분부터 10시 30분까지요?"], ["What time does it end?", "몇 시에 끝나나요?"]],
+        keys: ["six", "thirty", "ten", "time", "end", "from", "until"] },
+      { ai: "Correct. And the deposit is one hundred and fifty dollars.", ko: "맞습니다. 보증금은 150달러입니다.",
+        hint: "금액을 다시 확인해 보세요. 15와 50, 큰 숫자는 특히 헷갈립니다.",
+        models: [["One hundred fifty, not fifteen?", "150달러요, 15달러가 아니고요?"], ["Did you say a hundred and fifty dollars?", "150달러라고 하셨나요?"]],
+        keys: ["hundred", "fifty", "fifteen", "dollars", "say", "not"] },
+      { ai: "One hundred and fifty, yes. It'll be refunded at checkout.", ko: "네, 150달러입니다. 체크아웃 때 환불됩니다.",
+        hint: "언제, 어떻게 돌려받는지 물어보세요.",
+        models: [["When do I get it back?", "언제 돌려받나요?"], ["Is it refunded to my card?", "카드로 환불되나요?"]],
+        keys: ["when", "get", "back", "refunded", "card", "how"] },
+      { ai: "Within three business days after you check out.", ko: "체크아웃 후 영업일 기준 3일 이내입니다.",
+        hint: "들은 것을 확인하며 마무리해 보세요.",
+        models: [["Three business days, got it. Thank you.", "영업일 3일이요, 알겠습니다. 감사합니다."], ["Okay, thank you very much.", "네, 정말 감사합니다."]],
+        keys: ["three", "days", "got", "it", "thank", "okay"] }
+    ],
+    done: "숫자를 하나도 흘려듣지 않았습니다 🔢"
+  },
+
+  greeting: {
+    title: "인사와 스몰토크", emoji: "👋", lv: "입문",
+    char: { name: "Liam", emoji: "🧑‍🦱", role: "숙소에서 만난 여행자", lang: "en-US",
+      voice: { oa: "ash", rate: 1.04, pitch: 1,
+        inst: "Relaxed, easygoing American traveler making friendly small talk. Warm and unhurried, natural contractions." } },
+    desc: "여행지에서 처음 만난 사람과의 짧은 대화. 첫 마디가 제일 어렵습니다.",
+    turns: [
+      { ai: "Morning! Are you staying here too?", ko: "안녕하세요! 여기 묵으시는 거예요?",
+        hint: "인사를 받고 짧게 답해보세요. 길게 말할 필요 없습니다.",
+        models: [["Good morning! Yes, I checked in yesterday.", "안녕하세요! 네, 어제 체크인했어요."], ["Hi! Yeah, I'm here for a few days.", "안녕하세요! 네, 며칠 있을 거예요."]],
+        keys: ["morning", "hi", "yes", "yeah", "checked", "days", "here"] },
+      { ai: "Nice. Where are you from?", ko: "좋네요. 어디서 오셨어요?",
+        hint: "어디서 왔는지 답하고, 상대에게도 되물어 보세요.",
+        models: [["I'm from Korea. How about you?", "한국에서 왔어요. 그쪽은요?"], ["Seoul, Korea. And you?", "한국 서울이요. 당신은요?"]],
+        keys: ["korea", "seoul", "from", "how", "about", "you", "and"] },
+      { ai: "Vancouver, Canada. First time here?", ko: "캐나다 밴쿠버요. 여기는 처음이세요?",
+        hint: "처음인지 답하고 느낌을 한 마디 덧붙여 보세요.",
+        models: [["Yes, it's my first time. It's beautiful.", "네, 처음이에요. 정말 아름답네요."], ["No, this is my second visit.", "아니요, 두 번째 방문이에요."]],
+        keys: ["yes", "first", "time", "beautiful", "no", "second", "visit"] },
+      { ai: "You should try the market by the river. Best food in town.", ko: "강가 시장에 가보세요. 이 동네에서 제일 맛있어요.",
+        hint: "추천해 준 것에 고맙다고 표현해 보세요.",
+        models: [["Thanks for the tip! I'll check it out.", "알려주셔서 고마워요! 가볼게요."], ["That sounds great. Thank you!", "좋네요. 감사합니다!"]],
+        keys: ["thanks", "tip", "check", "out", "sounds", "great", "thank"] },
+      { ai: "Anytime. Enjoy your trip!", ko: "언제든지요. 즐거운 여행 되세요!",
+        hint: "헤어지는 인사를 해보세요.",
+        models: [["You too. Have a nice day!", "당신도요. 좋은 하루 되세요!"], ["Thanks, you as well!", "감사해요, 당신도요!"]],
+        keys: ["you", "too", "nice", "day", "thanks", "well", "enjoy"] }
+    ],
+    done: "처음 만난 사람과 대화를 주고받았습니다 👋"
+  },
+
+  askhelp: {
+    title: "도와달라고 하기", emoji: "🙋", lv: "입문",
+    char: { name: "Nora", emoji: "👩‍💼", role: "역 안내 직원", lang: "en-US",
+      voice: { oa: "alloy", rate: 1.02, pitch: 1.01,
+        inst: "Kind, helpful American station attendant. Patient and reassuring with a traveler who is struggling. Natural, warm delivery." } },
+    desc: "곤란할 때 먼저 말을 거는 훈련. 부탁하는 말투가 핵심입니다.",
+    turns: [
+      { ai: "Excuse me, are you all right? You look a bit lost.", ko: "실례합니다, 괜찮으세요? 좀 헤매시는 것 같아서요.",
+        hint: "도움이 필요하다고 솔직하게 말해보세요. 참으면 더 오래 걸립니다.",
+        models: [["Yes, could you help me, please?", "네, 도와주시겠어요?"], ["Actually, I'm a little lost.", "사실 조금 길을 잃었어요."]],
+        keys: ["yes", "help", "please", "could", "lost", "little", "actually"] },
+      { ai: "Of course. What seems to be the problem?", ko: "그럼요. 어떤 문제이신가요?",
+        hint: "무엇이 문제인지 한 문장으로 설명해 보세요.",
+        models: [["The ticket machine took my money.", "티켓 기계가 돈을 먹었어요."], ["I can't figure out how to buy a ticket.", "표를 어떻게 사는지 모르겠어요."]],
+        keys: ["ticket", "machine", "money", "buy", "can't", "figure", "how"] },
+      { ai: "Ah, that machine's been acting up all week. Let me get someone.", ko: "아, 그 기계가 이번 주 내내 말썽이에요. 사람을 부를게요.",
+        hint: "기다리겠다고 하거나 고맙다고 표현해 보세요.",
+        models: [["Thank you, I'll wait here.", "감사합니다, 여기서 기다릴게요."], ["That's very kind of you.", "정말 친절하시네요."]],
+        keys: ["thank", "wait", "here", "kind", "you", "very"] },
+      { ai: "No trouble at all. While we wait — where are you headed?", ko: "별말씀을요. 기다리는 동안 — 어디로 가시는 길이에요?",
+        hint: "목적지를 말하고, 가는 방법을 물어보세요.",
+        models: [["Central Station. Which line should I take?", "중앙역이요. 어느 노선을 타야 하나요?"], ["I'm going to the airport. Is this the right platform?", "공항에 가요. 여기가 맞는 승강장인가요?"]],
+        keys: ["station", "airport", "which", "line", "take", "right", "platform"] },
+      { ai: "Line 3, platform two. And my colleague will sort out your refund.", ko: "3호선, 2번 승강장이요. 환불은 동료가 처리해 드릴 거예요.",
+        hint: "들은 것을 확인하고 감사 인사로 마무리해 보세요.",
+        models: [["Line 3, platform 2. Thank you so much!", "3호선, 2번 승강장이요. 정말 감사합니다!"], ["Got it. I really appreciate your help.", "알겠습니다. 도와주셔서 정말 감사해요."]],
+        keys: ["line", "platform", "thank", "got", "it", "appreciate", "help"] }
+    ],
+    done: "먼저 도움을 청하고 문제를 해결했습니다 🙋"
+  },
+
   checkin: {
     title: "공항 체크인", emoji: "🛄", lv: "입문",
     char: { name: "Emma", emoji: "👩‍✈️", role: "체크인 직원", lang: "en-US",
