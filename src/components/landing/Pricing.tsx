@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 
-export function Pricing() {
+/** 시나리오 개수는 서버(page.tsx)에서 세어 내려준다 — lib/data/stats.ts 참고 */
+export function Pricing({ sceneCount }: { sceneCount: number }) {
   const [yearly, setYearly] = useState(false);
   const price = (monthly: string, yearlyPrice: string) => (yearly ? yearlyPrice : monthly);
 
@@ -55,7 +56,7 @@ export function Pricing() {
               <small>/월</small>
             </div>
             <ul>
-              <li>전체 상황 62개</li>
+              <li>전체 상황 {sceneCount}개</li>
               <li>AI 캐릭터 8명 전부</li>
               <li>대화 무제한</li>
               <li>발음·문장 교정 리포트</li>

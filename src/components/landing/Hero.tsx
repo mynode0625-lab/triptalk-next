@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/Badge";
-import { STATS } from "@/lib/data/stats";
+import { SCENE_COUNT, STATS } from "@/lib/data/stats";
 import { HeroChat } from "./HeroChat";
 import { Stats } from "./Stats";
 
@@ -20,7 +20,7 @@ export function Hero() {
             <span className="grad">AI 캐릭터</span>와 미리 체험하세요
           </h1>
           <p className="hero__desc">
-            공항 체크인부터 호텔 컴플레인까지. 실제 여행에서 마주치는 62가지 상황을
+            공항 체크인부터 카드 분실 신고까지. 실제 여행에서 마주치는 {SCENE_COUNT}가지 상황을
             AI 캐릭터와 역할극으로 연습합니다. 틀려도 괜찮아요, 여기선 아무도 재촉하지 않으니까요.
           </p>
 

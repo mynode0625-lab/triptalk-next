@@ -26,6 +26,9 @@ const modelSentences = scenes.reduce(
 const correctionRules =
   Object.keys(SILENT).length + Object.keys(STRESS).length + PATTERNS.length + RULES.length;
 
+/** 히어로 본문에서도 쓴다 — 문구의 숫자가 실제와 어긋나지 않도록 */
+export const SCENE_COUNT = scenes.length;
+
 export const STATS: { count: number; label: string }[] = [
   { count: scenes.length, label: "연습 시나리오" },
   { count: CHARACTERS.length, label: "AI 캐릭터" },
