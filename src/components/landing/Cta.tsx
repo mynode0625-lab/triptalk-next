@@ -5,7 +5,7 @@ import { useState } from "react";
 type Note = { text: string; tone: "" | "is-ok" | "is-error" };
 
 const DEFAULT_NOTE: Note = {
-  text: "신용카드 없이 3일 무료. 언제든 해지할 수 있습니다.",
+  text: "베타 기간 무료입니다. 신용카드도 필요 없습니다.",
   tone: ""
 };
 
