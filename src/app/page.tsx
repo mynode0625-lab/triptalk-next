@@ -13,6 +13,7 @@ import { RevealObserver } from "@/components/landing/RevealObserver";
 import { Reviews } from "@/components/landing/Reviews";
 import { Situations } from "@/components/landing/Situations";
 import { ToTop } from "@/components/landing/ToTop";
+import { SCENE_COUNT } from "@/lib/data/stats";
 
 export default function LandingPage() {
   return (
@@ -49,7 +50,7 @@ export default function LandingPage() {
         <Demo />
         <How />
         <Reviews />
-        <Pricing />
+        <Pricing sceneCount={SCENE_COUNT} />
 
         <section className="section section--tint" id="faq">
           <div className="container container--narrow">
