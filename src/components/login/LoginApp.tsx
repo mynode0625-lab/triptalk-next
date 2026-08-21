@@ -210,7 +210,7 @@ export function LoginApp() {
               <Link href="/" className="auth__back">← 홈으로</Link>
 
               <header className="auth__head">
-                <Badge>🧳 3일 무료 체험</Badge>
+                <Badge>🧳 베타 기간 무료</Badge>
                 <h1>다시 만나서 반가워요</h1>
                 <p>소셜 계정으로 3초 만에 시작하세요.<br />비밀번호를 새로 만들 필요가 없습니다.</p>
               </header>

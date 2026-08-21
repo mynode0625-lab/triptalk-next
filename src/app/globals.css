@@ -490,6 +490,11 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
 .plan__price { margin: 20px 0 22px; display: flex; align-items: baseline; gap: 4px; }
 .plan__price b { font-size: 38px; font-weight: 800; letter-spacing: -.045em; }
 .plan__price small { font-size: 14px; color: var(--ink-3); font-weight: 600; }
+/* 결제 연동 전까지, 적힌 금액이 지금 청구되는 것으로 읽히지 않게 합니다 */
+.plan__beta {
+  margin: -14px 0 18px; font-size: 12.5px; font-weight: 700;
+  color: var(--mint); letter-spacing: -.01em;
+}
 .plan ul { margin-bottom: 26px; display: flex; flex-direction: column; gap: 11px; }
 .plan li { font-size: 14.5px; color: var(--ink-2); padding-left: 25px; position: relative; }
 .plan li::before {
