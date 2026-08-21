@@ -154,6 +154,168 @@ export const SCENES: Record<SceneKey, Scene> = {
         keys: ["card", "cash", "contactless", "change", "twenty", "keep", "here"] }
     ],
     done: "택시 대화를 끝까지 해냈습니다 🎉"
+  },
+
+  /* ── 💳 돈 트랙 ─────────────────────────────────────────────
+   * 여행영어 책들은 돈 관련 상황을 여행 순서에 맞춰 흩어 놓습니다.
+   * (환전은 '도착', 세금 환급은 '쇼핑', 카드는 '계산' 장)
+   * 그래서 "돈 때문에 곤란할 때" 를 한 번에 준비할 방법이 없습니다.
+   * 여기서는 그 상황만 모아 하나의 트랙으로 둡니다.
+   */
+
+  carddecline: {
+    title: "카드 결제 거절", emoji: "💳", lv: "중급",
+    char: { name: "Maya", emoji: "🧑‍💼", role: "상점 점원", lang: "en-US",
+      voice: { oa: "coral", rate: 1.02, pitch: 1.02,
+        inst: "Friendly American shop clerk, slightly apologetic and helpful. Natural retail small talk, smooth connected speech — never robotic." } },
+    desc: "계산대에서 카드가 거절됐습니다. 당황하지 않고 대안을 찾는 훈련.",
+    turns: [
+      { ai: "I'm sorry, your card was declined. Would you like to try another one?", ko: "죄송합니다, 카드가 승인 거절됐어요. 다른 카드로 해보시겠어요?",
+        hint: "다시 한 번 시도해 달라고 정중히 부탁해 보세요.",
+        models: [["Could you try it again, please?", "다시 한 번 해봐 주시겠어요?"], ["Let me try a different card.", "다른 카드로 해볼게요."]],
+        keys: ["try", "again", "another", "different", "card", "please"] },
+      { ai: "Still declined, I'm afraid. Do you have another way to pay?", ko: "여전히 거절되네요. 다른 결제 수단 있으세요?",
+        hint: "현금으로 내겠다고 하거나, 다른 카드를 건네보세요.",
+        models: [["I'll pay in cash instead.", "그럼 현금으로 낼게요."], ["Can you try this one?", "이 카드로 해주시겠어요?"]],
+        keys: ["cash", "instead", "pay", "this", "one", "card", "try"] },
+      { ai: "That went through. Would you like a receipt?", ko: "결제됐습니다. 영수증 드릴까요?",
+        hint: "영수증을 받겠다고 답해보세요.",
+        models: [["Yes, please.", "네, 주세요."], ["Could I have a receipt, please?", "영수증 주시겠어요?"]],
+        keys: ["yes", "please", "receipt", "have", "sure"] },
+      { ai: "Here you go. Just so you know, we charged it in local currency.", ko: "여기 있습니다. 참고로 현지 통화로 결제됐어요.",
+        hint: "현지 통화가 맞다고 확인해 보세요. 원화 결제는 수수료가 더 붙습니다.",
+        models: [["Local currency is fine, thank you.", "현지 통화로 괜찮습니다, 감사합니다."], ["Good, I prefer local currency.", "좋아요, 현지 통화가 더 좋습니다."]],
+        keys: ["local", "currency", "fine", "prefer", "good", "thank"] },
+      { ai: "Great. Sorry about the trouble!", ko: "좋습니다. 번거롭게 해드려 죄송해요!",
+        hint: "괜찮다고 하며 정중히 마무리해 보세요.",
+        models: [["No worries. Thanks for your help.", "괜찮아요. 도와주셔서 감사합니다."], ["That's all right. Have a good day!", "괜찮습니다. 좋은 하루 되세요!"]],
+        keys: ["no", "worries", "thanks", "help", "all", "right", "day"] }
+    ],
+    done: "카드가 막힌 상황에서도 끝까지 결제했습니다 💳"
+  },
+
+  atm: {
+    title: "해외 ATM 인출 실패", emoji: "🏧", lv: "중급",
+    char: { name: "David", emoji: "👨‍💼", role: "은행 직원", lang: "en-US",
+      voice: { oa: "onyx", rate: .98, pitch: .96,
+        inst: "Calm, patient American bank teller. Reassuring and methodical, clear but natural conversational rhythm." } },
+    desc: "돈은 안 나왔는데 출금 문자만 왔습니다. 창구에서 설명하고 해결하기.",
+    turns: [
+      { ai: "Hi there. How can I help you today?", ko: "안녕하세요. 무엇을 도와드릴까요?",
+        hint: "ATM에서 현금이 나오지 않았다고 설명해 보세요.",
+        models: [["The ATM didn't give me my cash.", "ATM에서 현금이 안 나왔어요."], ["I tried to withdraw money, but it failed.", "출금을 시도했는데 실패했습니다."]],
+        keys: ["atm", "cash", "withdraw", "money", "failed", "machine"] },
+      { ai: "I'm sorry about that. Was your account charged?", ko: "불편을 드려 죄송합니다. 계좌에서는 빠져나갔나요?",
+        hint: "출금 문자를 받았다고 말하거나, 확인을 부탁해 보세요.",
+        models: [["Yes, I got a text saying it was withdrawn.", "네, 출금됐다는 문자를 받았어요."], ["I'm not sure. Could you check for me?", "잘 모르겠어요. 확인해 주시겠어요?"]],
+        keys: ["yes", "text", "message", "withdrawn", "check", "sure", "not"] },
+      { ai: "Let me look into it. Could I see your card and passport?", ko: "확인해 보겠습니다. 카드와 여권을 보여주시겠어요?",
+        hint: "건네주면서 한 마디 덧붙여 보세요.",
+        models: [["Sure, here you go.", "네, 여기 있습니다."], ["Of course. Here's my card and passport.", "물론이죠. 카드와 여권입니다."]],
+        keys: ["sure", "here", "course", "card", "passport"] },
+      { ai: "This is a foreign card, so the refund may take a few days.", ko: "해외 카드라 환불에 며칠 걸릴 수 있습니다.",
+        hint: "며칠이나 걸리는지 물어보세요.",
+        models: [["How many days will it take?", "며칠이나 걸릴까요?"], ["Is there anything else I should do?", "제가 더 해야 할 일이 있을까요?"]],
+        keys: ["how", "many", "days", "take", "long", "anything", "else"] },
+      { ai: "Usually three to five business days. Here's your receipt.", ko: "보통 영업일 기준 3~5일입니다. 영수증 여기 있습니다.",
+        hint: "영수증을 보관하겠다고 하며 마무리해 보세요.",
+        models: [["Thank you. I'll keep the receipt.", "감사합니다. 영수증은 보관할게요."], ["Got it. Thank you for your help.", "알겠습니다. 도와주셔서 감사합니다."]],
+        keys: ["thank", "keep", "receipt", "got", "it", "help"] }
+    ],
+    done: "돈이 안 나온 상황을 영어로 해결했습니다 🏧"
+  },
+
+  exchange: {
+    title: "환전소에서", emoji: "💱", lv: "입문",
+    char: { name: "Olivia", emoji: "👩", role: "환전 창구 직원", lang: "en-US",
+      voice: { oa: "nova", rate: 1, pitch: 1.03,
+        inst: "Bright, efficient American currency exchange teller. Warm and quick, clear numbers, natural connected speech." } },
+    desc: "환율과 수수료를 직접 묻고 확인합니다. 숫자 듣기 연습이기도 합니다.",
+    turns: [
+      { ai: "Good afternoon. How much would you like to exchange?", ko: "안녕하세요. 얼마나 환전하시겠어요?",
+        hint: "금액과 통화를 말해보세요. (예: 300달러)",
+        models: [["I'd like to exchange three hundred dollars.", "300달러 환전하고 싶습니다."], ["Two hundred dollars, please.", "200달러 부탁드립니다."]],
+        keys: ["exchange", "dollars", "hundred", "like", "please", "change"] },
+      { ai: "Certainly. Today's rate is 1,340 won to the dollar.", ko: "알겠습니다. 오늘 환율은 달러당 1,340원입니다.",
+        hint: "수수료가 있는지 물어보세요. 환율만 보고 결정하면 손해입니다.",
+        models: [["Is there a commission?", "수수료가 있나요?"], ["Does that include the fee?", "그건 수수료 포함인가요?"]],
+        keys: ["commission", "fee", "charge", "include", "rate", "extra"] },
+      { ai: "There's a three percent fee. Is that all right?", ko: "3퍼센트 수수료가 있습니다. 괜찮으실까요?",
+        hint: "괜찮다고 하거나, 총액을 먼저 보여달라고 해보세요.",
+        models: [["That's fine, thank you.", "괜찮습니다, 감사합니다."], ["Could I see the total first?", "총액을 먼저 볼 수 있을까요?"]],
+        keys: ["fine", "okay", "total", "first", "see", "thank"] },
+      { ai: "Here's your money. Would you like to count it?", ko: "돈 여기 있습니다. 세어 보시겠어요?",
+        hint: "작은 지폐도 섞어달라고 부탁해 보세요. 현지에서 요긴합니다.",
+        models: [["Could you include some small bills?", "작은 지폐도 좀 섞어 주시겠어요?"], ["Yes, let me count it. Thank you.", "네, 세어 볼게요. 감사합니다."]],
+        keys: ["small", "bills", "change", "include", "count", "yes", "thank"] },
+      { ai: "Of course. Here's your receipt. Anything else?", ko: "물론이죠. 영수증 여기 있습니다. 더 필요하신 게 있나요?",
+        hint: "정중하게 마무리해 보세요.",
+        models: [["No, that's all. Thank you!", "아니요, 됐습니다. 감사합니다!"], ["That's everything, thanks.", "그게 다입니다, 감사합니다."]],
+        keys: ["no", "that's", "all", "thank", "everything", "else"] }
+    ],
+    done: "환율과 수수료까지 직접 확인했습니다 💱"
+  },
+
+  taxrefund: {
+    title: "택스 리펀드", emoji: "🧾", lv: "심화",
+    char: { name: "Sofia", emoji: "👩‍💼", role: "공항 환급 창구 직원", lang: "en-US",
+      voice: { oa: "sage", rate: 1.05, pitch: 1,
+        inst: "Brisk but polite American airport refund desk agent. Businesslike, moves quickly through steps, natural human rhythm." } },
+    desc: "공항에서 세금을 돌려받습니다. 절차 질문이 빠르게 이어집니다.",
+    turns: [
+      { ai: "Hello. Do you have your tax refund forms ready?", ko: "안녕하세요. 세금 환급 서류 준비되셨나요?",
+        hint: "서류를 건네며 답해보세요.",
+        models: [["Yes, here are my receipts and forms.", "네, 영수증과 서류 여기 있습니다."], ["I think so. Could you check them?", "아마도요. 확인해 주시겠어요?"]],
+        keys: ["yes", "here", "receipts", "forms", "check", "think"] },
+      { ai: "Thank you. Did you pack these items in your checked luggage?", ko: "감사합니다. 이 물건들은 부치는 짐에 넣으셨나요?",
+        hint: "기내용인지 부친 짐인지 답해보세요.",
+        models: [["No, they're in my carry-on.", "아니요, 기내용 가방에 있습니다."], ["Yes, they're in my checked bag.", "네, 부친 짐에 있어요."]],
+        keys: ["no", "carry", "yes", "checked", "bag", "luggage", "hand"] },
+      { ai: "Got it. Would you like the refund in cash or back to your card?", ko: "알겠습니다. 환급은 현금으로 받으시겠어요, 카드로 받으시겠어요?",
+        hint: "원하는 방식을 골라 말해보세요.",
+        models: [["To my card, please.", "카드로 부탁드립니다."], ["In cash, if that's possible.", "가능하면 현금으로요."]],
+        keys: ["card", "cash", "please", "possible", "back", "credit"] },
+      { ai: "Card refunds can take up to two weeks. Is that okay?", ko: "카드 환급은 최대 2주까지 걸릴 수 있습니다. 괜찮으실까요?",
+        hint: "괜찮다고 하거나, 현금으로 바꾸겠다고 해보세요.",
+        models: [["That's fine, thank you.", "괜찮습니다, 감사합니다."], ["Then I'll take cash instead.", "그럼 현금으로 하겠습니다."]],
+        keys: ["fine", "okay", "then", "cash", "instead", "take"] },
+      { ai: "All done. Please drop the envelope in the box over there.", ko: "다 됐습니다. 저쪽 상자에 봉투를 넣어주세요.",
+        hint: "위치를 못 들었다면 되물어 보세요. 되묻기가 실전에서 가장 유용합니다.",
+        models: [["Sorry, which box was that?", "죄송한데, 어느 상자라고 하셨죠?"], ["Got it. Thank you very much!", "알겠습니다. 정말 감사합니다!"]],
+        keys: ["sorry", "which", "box", "where", "got", "it", "thank"] }
+    ],
+    done: "세금 환급 절차를 끝까지 통과했습니다 🧾"
+  },
+
+  lostcard: {
+    title: "카드 분실 신고", emoji: "📞", lv: "심화",
+    char: { name: "Rachel", emoji: "🎧", role: "카드사 상담원", lang: "en-US",
+      voice: { oa: "ballad", rate: 1.04, pitch: 1.01,
+        inst: "Professional American call-center agent. Calm, scripted politeness with genuine warmth. Phone-clear articulation, natural pacing." } },
+    desc: "얼굴이 안 보이는 전화 영어입니다. 가장 어렵지만 가장 필요합니다.",
+    turns: [
+      { ai: "Thank you for calling. How may I assist you today?", ko: "전화 주셔서 감사합니다. 무엇을 도와드릴까요?",
+        hint: "카드를 잃어버렸다고 먼저 분명히 말하세요.",
+        models: [["I lost my credit card.", "신용카드를 잃어버렸습니다."], ["My card was stolen this morning.", "오늘 아침에 카드를 도난당했어요."]],
+        keys: ["lost", "card", "stolen", "credit", "my", "morning"] },
+      { ai: "I'm sorry to hear that. Could I have your name and date of birth?", ko: "안타깝습니다. 성함과 생년월일을 알려주시겠어요?",
+        hint: "이름과 생년월일을 또박또박 말해보세요.",
+        models: [["My name is Jiwon Lee, born May fifth, 1992.", "이지원이고, 1992년 5월 5일생입니다."], ["Sure. Jiwon Lee, May fifth, 1992.", "네. 이지원, 1992년 5월 5일입니다."]],
+        keys: ["name", "born", "my", "sure", "fifth", "may"] },
+      { ai: "Thank you. I've blocked the card. Would you like a replacement?", ko: "감사합니다. 카드를 정지했습니다. 재발급 해드릴까요?",
+        hint: "재발급을 원하는지, 어디로 받을지 말해보세요.",
+        models: [["Yes, please. Can you send it to my hotel?", "네, 부탁드려요. 호텔로 보내주실 수 있나요?"], ["No, I'll get one when I get home.", "아니요, 귀국해서 받을게요."]],
+        keys: ["yes", "please", "send", "hotel", "no", "home", "replacement"] },
+      { ai: "Certainly. Were there any charges you don't recognize?", ko: "알겠습니다. 모르는 결제 내역이 있으신가요?",
+        hint: "모르는 결제가 있는지 답해보세요.",
+        models: [["Yes, there's one I didn't make.", "네, 제가 하지 않은 결제가 하나 있어요."], ["No, everything looks normal.", "아니요, 다 정상으로 보입니다."]],
+        keys: ["yes", "one", "didn't", "make", "no", "everything", "normal"] },
+      { ai: "I've filed a dispute. You'll get an email confirmation shortly.", ko: "이의 제기를 접수했습니다. 곧 확인 이메일을 받으실 겁니다.",
+        hint: "확인하고 정중히 마무리해 보세요.",
+        models: [["Thank you. Could you send it to this email?", "감사합니다. 이 이메일로 보내주시겠어요?"], ["Great, thank you for your help.", "좋습니다, 도와주셔서 감사합니다."]],
+        keys: ["thank", "send", "email", "great", "help", "confirmation"] }
+    ],
+    done: "전화로 분실 신고까지 끝냈습니다 📞"
   }
 };
 

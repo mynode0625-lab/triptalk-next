@@ -37,7 +37,10 @@ export type Scene = {
   done: string;
 };
 
-export type SceneKey = "checkin" | "immigration" | "hotel" | "restaurant" | "taxi";
+export type SceneKey =
+  | "checkin" | "immigration" | "hotel" | "restaurant" | "taxi"
+  /* 💳 돈 트랙 — 여행영어 책들이 여러 장에 흩어 놓는 금융 상황을 모은 묶음 */
+  | "carddecline" | "atm" | "exchange" | "taxrefund" | "lostcard";
 
 export type CorrectionItem = { from: string; to: string; why: string };
 
