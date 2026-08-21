@@ -1,8 +1,10 @@
 "use client";
 
-import { STATS } from "@/lib/data/hero";
 import { useCountUp } from "@/lib/hooks/useCountUp";
 import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
+
+/** 숫자는 서버(Hero)에서 실제 데이터를 세어 내려줍니다. lib/data/stats.ts 참고 */
+export type StatItem = { count: number; label: string };
 
 function Stat({ count, label, reduce }: { count: number; label: string; reduce: boolean | null }) {
   const { ref, value } = useCountUp(count, reduce);
@@ -16,11 +18,11 @@ function Stat({ count, label, reduce }: { count: number; label: string; reduce: 
   );
 }
 
-export function Stats() {
+export function Stats({ stats }: { stats: StatItem[] }) {
   const reduce = useReducedMotion();
   return (
     <div className="container stats reveal">
-      {STATS.map(s => (
+      {stats.map(s => (
         <Stat key={s.label} count={s.count} label={s.label} reduce={reduce} />
       ))}
     </div>
