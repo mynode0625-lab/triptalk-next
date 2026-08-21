@@ -585,7 +585,7 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
 
 /* ── 스크롤 등장 애니메이션 ─────────────────────── */
 .reveal { opacity: 0; transform: translateY(26px); transition: opacity .6s ease, transform .6s cubic-bezier(.2,.7,.3,1); }
-.reveal.is-in { opacity: 1; transform: none; }
+.reveal[data-in] { opacity: 1; transform: none; }
 .reveal--delay { transition-delay: .12s; }
 
 /* ── 반응형 ─────────────────────────────────────── */
