@@ -48,6 +48,11 @@ export class SpeechEngine {
   private serverTts: boolean | null = null;
   /** 서버가 429(호출 제한)를 준 시각 이후로 이때까지는 서버 TTS 를 건너뜁니다. */
   private serverTtsPausedUntil = 0;
+  /**
+   * 미리 구워둔 오디오 목록 — `public/tts/manifest.json`.
+   * 연습실 대본은 고정이라 대사 대부분이 여기 있습니다. 있으면 API 를 부르지 않습니다.
+   */
+  private prerendered: Record<string, string> | null = null;
 
   private voiceListeners = new Set<() => void>();
   /** useSyncExternalStore 용 캐시 — 같은 목록이면 같은 배열 참조를 돌려줍니다. */
@@ -69,6 +74,18 @@ export class SpeechEngine {
   setCharacter(char: SceneCharacter | null) { this.char = char; }
   /** `/api/tts` 가용 여부를 미리 알려주면 헛된 요청을 한 번 아낍니다. */
   setServerTts(available: boolean) { this.serverTts = available; }
+  /** 프리렌더 매니페스트 등록. `scripts/prerender-tts.mts` 가 만든 것을 그대로 넘깁니다. */
+  setPrerendered(map: Record<string, string> | null) { this.prerendered = map; }
+
+  /**
+   * 이 문장·음성으로 구워둔 파일이 있으면 경로를 돌려줍니다.
+   * 키 규칙은 `scripts/prerender-tts.mts` 의 `keyOf` 와 같아야 합니다.
+   */
+  private prerenderedUrl(text: string, profile: VoiceProfile): string | null {
+    if (!this.prerendered) return null;
+    const file = this.prerendered[`${profile.oa || "nova"}|${text}`];
+    return file ? `/tts/${file}` : null;
+  }
 
   /* ── 보이스 목록 ──────────────────────────────── */
   private loadVoices = () => {
@@ -274,8 +291,9 @@ export class SpeechEngine {
   /**
    * 모든 재생은 이 함수를 통합니다. 자연스러운 순서로 내려갑니다.
    *   1. 사용자가 직접 넣은 클라우드 키 (OpenAI / ElevenLabs)
-   *   2. 서버 TTS (`/api/tts`) — 서버에 키가 있을 때
-   *   3. 브라우저 내장 음성
+   *   2. 미리 구워둔 파일 (`public/tts/`) — 고정 대본의 대사
+   *   3. 서버 TTS (`/api/tts`) — 서버에 키가 있을 때
+   *   4. 브라우저 내장 음성
    */
   async speak(text: string, { lang, rate, profile, onEnd }: SpeakOptions = {}) {
     this.stopAudio();
@@ -295,7 +313,20 @@ export class SpeechEngine {
       }
     }
 
-    /* 2. 서버 TTS */
+    /* 2. 미리 구워둔 파일 — 대본이 고정이라 대사 대부분이 여기서 끝납니다.
+     *    API 호출도, 비용도, 대기 시간도 없습니다. */
+    const baked = this.prerenderedUrl(body, prof);
+    if (baked) {
+      try {
+        this.synth?.cancel();
+        await this.playUrl(baked, r, onEnd);
+        return;
+      } catch {
+        /* 파일이 없거나 재생 실패 — 아래 경로로 내려갑니다 */
+      }
+    }
+
+    /* 3. 서버 TTS */
     if (this.serverTts !== false && Date.now() >= this.serverTtsPausedUntil) {
       try {
         this.synth?.cancel();
@@ -306,7 +337,7 @@ export class SpeechEngine {
       }
     }
 
-    /* 3. 브라우저 내장 음성 */
+    /* 4. 브라우저 내장 음성 */
     this.sysSpeak(text, { lang: lg, rate: r, profile: prof, onEnd });
   }
 
