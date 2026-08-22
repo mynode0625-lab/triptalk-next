@@ -30,5 +30,8 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  // scripts/ 는 앱 번들이 아니라 node 가 직접 실행하는 빌드 도구입니다.
+  // node 의 타입 스트리핑은 import 에 .ts 확장자를 요구하는데, 이 설정의
+  // moduleResolution 은 그걸 막습니다. 앱 규칙은 그대로 두고 여기서 뺍니다.
+  "exclude": ["node_modules", "scripts"]
 }

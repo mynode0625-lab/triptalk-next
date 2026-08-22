@@ -149,6 +149,18 @@ export function PracticeApp() {
   /* 옵션이 바뀌면 엔진에 그대로 반영합니다. */
   useEffect(() => { getEngine().setOptions(opts); }, [opts]);
 
+  /* 미리 구워둔 대사 목록을 한 번만 읽습니다.
+   * 연습실 대본은 고정이라 대사 대부분이 여기 있고, 있으면 API 를 부르지 않습니다.
+   * 파일이 없으면(아직 안 구웠으면) 조용히 넘어가 서버 TTS·내장 음성으로 갑니다. */
+  useEffect(() => {
+    let alive = true;
+    fetch("/tts/manifest.json")
+      .then(r => (r.ok ? (r.json() as Promise<Record<string, string>>) : null))
+      .then(map => { if (alive && map) getEngine().setPrerendered(map); })
+      .catch(() => { /* 없으면 그만 — 아래 경로로 재생됩니다 */ });
+    return () => { alive = false; };
+  }, []);
+
   /* 서버에 TTS 키가 있는지 한 번만 확인합니다. (오디오를 만들지 않아 비용 없음) */
   useEffect(() => {
     let alive = true;

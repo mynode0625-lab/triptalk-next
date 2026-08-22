@@ -4,6 +4,17 @@ AI 캐릭터와 상황별 여행영어를 연습하는 데모 서비스.
 순수 HTML/CSS/JS로 만들어진 원본(`triptalk`)을 기능 손실 없이 Next.js로 이전한 저장소입니다.
 이전 계획과 진행 상황은 [plan.md](./plan.md)에 있습니다.
 
+## 배포
+
+| | |
+|---|---|
+| **서비스** | https://triptalk-next-mynode.vercel.app |
+| **저장소** | https://github.com/mynode0625-lab/triptalk-next |
+| **프레임워크** | Next.js 16.3.1 (App Router · Turbopack) · React 19.2.8 · TypeScript |
+| **호스팅** | Vercel — GitHub `main` 에 푸시하면 자동 배포됩니다 |
+
+`triptalk-next.vercel.app` 은 다른 사용자가 선점해 `-mynode` 접미사가 붙었습니다.
+
 ## 실행
 
 ```bash
@@ -25,7 +36,52 @@ Node 20.9 이상이 필요합니다 (Next.js 16 요구사항).
 | `/api/auth/[provider]` | OAuth 인가코드 → 토큰 교환 → 프로필 조회 → **세션 쿠키 발급** |
 | `/api/auth/session` | 현재 세션 조회(GET) · 로그아웃(DELETE) |
 | `/api/auth/demo` | 키가 없는 제공자의 데모 세션 발급 |
-| `/api/tts` | 서버 TTS — 자연스러운 미국식 음성 (`OPENAI_API_KEY` 있을 때) |
+| `/api/tts` | 서버 TTS 폴백 — 아래 *AI 음성* 참고. 배포본에서는 키를 두지 않아 항상 501 |
+
+## AI 음성 (OpenAI API)
+
+캐릭터 대사는 OpenAI **`gpt-4o-mini-tts`** 로 만든 음성입니다.
+브라우저 내장 음성은 기기에 설치된 음성에 좌우돼서, 어떤 기기에서 열든
+같은 품질로 들리게 하려고 API 를 썼습니다.
+
+**다만 재생할 때마다 API 를 부르지는 않습니다.** 연습실 대본은
+[`src/lib/data/scenarios.ts`](./src/lib/data/scenarios.ts) 에 고정돼 있어서
+말할 문장이 미리 정해져 있습니다. 그래서 **254개 · 9,342자를 한 번만 생성해
+[`public/tts/`](./public/tts) 에 저장**해 두고, 런타임에는 그 파일을 그대로 씁니다.
+
+| | 매번 호출 | 이 저장소 |
+|---|---|---|
+| 런타임 OpenAI 호출 | 재생마다 | **0회** |
+| 트래픽이 늘면 | 청구액도 늘어남 | 그대로 |
+| 배포 서버에 API 키 | 필요 | **불필요** |
+| 재생 지연 | 생성 대기 | 정적 파일 |
+
+시나리오마다 음성(`voice.oa`)과 톤 지시문(`voice.inst`)이 따로 있어서
+프리렌더해도 캐릭터별 연기가 그대로 유지됩니다.
+
+### 어디서 확인하나
+
+| 확인할 것 | 위치 |
+|---|---|
+| OpenAI 를 호출하는 코드 | [`scripts/prerender-tts.mts`](./scripts/prerender-tts.mts) — `api.openai.com/v1/audio/speech` |
+| 생성 결과 | [`public/tts/`](./public/tts) — mp3 254개 + `manifest.json` |
+| 런타임 재생 경로 | [`src/lib/speech/engine.ts`](./src/lib/speech/engine.ts) — 개인 키 → **구운 파일** → 서버 TTS → 브라우저 내장 |
+| 폴백 API 라우트 | [`src/app/api/tts/route.ts`](./src/app/api/tts/route.ts) |
+
+브라우저에서 직접 확인하려면 `/practice` 에서 시나리오를 하나 고르고
+개발자도구 Network 탭을 보세요. `GET /tts/*.mp3` 만 찍히고
+`POST /api/tts` 는 나타나지 않습니다.
+
+### 대사를 추가했을 때
+
+```bash
+node --env-file=.env.local scripts/prerender-tts.mts --dry-run   # 늘어난 개수 확인
+node --env-file=.env.local scripts/prerender-tts.mts             # 새 문장만 생성
+```
+
+이미 있는 파일은 건너뛰므로 같은 문장에 두 번 과금되지 않습니다.
+매니페스트에 없는 문장은 서버 TTS·브라우저 내장 음성으로 폴백하므로,
+굽기 전이라도 화면은 정상 동작합니다.
 
 ## 구조
 
