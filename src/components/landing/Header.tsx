@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/ui/Logo";
+import { fetchSession, logout } from "@/lib/auth/session";
 
 const NAV = [
   { href: "#features", label: "특징" },
@@ -13,8 +14,29 @@ const NAV = [
 
 export function Header() {
   const [stuck, setStuck] = useState(false);
+  /**
+   * 로그인 여부.
+   *
+   * null 은 "아직 모른다" 입니다. 세션은 서버에 물어봐야 알 수 있는데, 확인이
+   * 끝나기 전에 "로그아웃" 을 보여주면 로그인하지 않은 사람에게 잘못된 상태를
+   * 알리게 됩니다. 모르는 동안에는 로그인 쪽을 보여 두고, 답이 오면 바꿉니다.
+   */
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState("");
+
+  useEffect(() => {
+    let alive = true;
+    void fetchSession().then(session => {
+      if (alive) setSignedIn(Boolean(session));
+    });
+    return () => { alive = false; };
+  }, []);
+
+  const onLogout = async () => {
+    await logout();
+    setSignedIn(false);
+  };
 
   useEffect(() => {
     const onScroll = () => {
@@ -52,7 +74,13 @@ export function Header() {
         </nav>
 
         <div className="header__actions">
-          <a href="/login" className="btn btn--ghost btn--sm">로그인</a>
+          {signedIn ? (
+            <button type="button" className="btn btn--ghost btn--sm" onClick={onLogout}>
+              로그아웃
+            </button>
+          ) : (
+            <a href="/login" className="btn btn--ghost btn--sm">로그인</a>
+          )}
           <a href="/practice" className="btn btn--primary btn--sm">🎙 말하기 연습</a>
           <button
             className={"nav-toggle" + (open ? " is-open" : "")}
