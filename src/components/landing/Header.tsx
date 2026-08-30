@@ -8,7 +8,6 @@ const NAV = [
   { href: "#characters", label: "AI 캐릭터" },
   { href: "#situations", label: "상황별 학습" },
   { href: "#demo", label: "체험하기" },
-  { href: "#pricing", label: "요금제" },
   { href: "#faq", label: "FAQ" }
 ];
 

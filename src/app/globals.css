@@ -290,16 +290,20 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
 .char {
   position: relative; padding: 26px 22px; border-radius: var(--radius);
   background: #fff; border: 1px solid var(--line); text-align: left;
-  cursor: pointer; overflow: hidden;
+  overflow: hidden;
+  /* 카드마다 소개 길이가 달라도 맨 아래 문구는 같은 줄에 서게 합니다 */
+  display: flex; flex-direction: column;
   transition: transform .25s, box-shadow .25s;
 }
+.char--link { cursor: pointer; }
 .char::before {
   content: ""; position: absolute; inset: 0 0 auto 0; height: 4px;
   background: linear-gradient(90deg, var(--brand), var(--brand-2));
   transform: scaleX(0); transform-origin: left; transition: transform .3s ease;
 }
-.char:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
-.char:hover::before, .char.is-open::before { transform: scaleX(1); }
+/* 누를 수 있는 카드만 떠오릅니다 — 준비 중인 카드가 눌리는 척하지 않도록. */
+.char--link:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+.char--link:hover::before, .char--link:focus-visible::before { transform: scaleX(1); }
 .char__avatar {
   width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center;
   font-size: 30px; background: var(--brand-soft); margin-bottom: 14px;
@@ -312,18 +316,25 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
   padding: 4px 10px; border-radius: 999px; background: var(--bg-tint);
   font-size: 11.5px; font-weight: 700; color: var(--ink-2);
 }
-.char__line {
-  max-height: 0; opacity: 0; overflow: hidden;
-  transition: max-height .35s ease, opacity .3s ease, margin .35s ease;
-  font-size: 13.5px; line-height: 1.55;
-}
-.char.is-open .char__line { max-height: 160px; opacity: 1; margin-top: 14px; }
+/* 첫 마디는 접지 않습니다. 카드를 누르는 것은 이제 '펼치기'가 아니라
+   '이 사람과 연습하기'라서, 들어가기 전에 목소리의 성격이 보여야 합니다. */
+.char__line { margin: 14px 0; font-size: 13.5px; line-height: 1.55; }
 .char__line q {
   display: block; padding: 11px 13px; border-radius: 12px;
   background: var(--bg-tint); border-left: 3px solid var(--brand);
   font-style: italic; color: var(--ink);
+  /* 따옴표는 본문에 직접 넣습니다 — q 가 자동으로 붙이면 겹쳐 보입니다 */
+  quotes: none;
 }
 .char__line em { display: block; margin-top: 6px; font-size: 12.5px; color: var(--ink-3); font-style: normal; }
+/* 소개 길이가 달라도 맨 아래 문구는 카드 바닥에 나란히 섭니다 */
+.char__go, .char__soon { align-self: flex-start; margin-top: auto; }
+.char__go { font-size: 13px; font-weight: 800; color: var(--brand); }
+.char--link:hover .char__go { text-decoration: underline; text-underline-offset: 3px; }
+.char__soon {
+  padding: 4px 10px; border-radius: 999px; background: var(--bg-tint);
+  font-size: 11.5px; font-weight: 700; color: var(--ink-3);
+}
 
 /* ── 상황별 학습 ────────────────────────────────── */
 .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
@@ -346,7 +357,8 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
   animation: rise .4s ease both;
   transition: transform .25s, box-shadow .25s;
 }
-.sit:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+.sit--link { display: block; }
+.sit--link:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--brand); }
 @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 .sit__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .sit__emoji { font-size: 26px; }
@@ -370,6 +382,8 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
   font-size: 13.5px; color: var(--ink-2);
 }
 .sit__phrase b { display: block; font-size: 11px; color: var(--brand); letter-spacing: .04em; margin-bottom: 3px; }
+.sit__go { display: block; margin-top: 13px; font-size: 13px; font-weight: 800; color: var(--brand); }
+.sit--link:hover .sit__go { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ── 데모 ───────────────────────────────────────── */
 .demo { display: grid; grid-template-columns: 300px 1fr; gap: 22px; }
@@ -449,60 +463,65 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
   color: #c7cbdb; font-size: 20px; font-weight: 700;
 }
 
-/* ── 후기 ───────────────────────────────────────── */
-.reviews { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+/* ── 사용자 후기 ─────────────────────────────────── */
+.reviews { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 26px; }
 .review {
-  padding: 28px; border-radius: var(--radius); background: #fff; border: 1px solid var(--line);
-  transition: transform .25s, box-shadow .25s;
-}
-.review:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
-.review blockquote { font-size: 16px; color: var(--ink); position: relative; padding-left: 22px; }
-.review blockquote::before {
-  content: "“"; position: absolute; left: -2px; top: -12px;
-  font-size: 44px; color: var(--brand); opacity: .35; font-family: Georgia, serif;
-}
-.review figcaption { margin-top: 16px; font-size: 14px; }
-.review figcaption b { font-weight: 800; }
-.review figcaption span { color: var(--ink-3); margin-left: 5px; }
-
-/* ── 요금제 ─────────────────────────────────────── */
-.plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: start; }
-.plan {
-  position: relative; padding: 32px 28px; border-radius: var(--radius);
+  padding: 24px 26px; border-radius: var(--radius);
   background: #fff; border: 1px solid var(--line);
-  transition: transform .25s, box-shadow .25s;
 }
-.plan:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
-.plan--featured {
-  border: 2px solid var(--brand);
-  box-shadow: 0 20px 50px rgba(79,70,229,.16);
-  transform: scale(1.03);
+.review__stars { font-size: 14px; color: var(--brand); letter-spacing: 2px; }
+.review__stars i { color: #d7dae6; font-style: normal; }
+.review blockquote { margin: 12px 0 14px; font-size: 15px; line-height: 1.7; color: var(--ink-2); }
+.review figcaption { display: flex; align-items: baseline; gap: 8px; font-size: 13px; }
+.review figcaption b { font-weight: 800; }
+.review figcaption span { color: var(--ink-3); font-size: 12.5px; }
+
+.reviews__cta { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.reviews__why {
+  max-width: 42ch; text-align: center;
+  font-size: 12.5px; line-height: 1.65; color: var(--ink-3);
 }
-.plan--featured:hover { transform: scale(1.03) translateY(-5px); }
-.plan__tag {
-  position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
-  padding: 5px 15px; border-radius: 999px; font-size: 12.5px; font-weight: 800; color: #fff;
-  background: linear-gradient(135deg, var(--brand), var(--brand-2));
-  box-shadow: 0 6px 16px rgba(79,70,229,.35);
+
+/* 작성 폼 — 랜딩 안에서 바로 남길 수 있게 둡니다 */
+.rform {
+  display: flex; flex-direction: column; gap: 16px;
+  padding: 26px; border-radius: var(--radius);
+  background: #fff; border: 1px solid var(--line);
 }
-.plan h3 { font-size: 21px; }
-.plan__desc { font-size: 14px; color: var(--ink-3); margin-top: 4px; }
-.plan__price { margin: 20px 0 22px; display: flex; align-items: baseline; gap: 4px; }
-.plan__price b { font-size: 38px; font-weight: 800; letter-spacing: -.045em; }
-.plan__price small { font-size: 14px; color: var(--ink-3); font-weight: 600; }
-/* 결제 연동 전까지, 적힌 금액이 지금 청구되는 것으로 읽히지 않게 합니다 */
-.plan__beta {
-  margin: -14px 0 18px; font-size: 12.5px; font-weight: 700;
-  color: var(--mint); letter-spacing: -.01em;
+.rform__row { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
+.rform__field { display: flex; flex-direction: column; gap: 7px; flex: 1; min-width: 200px; }
+.rform__field > span {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  font-size: 13.5px; font-weight: 700; color: var(--ink-2);
 }
-.plan ul { margin-bottom: 26px; display: flex; flex-direction: column; gap: 11px; }
-.plan li { font-size: 14.5px; color: var(--ink-2); padding-left: 25px; position: relative; }
-.plan li::before {
-  content: "✓"; position: absolute; left: 0; top: -1px;
-  color: var(--mint); font-weight: 800;
+.rform__field > span small { font-weight: 600; color: var(--ink-3); font-size: 12px; }
+.rform__field input, .rform__field textarea {
+  padding: 12px 14px; border-radius: 11px; border: 1.5px solid var(--line);
+  background: #fff; outline: none; font: inherit; font-size: 15px; resize: vertical;
+  transition: border-color .18s;
 }
-.plan li.off { color: #b6bac7; }
-.plan li.off::before { content: "×"; color: #d3d6e0; }
+.rform__field input:focus, .rform__field textarea:focus { border-color: var(--brand); }
+
+.rform__stars { display: flex; gap: 2px; border: 0; padding: 0; margin: 0; }
+.rform__stars legend {
+  font-size: 13.5px; font-weight: 700; color: var(--ink-2); margin-bottom: 7px; padding: 0;
+}
+.rform__star {
+  font-size: 26px; line-height: 1; color: #d7dae6; padding: 2px;
+  transition: color .15s, transform .15s;
+}
+.rform__star.is-on { color: var(--brand); }
+.rform__star:hover { transform: scale(1.15); }
+.rform__star:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
+
+.rform__note { font-size: 12.5px; line-height: 1.65; color: var(--ink-3); }
+.rform__note b { color: var(--ink-2); }
+.rform__error {
+  padding: 11px 14px; border-radius: 11px;
+  background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c;
+  font-size: 13.5px; font-weight: 600;
+}
+.rform__cta { display: flex; gap: 10px; }
 
 /* ── FAQ ────────────────────────────────────────── */
 .faq { display: flex; flex-direction: column; gap: 10px; }
@@ -532,20 +551,11 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
 }
 .cta h2 { font-size: clamp(28px, 4vw, 42px); }
 .cta p { margin-top: 14px; font-size: 17px; color: var(--ink-2); }
-.cta__form {
-  display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
-  margin: 30px auto 14px; max-width: 480px;
+.cta__actions {
+  display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+  margin: 26px 0 18px;
 }
-.cta__form input {
-  flex: 1; min-width: 240px; padding: 14px 20px; border-radius: 999px;
-  border: 1.5px solid transparent; background: #fff; outline: none;
-  box-shadow: var(--shadow); transition: border-color .2s;
-}
-.cta__form input:focus { border-color: var(--brand); }
-.cta__form input.is-error { border-color: #ef4444; }
-.cta__note { font-size: 13.5px; color: var(--ink-3); display: block; transition: color .2s; }
-.cta__note.is-ok { color: var(--mint); font-weight: 700; }
-.cta__note.is-error { color: #ef4444; font-weight: 700; }
+.cta__note { font-size: 13.5px; color: var(--ink-3); display: block; }
 
 /* ── 푸터 ───────────────────────────────────────── */
 .footer { background: var(--bg-dark); color: #a9b0c2; padding: 66px 0 26px; }
@@ -594,11 +604,10 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
   .float-card--1 { left: 0; }
   .float-card--2 { right: 0; }
 
-  .pain__grid, .features, .situations, .steps, .plans, .reviews { grid-template-columns: repeat(2, 1fr); }
+  .pain__grid, .features, .situations, .steps { grid-template-columns: repeat(2, 1fr); }
   .feature--wide { grid-column: span 2; }
   .characters { grid-template-columns: repeat(2, 1fr); }
   .step:not(:last-child)::after { display: none; }
-  .plan--featured, .plan--featured:hover { transform: none; }
   .demo { grid-template-columns: 1fr; }
   .footer__inner { grid-template-columns: 1fr; gap: 32px; }
 }
@@ -618,14 +627,14 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
 
   .section { padding: 72px 0; }
   .stats { grid-template-columns: repeat(2, 1fr); gap: 24px 12px; margin-top: 56px; }
-  .pain__grid, .features, .situations, .steps, .plans, .reviews, .characters,
+  .pain__grid, .features, .situations, .steps, .characters,
   .footer__cols { grid-template-columns: 1fr; }
   .feature--wide { grid-column: span 1; }
   .phone { width: 285px; height: 570px; }
   .float-card { display: none; }
   .tabs { gap: 6px; }
   .tab { padding: 9px 14px; font-size: 13.5px; }
-  .cta__form input { min-width: 100%; }
+  .cta__actions .btn { width: 100%; }
   .footer__cols { gap: 8px; }
 }
 

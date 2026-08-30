@@ -36,6 +36,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["Thank you so much for your help.", "도와주셔서 정말 감사합니다."], ["Great, thanks a lot!", "좋아요, 정말 감사해요!"]],
         keys: ["thank", "thanks", "help", "lot", "much", "great"] }
     ],
+    closing: { ai: "No worries at all. Enjoy the museum!", ko: "별말씀을요. 박물관 재밌게 보세요!" },
     done: "되묻기만으로 길 안내를 끝까지 알아들었습니다 🔁"
   },
 
@@ -67,6 +68,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["Three business days, got it. Thank you.", "영업일 3일이요, 알겠습니다. 감사합니다."], ["Okay, thank you very much.", "네, 정말 감사합니다."]],
         keys: ["three", "days", "got", "it", "thank", "okay"] }
     ],
+    closing: { ai: "You're all set, then. Enjoy your stay with us!", ko: "그럼 다 됐습니다. 즐겁게 머무세요!" },
     done: "숫자를 하나도 흘려듣지 않았습니다 🔢"
   },
 
@@ -98,6 +100,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["You too. Have a nice day!", "당신도요. 좋은 하루 되세요!"], ["Thanks, you as well!", "감사해요, 당신도요!"]],
         keys: ["you", "too", "nice", "day", "thanks", "well", "enjoy"] }
     ],
+    closing: { ai: "Thanks! Maybe I'll see you around the hostel.", ko: "고마워요! 숙소에서 또 봐요." },
     done: "처음 만난 사람과 대화를 주고받았습니다 👋"
   },
 
@@ -129,6 +132,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["Line 3, platform 2. Thank you so much!", "3호선, 2번 승강장이요. 정말 감사합니다!"], ["Got it. I really appreciate your help.", "알겠습니다. 도와주셔서 정말 감사해요."]],
         keys: ["line", "platform", "thank", "got", "it", "appreciate", "help"] }
     ],
+    closing: { ai: "You're very welcome. Have a safe trip!", ko: "천만에요. 조심히 가세요!" },
     done: "먼저 도움을 청하고 문제를 해결했습니다 🙋"
   },
 
@@ -160,6 +164,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["Sorry, which gate was that again?", "죄송한데, 몇 번 게이트라고 하셨죠?"], ["No, that's all. Thank you so much!", "아니요, 괜찮습니다. 정말 감사합니다!"]],
         keys: ["gate", "sorry", "again", "no", "thank", "all"] }
     ],
+    closing: { ai: "Gate 27, boarding at 10:40. Have a great flight!", ko: "27번 게이트, 10시 40분 탑승입니다. 좋은 비행 되세요!" },
     done: "체크인을 끝까지 통과했습니다 🎉"
   },
 
@@ -191,6 +196,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["Yes, I'm flying back on the 21st.", "네, 21일에 돌아갑니다."], ["Yes, here's my return ticket.", "네, 여기 왕복 항공권입니다."]],
         keys: ["yes", "return", "ticket", "back", "flying", "here"] }
     ],
+    closing: { ai: "That's all I need. Welcome, and enjoy your stay.", ko: "확인됐습니다. 입국을 환영합니다. 즐겁게 지내세요." },
     done: "입국 심사를 무사히 통과했습니다 🎉"
   },
 
@@ -222,6 +228,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["That's very kind of you. Thank you.", "정말 친절하시네요. 감사합니다."], ["Thank you, I really appreciate it.", "감사합니다, 정말 고맙습니다."]],
         keys: ["thank", "kind", "appreciate", "great"] }
     ],
+    closing: { ai: "Not at all. Do let us know if you need anything else.", ko: "별말씀을요. 더 필요하신 게 있으면 언제든 말씀해 주세요." },
     done: "컴플레인 상황을 끝까지 해냈습니다 🎉"
   },
 
@@ -253,6 +260,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["Could we split the bill, please?", "따로 계산할 수 있을까요?"], ["Together, please. I'll pay by card.", "함께요. 카드로 결제할게요."]],
         keys: ["split", "together", "bill", "separate", "card", "cash"] }
     ],
+    closing: { ai: "Of course. I'll be right back with the card machine.", ko: "그럼요. 카드 단말기 가지고 금방 오겠습니다." },
     done: "식사 주문을 끝까지 마쳤습니다 🎉"
   },
 
@@ -284,6 +292,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["Card, please. Do you take contactless?", "카드로요. 비접촉 결제 되나요?"], ["Here's twenty. Keep the change.", "20달러요. 잔돈은 됐습니다."]],
         keys: ["card", "cash", "contactless", "change", "twenty", "keep", "here"] }
     ],
+    closing: { ai: "Sure do. Just tap right there. Thanks, and enjoy your stay!", ko: "물론이죠. 여기에 갖다 대시면 됩니다. 감사합니다, 즐거운 여행 되세요!" },
     done: "택시 대화를 끝까지 해냈습니다 🎉"
   },
 
@@ -321,6 +330,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["Thank you so much.", "정말 감사합니다."], ["Great, thanks for your help.", "좋아요, 도와주셔서 감사합니다."]],
         keys: ["thank", "thanks", "much", "great", "help"] }
     ],
+    closing: { ai: "Of course! The fitting rooms are just around the corner.", ko: "그럼요! 탈의실은 저쪽 모퉁이에 있어요." },
     done: "원하는 사이즈와 색을 직접 물어봤습니다 👕"
   },
 
@@ -352,6 +362,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["Could I have it separately? I need it for the tax refund.", "따로 주시겠어요? 세금 환급에 필요해서요."], ["In the bag is fine, thanks.", "봉투에 넣어주셔도 괜찮아요, 감사합니다."]],
         keys: ["separately", "need", "tax", "refund", "bag", "fine", "thanks"] }
     ],
+    closing: { ai: "Sure, here you go. Keep that one safe. Have a good one!", ko: "네, 여기 있습니다. 그건 잘 보관하세요. 좋은 하루 되세요!" },
     done: "봉투부터 영수증까지 챙겨서 계산했습니다 🧺"
   },
 
@@ -383,6 +394,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["That's great. Thank you so much.", "잘됐네요. 정말 감사합니다."], ["Perfect, thanks for your help.", "완벽해요, 도와주셔서 감사합니다."]],
         keys: ["great", "thank", "much", "perfect", "thanks", "help"] }
     ],
+    closing: { ai: "Happy to help. Here's the new one — you're all set.", ko: "도움이 됐다니 다행이에요. 새 상품 여기 있습니다. 다 끝났어요." },
     done: "반품과 교환을 영어로 해결했습니다 🔄"
   },
 
@@ -421,6 +433,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["No worries. Thanks for your help.", "괜찮아요. 도와주셔서 감사합니다."], ["That's all right. Have a good day!", "괜찮습니다. 좋은 하루 되세요!"]],
         keys: ["no", "worries", "thanks", "help", "all", "right", "day"] }
     ],
+    closing: { ai: "Anytime. Here's your receipt — have a good one!", ko: "언제든지요. 영수증 여기 있습니다. 좋은 하루 되세요!" },
     done: "카드가 막힌 상황에서도 끝까지 결제했습니다 💳"
   },
 
@@ -452,6 +465,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["Thank you. I'll keep the receipt.", "감사합니다. 영수증은 보관할게요."], ["Got it. Thank you for your help.", "알겠습니다. 도와주셔서 감사합니다."]],
         keys: ["thank", "keep", "receipt", "got", "it", "help"] }
     ],
+    closing: { ai: "Please do. We'll email you as soon as it's resolved.", ko: "네, 꼭 보관해 주세요. 처리되는 대로 이메일 드리겠습니다." },
     done: "돈이 안 나온 상황을 영어로 해결했습니다 🏧"
   },
 
@@ -483,6 +497,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["No, that's all. Thank you!", "아니요, 됐습니다. 감사합니다!"], ["That's everything, thanks.", "그게 다입니다, 감사합니다."]],
         keys: ["no", "that's", "all", "thank", "everything", "else"] }
     ],
+    closing: { ai: "Great. Please count your cash before you leave the counter — enjoy your trip!", ko: "알겠습니다. 창구를 떠나기 전에 금액을 확인해 주세요. 즐거운 여행 되세요!" },
     done: "환율과 수수료까지 직접 확인했습니다 💱"
   },
 
@@ -514,6 +529,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["Sorry, which box was that?", "죄송한데, 어느 상자라고 하셨죠?"], ["Got it. Thank you very much!", "알겠습니다. 정말 감사합니다!"]],
         keys: ["sorry", "which", "box", "where", "got", "it", "thank"] }
     ],
+    closing: { ai: "The red one by the exit, just past security. You're all set!", ko: "출구 옆 빨간 상자입니다, 보안검색대 바로 지나서요. 다 끝났습니다!" },
     done: "세금 환급 절차를 끝까지 통과했습니다 🧾"
   },
 
@@ -545,6 +561,7 @@ export const SCENES: Record<SceneKey, Scene> = {
         models: [["Thank you. Could you send it to this email?", "감사합니다. 이 이메일로 보내주시겠어요?"], ["Great, thank you for your help.", "좋습니다, 도와주셔서 감사합니다."]],
         keys: ["thank", "send", "email", "great", "help", "confirmation"] }
     ],
+    closing: { ai: "Absolutely, it's on its way now. Thank you for calling, and take care.", ko: "물론입니다, 지금 발송했습니다. 전화 주셔서 감사하고, 안전한 여행 되세요." },
     done: "전화로 분실 신고까지 끝냈습니다 📞"
   }
 };

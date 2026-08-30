@@ -19,6 +19,9 @@ type Props = {
   levels: number[];
   meterLive: boolean;
   typeBarOpen: boolean;
+  /** 대화가 끝났는지 — 끝나면 입력 대신 마무리 줄을 보여줍니다 */
+  finished: boolean;
+  onReport: () => void;
   onMic: () => void;
   onToggleType: () => void;
   onType: (text: string) => void;
@@ -56,7 +59,7 @@ function liveText(live: MicLive, mode: Props["mode"], canListen: boolean) {
 
 export function MicBar({
   live, listening, enabled, mode, canListen, levels, meterLive,
-  typeBarOpen, onMic, onToggleType, onType, micBtnRef
+  typeBarOpen, finished, onReport, onMic, onToggleType, onType, micBtnRef
 }: Props) {
   const [draft, setDraft] = useState("");
   const typeRef = useRef<HTMLInputElement>(null);
@@ -64,6 +67,21 @@ export function MicBar({
   useEffect(() => {
     if (typeBarOpen) typeRef.current?.focus();
   }, [typeBarOpen]);
+
+  /* 끝난 뒤에도 마이크와 입력칸을 그대로 두면 아직 할 일이 남은 것처럼 보입니다.
+     (입력칸은 disabled 라 눌리지 않지만, 눌리지 않는 것과 없는 것은 다릅니다.) */
+  if (finished) {
+    return (
+      <div className="micbar micbar--done" id="micbar">
+        <div className="micbar__live">
+          <span className="micbar__hint">🎉 이 상황을 끝까지 마쳤습니다</span>
+        </div>
+        <button className="btn btn--primary btn--sm" onClick={onReport}>
+          📋 결과 리포트 보기
+        </button>
+      </div>
+    );
+  }
 
   const label = listening
     ? "듣는 중 — 누르면 완료"

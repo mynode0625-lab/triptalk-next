@@ -1,14 +1,18 @@
 /**
- * OAuth 인가 코드 → 액세스 토큰 → 프로필 조회 (신규)
+ * OAuth 인가 코드 → 액세스 토큰 → 프로필 조회
  *
- * 정적 사이트에서는 클라이언트 시크릿을 둘 곳이 없어 실제 소셜 로그인을
- * 완성할 수 없었습니다. 이 Route Handler 가 그 자리를 채웁니다.
+ * 정적 사이트에서는 클라이언트 시크릿을 둘 곳이 없어 실제 로그인을 완성할 수
+ * 없었습니다. 이 Route Handler 가 그 자리를 채웁니다.
+ *
+ * 로그인 제공자는 신한 SOL 하나입니다 (lib/auth/providers.ts 참고).
+ * 신한 SOL 은 공개 OAuth 제공자가 아니라 주소까지 환경변수로 받습니다 —
+ * 제휴 문서를 받기 전에는 값이 없고, 그러면 화면은 데모 흐름으로 동작합니다.
  *
  * 필요한 환경변수 (.env.local / Vercel 프로젝트 설정):
- *   NEXT_PUBLIC_KAKAO_CLIENT_ID   KAKAO_CLIENT_SECRET   (선택 — 카카오는 시크릿이 없을 수 있음)
- *   NEXT_PUBLIC_NAVER_CLIENT_ID   NAVER_CLIENT_SECRET
- *   NEXT_PUBLIC_GOOGLE_CLIENT_ID  GOOGLE_CLIENT_SECRET
- *   AUTH_SECRET                   (세션 쿠키 서명 — 배포본에서는 필수)
+ *   NEXT_PUBLIC_SHINHAN_CLIENT_ID   SHINHAN_CLIENT_SECRET
+ *   NEXT_PUBLIC_SHINHAN_AUTH_URL    (인가 화면 — 브라우저가 이동할 주소)
+ *   SHINHAN_TOKEN_URL               SHINHAN_PROFILE_URL
+ *   AUTH_SECRET                     (세션 쿠키 서명 — 배포본에서는 필수)
  *
  * 성공하면 서명된 HttpOnly 세션 쿠키를 발급합니다. 프로필은 화면 표시용으로만
  * 돌려주고, 로그인 여부의 근거는 언제나 쿠키입니다.
@@ -21,69 +25,45 @@ import type { NormalizedProfile, ProviderKey } from "@/types/session";
 type Body = { code?: string; state?: string; redirectUri?: string };
 
 const CONFIG: Record<ProviderKey, {
-  tokenUrl: string;
-  profileUrl: string;
+  tokenUrl: string | undefined;
+  profileUrl: string | undefined;
   clientId: string | undefined;
   clientSecret: string | undefined;
-  /** 시크릿이 없어도 토큰 교환이 가능한지 (카카오는 선택) */
-  secretOptional: boolean;
 }> = {
-  kakao: {
-    tokenUrl: "https://kauth.kakao.com/oauth/token",
-    profileUrl: "https://kapi.kakao.com/v2/user/me",
-    clientId: process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID,
-    clientSecret: process.env.KAKAO_CLIENT_SECRET,
-    secretOptional: true
-  },
-  naver: {
-    tokenUrl: "https://nid.naver.com/oauth2.0/token",
-    profileUrl: "https://openapi.naver.com/v1/nid/me",
-    clientId: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
-    clientSecret: process.env.NAVER_CLIENT_SECRET,
-    secretOptional: false
-  },
-  google: {
-    tokenUrl: "https://oauth2.googleapis.com/token",
-    profileUrl: "https://www.googleapis.com/oauth2/v3/userinfo",
-    clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    secretOptional: false
+  shinhan: {
+    tokenUrl: process.env.SHINHAN_TOKEN_URL,
+    profileUrl: process.env.SHINHAN_PROFILE_URL,
+    clientId: process.env.NEXT_PUBLIC_SHINHAN_CLIENT_ID,
+    clientSecret: process.env.SHINHAN_CLIENT_SECRET
   }
 };
 
-const isProvider = (v: string): v is ProviderKey =>
-  v === "kakao" || v === "naver" || v === "google";
+const isProvider = (v: string): v is ProviderKey => v === "shinhan";
 
 function fail(message: string, status: number) {
   return Response.json({ error: message }, { status });
 }
 
-/** 제공자별 프로필 응답을 공통 형태로 정규화합니다. */
+/**
+ * 프로필 응답을 공통 형태로 정규화합니다.
+ *
+ * 신한 SOL 의 프로필 응답 형태는 제휴 문서를 받아야 확정됩니다. 지금은 흔히 쓰는
+ * 필드 이름을 순서대로 찾아보고, 없으면 빈 값으로 둡니다. 실제 연동 때 고칠 곳은
+ * 이 함수 하나입니다.
+ */
 function normalize(provider: ProviderKey, raw: Record<string, unknown>): NormalizedProfile {
-  if (provider === "kakao") {
-    const account = (raw.kakao_account ?? {}) as Record<string, unknown>;
-    const profile = (account.profile ?? {}) as Record<string, unknown>;
-    return {
-      provider,
-      id: String(raw.id ?? ""),
-      name: String(profile.nickname ?? "카카오 사용자"),
-      email: String(account.email ?? "")
-    };
-  }
-  if (provider === "naver") {
-    const r = (raw.response ?? {}) as Record<string, unknown>;
-    return {
-      provider,
-      id: String(r.id ?? ""),
-      name: String(r.name ?? r.nickname ?? "네이버 사용자"),
-      email: String(r.email ?? "")
-    };
-  }
+  const pick = (...keys: string[]): string => {
+    for (const k of keys) {
+      const v = raw[k];
+      if (typeof v === "string" && v) return v;
+    }
+    return "";
+  };
   return {
     provider,
-    id: String(raw.sub ?? ""),
-    name: String(raw.name ?? "Google 사용자"),
-    email: String(raw.email ?? "")
+    id: pick("id", "userId", "userKey", "sub"),
+    name: pick("name", "userName", "nickname") || "신한 SOL 사용자",
+    email: pick("email", "userEmail")
   };
 }
 
@@ -93,9 +73,9 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ provid
   if (!isProvider(provider)) return fail("지원하지 않는 제공자입니다.", 404);
 
   const cfg = CONFIG[provider];
-  if (!cfg.clientId || (!cfg.clientSecret && !cfg.secretOptional)) {
-    // 키가 없으면 클라이언트가 데모 모드로 되돌아갈 수 있도록 명시적으로 알립니다.
-    return fail("이 제공자의 서버 키가 설정되지 않았습니다.", 501);
+  if (!cfg.clientId || !cfg.clientSecret || !cfg.tokenUrl || !cfg.profileUrl) {
+    // 키나 주소가 없으면 클라이언트가 데모 모드로 되돌아갈 수 있도록 명시적으로 알립니다.
+    return fail("이 제공자의 서버 설정이 완료되지 않았습니다.", 501);
   }
 
   // 실제 로그인을 켜 두고 AUTH_SECRET 을 빠뜨리면, 인스턴스가 바뀔 때마다 세션이
@@ -169,6 +149,7 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ provid
   /* ── 3. 세션 쿠키 발급 ──────────────────────────── */
   const session = {
     provider,
+    sub: profile.id,
     name: profile.name,
     email: profile.email,
     avatar: PROVIDERS[provider].avatar,

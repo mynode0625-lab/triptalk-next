@@ -8,6 +8,12 @@ export type Character = {
   tags: string[];
   line: string;
   ko: string;
+  /**
+   * 이 캐릭터를 실제로 만날 수 있는 시나리오 키.
+   * 있으면 카드를 누르는 즉시 그 연습으로 들어가고, 없으면 "준비 중" 으로 둡니다.
+   * 상황 카드(`Situation.scene`)와 같은 규칙입니다.
+   */
+  scene?: SceneKey;
 };
 
 export type SituationKey = "basics" | "airport" | "hotel" | "food" | "city" | "shopping" | "trouble";

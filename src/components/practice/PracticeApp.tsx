@@ -1,17 +1,19 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { SCENES } from "@/lib/data/scenarios";
+import { useSearchParams } from "next/navigation";
+import { SCENES, SCENE_KEYS } from "@/lib/data/scenarios";
 import { analyzeExpression } from "@/lib/correction/expression";
 import { pronTips } from "@/lib/correction/pronunciation";
 import { alignWords, similar, words as toWords } from "@/lib/correction/textDiff";
 import { sleep } from "@/lib/hooks/useSleep";
 import { getEngine } from "@/lib/speech/engine";
 import { useStoredTts, writeStoredTts } from "@/lib/speech/ttsStore";
+import { useFreeTrial } from "@/lib/practice/freeTrial";
 import { useMicLevel } from "@/lib/speech/useMicLevel";
 import { ERROR_MESSAGES, useSpeechRecognition } from "@/lib/speech/useSpeechRecognition";
 import type {
-  CorrectionItem, PracticeOptions, PracticeWord, SceneKey, TtsOptions
+  CorrectionItem, PracticeOptions, PracticeWord, SceneKey
 } from "@/types/practice";
 
 import type { AnalysisCard, WordChip } from "./cards";
@@ -21,9 +23,10 @@ import { FeedbackStrip } from "./FeedbackStrip";
 import { TranscriptLog } from "./TranscriptLog";
 import { ConfirmBar, type ConfirmState } from "./ConfirmBar";
 import { Hint } from "./Hint";
+import { LoginGate } from "./LoginGate";
 import { MicBar, type MicLive } from "./MicBar";
 import { ReportModal } from "./ReportModal";
-import { SetupScreen, type TtsStatus } from "./SetupScreen";
+import { SetupScreen } from "./SetupScreen";
 import { SidePanel } from "./SidePanel";
 import { ToolsContext } from "./tools";
 import { TopBar } from "./TopBar";
@@ -48,6 +51,8 @@ export function PracticeApp() {
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [finished, setFinished] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  /** 무료 횟수를 다 쓴 방문자에게 띄우는 로그인 안내 */
+  const [gateOpen, setGateOpen] = useState(false);
   const [panelHidden, setPanelHidden] = useState(false);
 
   const [hintVisible, setHintVisible] = useState(false);
@@ -72,21 +77,11 @@ export function PracticeApp() {
   // 자막·해석 모두 기본 꺼짐 — 먼저 귀로 듣게 합니다
   const [session, setSession] = useState({ rate: 1, auto: true, ko: false, en: false });
   const stored = useStoredTts();
-  const [draftOverride, setDraftOverride] = useState<TtsOptions | null>(null);
-  const [statusOverride, setStatusOverride] = useState<TtsStatus | undefined>(undefined);
 
   const opts: PracticeOptions = useMemo(
     () => ({ ...session, voiceURI: stored.voiceURI, tts: stored.tts }),
     [session, stored]
   );
-  const ttsDraft = draftOverride ?? stored.tts;
-  const ttsStatus: TtsStatus =
-    statusOverride !== undefined
-      ? statusOverride
-      : stored.tts.provider && stored.tts.key
-        ? { msg: "저장된 클라우드 음성을 사용 중입니다.", warn: false }
-        : null;
-  const setTtsStatus = setStatusOverride;
 
   const voices = useSyncExternalStore(
     subscribeVoices, getVoicesSnapshot, getVoicesServerSnapshot
@@ -112,6 +107,10 @@ export function PracticeApp() {
   const recog = useSpeechRecognition();
   const meter = useMicLevel();
 
+  /* 비로그인 무료 횟수. 세션 확인이 끝나기 전에는 아무도 막지 않습니다. */
+  const trial = useFreeTrial();
+  const { locked: trialLocked, reason: trialReason, consume: consumeTrial } = trial;
+
   const canListen = !!recog.supported && !!recog.secure;
   const typeBarOpen = typeBarOverride ?? !canListen;
   const scene = sceneKey ? SCENES[sceneKey] : null;
@@ -131,20 +130,17 @@ export function PracticeApp() {
     });
   }, []);
 
-  /* ── 엔진 연결: 상태 메시지 · 옵션 동기화 · 정리 ── */
+  /* ── 엔진 연결: 옵션 동기화 · 정리 ── */
   useEffect(() => {
     const engine = getEngine();
-    engine.onStatus = (msg, warn) => setTtsStatus({ msg, warn: !!warn });
-
     const onBeforeUnload = () => engine.cancel();
     window.addEventListener("beforeunload", onBeforeUnload);
 
     return () => {
       window.removeEventListener("beforeunload", onBeforeUnload);
-      engine.onStatus = null;
       engine.cancel();
     };
-  }, [setTtsStatus]);
+  }, []);
 
   /* 옵션이 바뀌면 엔진에 그대로 반영합니다. */
   useEffect(() => { getEngine().setOptions(opts); }, [opts]);
@@ -174,6 +170,16 @@ export function PracticeApp() {
       .catch(() => { if (alive) setServerTts(false); });
     return () => { alive = false; };
   }, []);
+
+  /* 예전 버전에서 개인 API 키를 저장해 둔 브라우저가 있습니다. 그 설정 화면은
+   * 사라졌으니, 지울 방법이 없는 키를 남겨두지 않고 한 번 비웁니다. */
+  useEffect(() => {
+    if (!stored.tts.provider && !stored.tts.key) return;
+    writeStoredTts({
+      voiceURI: stored.voiceURI,
+      tts: { provider: "", key: "", voice: "" }
+    });
+  }, [stored]);
 
 
   /* ═══════════════════════════════════════════════
@@ -220,20 +226,60 @@ export function PracticeApp() {
   /* ═══════════════════════════════════════════════
      진행 로직 (practice.js §9)
      ═══════════════════════════════════════════════ */
-  const finish = useCallback(() => {
-    getEngine().cancel();
-    setSpeaking(false);
-    setMicEnabled(false);
-    setHintVisible(false);
-    setFinished(true);
-    setReportOpen(true);
-  }, [setMicEnabled]);
+  /**
+   * 마지막 답변에 대한 캐릭터의 맺음말.
+   *
+   * 예전에는 마지막 턴을 채점하자마자 리포트를 열어서, 대화가 사용자의 말에서
+   * 끊기고 캐릭터는 대꾸 한 번 없이 사라졌습니다. 실제 대화라면 상대가 마지막
+   * 말을 받아줍니다. 맺음말을 들려준 **뒤에** 리포트를 엽니다 — 바로 열면 방금
+   * 나온 대사를 모달이 덮어버립니다.
+   */
+  const closingTurn = useCallback(
+    async (key: SceneKey) => {
+      const sc = SCENES[key];
+      setMicEnabled(false);
+      setHintVisible(false);
+      setConfirm(null);
+
+      const typingId = pushMsg({ kind: "typing" });
+      await sleep(700);
+      if (!aliveRef.current || sceneKeyRef.current !== key) return;
+      setMsgs(prev => prev.filter(m => m.id !== typingId));
+
+      pushMsg({ kind: "ai", ai: sc.closing.ai, ko: sc.closing.ko });
+      setRevealEn(false);
+      setShowModels(false);
+      setFinished(true);            // 진행바 100%
+
+      if (optsRef.current.auto) {
+        setSpeaking(true);
+        // 음성이 막힌 환경(자동재생 차단 등)에서도 리포트가 열리도록 시간 제한을 둡니다.
+        await new Promise<void>(resolve => {
+          let settled = false;
+          const once = () => { if (!settled) { settled = true; resolve(); } };
+          const guard = setTimeout(once, 9000);
+          void getEngine().speak(sc.closing.ai, {
+            lang: sc.char.lang,
+            rate: optsRef.current.rate,
+            onEnd: () => { clearTimeout(guard); once(); }
+          });
+        });
+      } else {
+        await sleep(2400);          // 자동 재생을 꺼 뒀다면 읽을 시간을 줍니다
+      }
+
+      if (!aliveRef.current || sceneKeyRef.current !== key) return;
+      setSpeaking(false);
+      setReportOpen(true);
+    },
+    [pushMsg, setMicEnabled]
+  );
 
   const aiTurn = useCallback(
     async (key: SceneKey, idx: number) => {
       const sc = SCENES[key];
       const t = sc.turns[idx];
-      if (!t) { finish(); return; }
+      if (!t) { void closingTurn(key); return; }
 
       turnRef.current = idx;
       setTurn(idx);
@@ -264,11 +310,15 @@ export function PracticeApp() {
         });
       }
     },
-    [finish, pushMsg, setMicEnabled]
+    [closingTurn, pushMsg, setMicEnabled]
   );
 
   const startScene = useCallback(
     (key: SceneKey) => {
+      // 무료 횟수를 다 썼으면 시작하지 않고 로그인 안내만 띄웁니다.
+      if (trialLocked) { setGateOpen(true); return; }
+      consumeTrial();
+
       sceneKeyRef.current = key;
       setSceneKey(key);
       turnRef.current = 0;
@@ -292,8 +342,26 @@ export function PracticeApp() {
       getEngine().setCharacter(SCENES[key].char);
       void aiTurn(key, 0);
     },
-    [aiTurn]
+    [aiTurn, consumeTrial, trialLocked]
   );
+
+  /* 랜딩 페이지의 캐릭터·상황 카드에서 `/practice?scene=hotel` 로 들어옵니다.
+   * 고른 상황이 이미 정해져 있으니 선택 화면을 한 번 더 거치게 하지 않습니다.
+   * 무료 횟수 판정이 끝난 뒤에 시작해야 다섯 번을 넘겨 세지 않습니다. */
+  const searchParams = useSearchParams();
+  const autoStartedRef = useRef(false);
+
+  useEffect(() => {
+    if (autoStartedRef.current || !trial.ready) return;
+    const asked = searchParams.get("scene");
+    if (!asked || !SCENE_KEYS.includes(asked as SceneKey)) return;
+    autoStartedRef.current = true;   // 연습실 안에서 되돌아와도 다시 시작하지 않게
+
+    // 첫 화면이 그려진 뒤에 시작합니다 — 카드를 눌러 들어왔을 때와 같은 순서로
+    // 대사·타이핑 애니메이션이 돌게 하려는 것입니다.
+    const id = setTimeout(() => startScene(asked as SceneKey), 0);
+    return () => clearTimeout(id);
+  }, [searchParams, startScene, trial.ready]);
 
   /* ═══════════════════════════════════════════════
      채점 · 피드백 (practice.js §11)
@@ -511,48 +579,6 @@ export function PracticeApp() {
     void getEngine().speak(SAMPLE, { lang: "en-US", profile: {} });
   }, []);
 
-  const onTtsSave = useCallback(async () => {
-    const next: TtsOptions = {
-      provider: ttsDraft.provider,
-      key: ttsDraft.key.trim(),
-      voice: ttsDraft.voice.trim()
-    };
-    writeStoredTts({ voiceURI: optsRef.current.voiceURI, tts: next });
-    getEngine().setOptions({ ...optsRef.current, tts: next });
-
-    if (!next.provider) {
-      setTtsStatus({ msg: "브라우저 내장 음성을 사용합니다.", warn: false });
-      void getEngine().speak(SAMPLE, { lang: "en-US", profile: {} });
-      return;
-    }
-    if (!next.key) {
-      setTtsStatus({ msg: "API 키를 입력해 주세요.", warn: true });
-      return;
-    }
-    setTtsStatus({ msg: "음성을 만드는 중…", warn: false });
-    try {
-      await getEngine().playCloudSample(SAMPLE, { oa: "nova" });
-      setTtsStatus({
-        msg: "✅ 연결됐습니다. 이제 사람 목소리에 가까운 음성으로 읽어줍니다.",
-        warn: false
-      });
-    } catch (e) {
-      setTtsStatus({
-        msg: "⚠️ 실패: " + (e as Error).message + " — 키와 잔액을 확인해 주세요.",
-        warn: true
-      });
-    }
-  }, [setTtsStatus, ttsDraft]);
-
-  const onTtsClear = useCallback(() => {
-    const next: TtsOptions = { provider: "", key: "", voice: "" };
-    setDraftOverride(next);
-    getEngine().clearCache();
-    writeStoredTts({ voiceURI: optsRef.current.voiceURI, tts: next });
-    getEngine().setOptions({ ...optsRef.current, tts: next });
-    setTtsStatus({ msg: "키를 삭제했습니다. 브라우저 내장 음성을 사용합니다.", warn: false });
-  }, [setTtsStatus]);
-
   /* ═══════════════════════════════════════════════
      화면 전환
      ═══════════════════════════════════════════════ */
@@ -612,12 +638,8 @@ export function PracticeApp() {
             onPick={startScene}
             onVoiceChange={onVoiceChange}
             onVoiceTest={onVoiceTest}
-            ttsDraft={ttsDraft}
-            setTtsDraft={fn => setDraftOverride(p => fn(p ?? stored.tts))}
-            onTtsSave={() => void onTtsSave()}
-            onTtsClear={onTtsClear}
-            ttsStatus={ttsStatus}
             serverTts={serverTts}
+            trial={trial}
           />
         ) : (
           <main className="stage" id="stage">
@@ -682,6 +704,8 @@ export function PracticeApp() {
                 levels={meter.levels}
                 meterLive={meter.live}
                 typeBarOpen={typeBarOpen}
+                finished={finished}
+                onReport={() => setReportOpen(true)}
                 onMic={onMic}
                 onToggleType={() => setTypeBarOverride(v => !(v ?? !canListen))}
                 onType={text => submit(text, { heard: text, confidence: 0, spoken: false })}
@@ -706,6 +730,8 @@ export function PracticeApp() {
             />
           </main>
         )}
+
+        {gateOpen && trialReason ? <LoginGate reason={trialReason} onClose={() => setGateOpen(false)} /> : null}
 
         {reportOpen && scene ? (
           <ReportModal

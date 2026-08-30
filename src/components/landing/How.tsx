@@ -9,18 +9,18 @@ export function How() {
         <ol className="steps">
           <li className="step reveal">
             <span className="step__num">01</span>
-            <h3>여행 정보 입력</h3>
-            <p>목적지와 출국일, 지금의 영어 수준을 알려주세요. 30초면 됩니다.</p>
+            <h3>상황 고르기</h3>
+            <p>공항 체크인부터 카드 분실 신고까지. 오늘 연습할 상황 하나를 고릅니다.</p>
           </li>
           <li className="step reveal">
             <span className="step__num">02</span>
             <h3>캐릭터와 역할극</h3>
-            <p>매일 10분, 오늘의 상황을 AI 캐릭터와 대화로 통과합니다.</p>
+            <p>캐릭터가 영어로 말을 겁니다. 마이크를 누르고 소리 내어 답하면 됩니다.</p>
           </li>
           <li className="step reveal">
             <span className="step__num">03</span>
-            <h3>복기하고 출발</h3>
-            <p>틀린 문장은 카드로 저장되고, 출국 전 최종 리허설로 마무리합니다.</p>
+            <h3>리포트로 복기</h3>
+            <p>어긋난 발음과 더 자연스러운 표현을 리포트로 확인하고, 같은 상황을 다시 연습합니다.</p>
           </li>
         </ol>
       </div>

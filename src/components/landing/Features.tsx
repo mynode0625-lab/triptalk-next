@@ -14,7 +14,7 @@ export function Features() {
             <h3>캐릭터별 말투와 성격</h3>
             <p>느긋한 호텔 직원, 말이 빠른 택시 기사, 무뚝뚝한 입국심사관. 캐릭터마다 억양·속도·표현이 다르기 때문에 어떤 상대를 만나도 당황하지 않습니다.</p>
             <div className="feature__chips">
-              <span>영국식/미국식 억양</span><span>속도 3단계</span><span>돌발 질문</span>
+              <span>영국식·미국식 억양</span><span>말하기 속도 조절</span><span>천천히 다시 듣기</span>
             </div>
           </article>
           <article className="feature reveal">
@@ -28,16 +28,16 @@ export function Features() {
             <p>문장이 어색하면 대화를 끊지 않고 더 자연스러운 표현을 옆에서 알려줍니다.</p>
           </article>
           <article className="feature reveal">
-            <span className="feature__icon">🧭</span>
-            <h3>여행 일정 연동</h3>
-            <p>출국일과 목적지를 넣으면 필요한 상황부터 순서대로 커리큘럼이 짜입니다.</p>
+            <span className="feature__icon">🎯</span>
+            <h3>따라 말하기</h3>
+            <p>모범 문장을 그대로 소리 내어 따라 하면, 단어 단위로 어디가 어긋났는지 짚어줍니다.</p>
           </article>
           <article className="feature feature--wide reveal">
-            <span className="feature__icon">📼</span>
-            <h3>대화 복기 노트</h3>
-            <p>연습이 끝나면 내가 말한 문장, 놓친 표현, 다시 들어야 할 구간이 정리됩니다. 공항 가는 길에 카드만 넘겨도 복습이 끝납니다.</p>
+            <span className="feature__icon">📋</span>
+            <h3>끝나면 바로 복기</h3>
+            <p>연습하는 동안 인식이 어긋난 단어와 더 자연스러운 표현이 옆에 쌓이고, 상황을 마치면 결과 리포트로 한 번에 정리됩니다. 카드마다 🔊를 눌러 발음을 다시 들을 수 있습니다.</p>
             <div className="feature__chips">
-              <span>자동 단어장</span><span>망각 곡선 복습</span><span>오프라인 저장</span>
+              <span>발음 연습 단어</span><span>표현 교정 카드</span><span>결과 리포트</span>
             </div>
           </article>
         </div>

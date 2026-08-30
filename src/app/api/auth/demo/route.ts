@@ -1,7 +1,7 @@
 /**
  * 데모 세션 발급
  *
- * 소셜 키를 하나도 넣지 않아도 로그인 "흐름"은 볼 수 있어야 합니다. 원본부터
+ * 신한 SOL 연동 키가 없어도 로그인 "흐름"은 볼 수 있어야 합니다. 원본부터
  * 있던 데모 모드를 서버 쪽으로 옮긴 것입니다.
  *
  * **해당 제공자의 실제 키가 설정돼 있으면 거부합니다.** 그렇지 않으면 진짜 키가
@@ -13,13 +13,10 @@ import { PROVIDERS } from "@/lib/auth/providers";
 import type { ProviderKey } from "@/types/session";
 
 const CLIENT_IDS: Record<ProviderKey, string | undefined> = {
-  kakao: process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID,
-  naver: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
-  google: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+  shinhan: process.env.NEXT_PUBLIC_SHINHAN_CLIENT_ID
 };
 
-const isProvider = (v: unknown): v is ProviderKey =>
-  v === "kakao" || v === "naver" || v === "google";
+const isProvider = (v: unknown): v is ProviderKey => v === "shinhan";
 
 export async function POST(request: NextRequest) {
   let provider: unknown;
@@ -35,8 +32,23 @@ export async function POST(request: NextRequest) {
   }
 
   const meta = PROVIDERS[provider];
+
+  /* 데모 세션에도 **방문자마다 다른 id** 를 발급합니다.
+   *
+   * 예전에는 데모 세션이 전부 같은 사람이었습니다. 그 상태로 후기에 로그인을 걸면
+   * `unique (author_provider, author_sub)` 때문에 **두 번째 사람이 첫 사람의 글을
+   * 덮어씁니다.** 임시 신원을 주면 각자 자기 후기를 갖고, 남용자를 차단할 수도
+   * 있습니다.
+   *
+   * ⚠ 장벽으로는 약합니다 — 로그아웃하고 다시 들어오면 새 사람이 됩니다. 목적은
+   * 완벽한 차단이 아니라 사후 대응과 도배 방지입니다. 실제 연동 키가 들어오면
+   * 이 경로 자체가 막히고(위의 409) 진짜 계정으로 대체됩니다.
+   */
+  const sub = `demo-${crypto.randomUUID()}`;
+
   const session = {
     provider,
+    sub,
     name: meta.demo.name,
     email: meta.demo.email,
     avatar: meta.avatar,

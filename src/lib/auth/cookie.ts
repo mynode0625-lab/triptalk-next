@@ -94,8 +94,12 @@ export async function readSessionCookie(): Promise<Session | null> {
   try {
     const payload = JSON.parse(new TextDecoder().decode(fromB64Url(body))) as Payload;
     if (typeof payload.exp !== "number" || Date.now() > payload.exp) return null;
+    // sub 가 없는 것은 이 필드를 넣기 전에 발급된 쿠키다. 로그인하지 않은 것으로
+    // 본다 — 억지로 메우면 그 보정 코드가 오래 남는다. 7일이면 자연히 사라진다.
+    if (!payload.sub) return null;
     return {
       provider: payload.provider,
+      sub: payload.sub,
       name: payload.name,
       email: payload.email,
       avatar: payload.avatar,

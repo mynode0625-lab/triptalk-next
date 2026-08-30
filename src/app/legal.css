@@ -1,0 +1,125 @@
+/* ═══════════════════════════════════════════════════
+   개인정보처리방침 — 읽히는 것이 목적인 문서 페이지
+   본문 폭을 좁게 잡고 장식을 걷어냅니다.
+   ═══════════════════════════════════════════════════ */
+
+.legal-top {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(255,255,255,.88); backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.legal-top__inner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; height: 62px;
+}
+
+.legal { padding: 40px 0 90px; }
+.legal__doc { width: min(100% - 40px, 780px); margin-inline: auto; }
+
+.legal h1 { font-size: clamp(27px, 5vw, 36px); }
+.legal__dates {
+  margin-top: 12px; color: var(--ink-3); font-size: 13.5px;
+  display: flex; flex-wrap: wrap; gap: 4px 16px;
+}
+
+/* 먼저 읽는 요약 — 아래 본문과 내용이 어긋나지 않게 유지합니다 */
+.legal__tldr {
+  margin-top: 26px; padding: 20px 22px;
+  border-radius: var(--radius); background: var(--brand-soft);
+  border: 1px solid #d8dbff;
+}
+.legal__tldr h2 { font-size: 15.5px; margin-bottom: 10px; }
+.legal__tldr ul { display: flex; flex-direction: column; gap: 7px; }
+.legal__tldr li {
+  position: relative; padding-left: 17px;
+  font-size: 14.5px; color: var(--ink-2); line-height: 1.7;
+}
+.legal__tldr li::before {
+  content: "·"; position: absolute; left: 5px; font-weight: 800; color: var(--brand);
+}
+
+/* 아직 채우지 않은 필수 항목 표시 */
+.legal__todo {
+  margin-top: 18px; padding: 15px 18px;
+  border-radius: var(--radius-sm);
+  background: #fff7ed; border: 1px solid #fdba74; color: #9a3412;
+  font-size: 13.5px; line-height: 1.7;
+}
+.legal__todo b { display: block; margin-bottom: 3px; }
+
+.legal__toc {
+  margin-top: 26px; padding: 18px 22px;
+  border-radius: var(--radius); border: 1px solid var(--line); background: var(--bg-tint);
+}
+.legal__toc h2 { font-size: 14px; color: var(--ink-3); margin-bottom: 10px; }
+.legal__toc ol { counter-reset: toc; display: grid; gap: 6px 20px; }
+.legal__toc li { counter-increment: toc; font-size: 14px; }
+.legal__toc li::before { content: counter(toc) ". "; color: var(--ink-3); }
+.legal__toc a { color: var(--ink-2); }
+.legal__toc a:hover { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
+@media (min-width: 640px) { .legal__toc ol { grid-template-columns: 1fr 1fr; } }
+
+.legal__sec { margin-top: 44px; scroll-margin-top: 78px; }
+.legal__sec > h2 {
+  font-size: 19px; padding-bottom: 11px; border-bottom: 2px solid var(--ink);
+  margin-bottom: 18px;
+}
+.legal__sec h3 {
+  font-size: 15.5px; margin: 24px 0 9px; color: var(--ink);
+}
+.legal__sec p { font-size: 15px; color: var(--ink-2); margin-bottom: 12px; }
+.legal__sec b { color: var(--ink); }
+.legal__sec ul { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.legal__sec ul li {
+  position: relative; padding-left: 16px;
+  font-size: 15px; color: var(--ink-2); line-height: 1.72;
+}
+.legal__sec ul li::before {
+  content: ""; position: absolute; left: 3px; top: 11px;
+  width: 4px; height: 4px; border-radius: 50%; background: var(--ink-3);
+}
+.legal__sec a { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
+
+/* 강조 문단 — 사실관계상 특히 오해하기 쉬운 부분 */
+.legal__note {
+  padding: 15px 18px; border-radius: var(--radius-sm);
+  background: var(--bg-tint); border-left: 3px solid var(--brand);
+  font-size: 14.5px; color: var(--ink-2); line-height: 1.72; margin-bottom: 14px;
+}
+.legal__note p:last-child { margin-bottom: 0; }
+
+.legal__scroll { overflow-x: auto; margin-bottom: 14px; -webkit-overflow-scrolling: touch; }
+.legal table {
+  width: 100%; min-width: 560px; border-collapse: collapse; font-size: 13.5px;
+}
+/* 열이 많은 표 — 좁게 두면 셀마다 한 단어씩 끊겨 읽을 수 없습니다.
+   가로 스크롤을 감수하고 셀 폭을 확보합니다. */
+.legal table.table--wide { min-width: 820px; }
+.legal table.table--wide td:first-child { white-space: nowrap; }
+.legal th, .legal td {
+  border: 1px solid var(--line); padding: 10px 12px;
+  text-align: left; vertical-align: top; line-height: 1.62;
+}
+.legal th { background: var(--bg-tint); font-weight: 700; color: var(--ink); white-space: nowrap; }
+.legal td { color: var(--ink-2); }
+
+.legal__contact {
+  margin-top: 10px; padding: 18px 20px;
+  border-radius: var(--radius); border: 1px solid var(--line); background: #fff;
+  box-shadow: var(--shadow);
+}
+.legal__contact dl { display: grid; gap: 9px; }
+.legal__contact div { display: flex; gap: 12px; font-size: 14.5px; }
+.legal__contact dt { min-width: 92px; color: var(--ink-3); flex-shrink: 0; }
+.legal__contact dd { color: var(--ink-2); font-weight: 600; }
+
+.legal__foot {
+  margin-top: 52px; padding-top: 22px; border-top: 1px solid var(--line);
+  color: var(--ink-3); font-size: 13px; line-height: 1.75;
+}
+
+@media (max-width: 640px) {
+  .legal { padding: 28px 0 64px; }
+  .legal__sec { margin-top: 36px; }
+  .legal__contact div { flex-direction: column; gap: 2px; }
+}
