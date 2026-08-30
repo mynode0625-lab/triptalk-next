@@ -251,6 +251,7 @@ export function PracticeApp() {
       setShowModels(false);
       setFinished(true);            // 진행바 100%
 
+      if (listeningRef.current) recog.stop();   // 위와 같은 이유
       if (optsRef.current.auto) {
         setSpeaking(true);
         // 음성이 막힌 환경(자동재생 차단 등)에서도 리포트가 열리도록 시간 제한을 둡니다.
@@ -272,7 +273,7 @@ export function PracticeApp() {
       setSpeaking(false);
       setReportOpen(true);
     },
-    [pushMsg, setMicEnabled]
+    [pushMsg, recog, setMicEnabled]
   );
 
   const aiTurn = useCallback(
@@ -301,6 +302,13 @@ export function PracticeApp() {
       // 마이크는 바로 열어둡니다. (모바일 사파리처럼 TTS가 막히는 환경 대비 —
       //  말하기 버튼을 누르면 재생 중인 음성은 자동으로 멈춥니다.)
       setMicEnabled(true);
+
+      /* 지난 턴의 인식이 아직 돌고 있으면 먼저 닫습니다.
+         열린 마이크에 대고 캐릭터 대사를 재생하면 **인식기가 그 소리를 받아씁니다** —
+         사용자가 말하지 않았는데 대사가 그대로 답변으로 잡히는 일이 실제로 있었습니다. */
+      if (listeningRef.current) recog.stop();
+      setMicLive({ kind: "hint" });   // 지난 턴의 중간 결과가 남아 있지 않게
+
       if (optsRef.current.auto) {
         setSpeaking(true);
         void getEngine().speak(t.ai, {
@@ -310,7 +318,7 @@ export function PracticeApp() {
         });
       }
     },
-    [closingTurn, pushMsg, setMicEnabled]
+    [closingTurn, pushMsg, recog, setMicEnabled]
   );
 
   const startScene = useCallback(
@@ -517,9 +525,16 @@ export function PracticeApp() {
 
   const onMic = useCallback(() => {
     if (!micEnabled) return;
+    if (listeningRef.current) { startListening(); return; }   // 듣는 중이면 멈추는 동작
+
+    /* 재생 중인 음성을 멈추고 **잠깐 기다린 뒤** 마이크를 엽니다.
+       cancel() 직후에도 스피커에서 소리 꼬리가 남는 기기가 있고, 그 꼬리를 인식기가
+       사용자의 말로 받아씁니다. 200ms 는 사람이 버튼을 누르고 입을 떼는 시간보다
+       짧아 체감되지 않습니다. */
     getEngine().cancel();
     setSpeaking(false);
-    startListening();
+    setMicLive({ kind: "hint" });
+    setTimeout(() => { if (aliveRef.current) startListening(); }, 200);
   }, [micEnabled, startListening]);
 
   /* 새 내용이 오면 아래(피드백)로 스크롤합니다.
