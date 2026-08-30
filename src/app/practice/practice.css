@@ -303,6 +303,10 @@ body:has(.practice-page) { background: var(--bg-tint); }
   color: var(--brand); font-size: 12px; font-weight: 800; text-align: center;
 }
 .panel .empty { font-size: 13px; color: var(--ink-3); }
+/* 상단 '📋 리포트' 로 접고 펼칩니다.
+   예전에는 이 규칙이 좁은 화면 미디어쿼리 안에만 있어서, 넓은 화면에서는 클래스만
+   바뀌고 아무 일도 일어나지 않았습니다 — 버튼이 죽은 것처럼 보였습니다. */
+.panel.is-hidden { display: none; }
 
 .gauge__num { font-size: 40px; font-weight: 800; letter-spacing: -.045em; line-height: 1.05; }
 .gauge__bar { height: 8px; border-radius: 99px; background: var(--bg-tint); overflow: hidden; margin: 9px 0 8px; }
@@ -361,7 +365,6 @@ body:has(.practice-page) { background: var(--bg-tint); }
 @media (max-width: 1020px) {
   .stage { grid-template-columns: 1fr; }
   .panel { position: static; }
-  .panel.is-hidden { display: none; }
   .talk { min-height: auto; }
   .talk__chat { max-height: 56vh; }
 }

@@ -625,6 +625,7 @@ export function PracticeApp() {
           name={scene?.char.name ?? "Emma"}
           scene={scene?.title ?? "공항 체크인"}
           onSetup={toSetup}
+          panelHidden={panelHidden}
           onPanel={() => setPanelHidden(h => !h)}
         />
 

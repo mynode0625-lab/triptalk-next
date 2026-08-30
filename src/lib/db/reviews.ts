@@ -18,6 +18,21 @@ export type Review = {
 };
 
 export const BODY_MIN = 5;
+
+/**
+ * 화면에 보일 이름 — **첫 글자만 남기고 가립니다.**
+ *
+ * 로그인 제공자가 주는 이름은 대개 실명입니다. 후기는 누구나 볼 수 있는 글이라
+ * 실명이 그대로 걸리면 본인이 의도하지 않은 노출이 됩니다.
+ *
+ * 가린 값을 **저장합니다.** 저장한 뒤 보여줄 때만 가리면 전체 이름이 계속 남아
+ * 있게 되고, 언젠가 실수로 나갑니다. 필요하지 않은 것은 처음부터 갖지 않습니다.
+ */
+export function maskName(raw: string): string {
+  const name = raw.trim();
+  if (!name) return "익명";
+  return [...name][0] + "**";
+}
 export const BODY_MAX = 200;
 
 const TABLE = "reviews";
@@ -100,7 +115,7 @@ export async function upsertReview(input: ReviewInput): Promise<Review | null> {
       {
         author_provider: input.provider,
         author_sub: input.sub,
-        author_name: input.name,
+        author_name: maskName(input.name),
         rating: input.rating,
         body: input.body,
         scene_key: input.sceneKey ?? null,
@@ -175,5 +190,49 @@ export async function deleteReview(id: string): Promise<boolean> {
 
   const { error } = await client.from(TABLE).delete().eq("id", id);
   if (error) console.error("[TripTalk] 후기를 지우지 못했습니다:", error.message);
+  return !error;
+}
+
+
+/* ── 본인 후기 ──────────────────────────────────────────────
+   한 계정에 후기 하나이므로, 자기 글은 언제나 하나이거나 없습니다. */
+
+/** 이 계정이 남긴 후기. 없으면 null. */
+export async function findMyReview(provider: ProviderKey, sub: string): Promise<Review | null> {
+  const client = db();
+  if (!client) return null;
+
+  const { data, error } = await client
+    .from(TABLE)
+    .select(PUBLIC_COLUMNS)
+    .eq("author_provider", provider)
+    .eq("author_sub", sub)
+    .neq("status", "removed")
+    .maybeSingle();
+
+  if (error) {
+    console.error("[TripTalk] 내 후기를 읽지 못했습니다:", error.message);
+    return null;
+  }
+  return data ? toReview(data as Row) : null;
+}
+
+/**
+ * 자기 후기를 지웁니다.
+ *
+ * 조건에 **작성자를 반드시 함께** 겁니다. id 만으로 지우면 남의 id 를 보낸 사람이
+ * 남의 글을 지울 수 있습니다. RLS 가 없으니 이 조건이 유일한 방어선입니다.
+ */
+export async function deleteMyReview(provider: ProviderKey, sub: string): Promise<boolean> {
+  const client = db();
+  if (!client) return false;
+
+  const { error } = await client
+    .from(TABLE)
+    .delete()
+    .eq("author_provider", provider)
+    .eq("author_sub", sub);
+
+  if (error) console.error("[TripTalk] 내 후기를 지우지 못했습니다:", error.message);
   return !error;
 }
