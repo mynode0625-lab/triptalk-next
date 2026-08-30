@@ -101,6 +101,8 @@ export function PracticeApp() {
   const listeningRef = useRef(false);
   const msgIdRef = useRef(0);
   const micBtnRef = useRef<HTMLButtonElement | null>(null);
+  /** 마이크를 여는 예약. 두 번 눌러 두 개가 겹치지 않게 합니다. */
+  const micTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const mainRef = useRef<HTMLDivElement | null>(null);
   const aliveRef = useRef(true);
 
@@ -185,8 +187,16 @@ export function PracticeApp() {
   /* ═══════════════════════════════════════════════
      재생 · 마이크 보조
      ═══════════════════════════════════════════════ */
+  /**
+   * 🔊 다시 듣기 · 천천히 · 모범 문장 재생.
+   *
+   * **앱이 소리를 내기 전에 열린 마이크를 닫습니다.** 닫지 않으면 인식기가 그 소리를
+   * 사용자의 말로 받아쓰고, 그대로 답변으로 확정돼 버립니다. 사용자 입장에서는
+   * "녹음을 켜고 재생을 눌렀더니 입력이 안 된다" 로 보입니다.
+   */
   const speak = useCallback(
     (text: string, o?: { slow?: boolean; onEnd?: () => void }) => {
+      if (listeningRef.current) recog.stop();
       const key = sceneKeyRef.current;
       const lang = key ? SCENES[key].char.lang : "en-US";
       const rate = o?.slow ? 0.8 : optsRef.current.rate;
@@ -196,7 +206,7 @@ export function PracticeApp() {
         onEnd: () => { setSpeaking(false); o?.onEnd?.(); }
       });
     },
-    []
+    [recog]
   );
 
   const setMicEnabled = useCallback((on: boolean) => {
@@ -526,6 +536,7 @@ export function PracticeApp() {
   const onMic = useCallback(() => {
     if (!micEnabled) return;
     if (listeningRef.current) { startListening(); return; }   // 듣는 중이면 멈추는 동작
+    if (micTimerRef.current) return;                          // 이미 열리는 중이면 겹쳐 열지 않습니다
 
     /* 재생 중인 음성을 멈추고 **잠깐 기다린 뒤** 마이크를 엽니다.
        cancel() 직후에도 스피커에서 소리 꼬리가 남는 기기가 있고, 그 꼬리를 인식기가
@@ -534,7 +545,10 @@ export function PracticeApp() {
     getEngine().cancel();
     setSpeaking(false);
     setMicLive({ kind: "hint" });
-    setTimeout(() => { if (aliveRef.current) startListening(); }, 200);
+    micTimerRef.current = setTimeout(() => {
+      micTimerRef.current = null;
+      if (aliveRef.current) startListening();
+    }, 200);
   }, [micEnabled, startListening]);
 
   /* 새 내용이 오면 아래(피드백)로 스크롤합니다.
@@ -565,6 +579,7 @@ export function PracticeApp() {
     (text: string) => {
       modeRef.current = "shadow";
       setMode("shadow");
+      if (listeningRef.current) recog.stop();   // 재생 전에 마이크를 닫습니다 (speak 주석 참고)
       shadowTargetRef.current = text;
       setConfirm(null);
       setMicLive({ kind: "target", text });
@@ -577,7 +592,7 @@ export function PracticeApp() {
         rate: 0.85
       });
     },
-    [setMicEnabled]
+    [recog, setMicEnabled]
   );
 
   /* ═══════════════════════════════════════════════
