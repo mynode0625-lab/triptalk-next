@@ -118,3 +118,62 @@ export async function upsertReview(input: ReviewInput): Promise<Review | null> {
   }
   return toReview(data as Row);
 }
+
+
+/* ── 관리자용 ────────────────────────────────────────────────
+   아래 셋은 `/api/admin/reviews` 에서만 부릅니다. 공개 화면은 쓰지 않습니다. */
+
+/** 관리자 목록에 보일 후기 — 숨김·삭제된 것까지 포함합니다. */
+export type AdminReview = Review & { status: string };
+
+const ADMIN_COLUMNS = "id, author_name, rating, body, created_at, status";
+
+/** 상태와 무관하게 전부. 무엇을 감췄는지도 봐야 하기 때문입니다. */
+export async function listAllReviews(limit = 100): Promise<AdminReview[]> {
+  const client = db();
+  if (!client) return [];
+
+  const { data, error } = await client
+    .from(TABLE)
+    .select(ADMIN_COLUMNS)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error("[TripTalk] 관리자 목록을 읽지 못했습니다:", error.message);
+    return [];
+  }
+  return ((data ?? []) as (Row & { status: string })[]).map(r => ({
+    ...toReview(r),
+    status: String(r.status)
+  }));
+}
+
+/**
+ * 감추거나 다시 보이게 합니다.
+ *
+ * 지우는 것보다 이쪽을 먼저 권합니다. 잘못 감췄으면 되돌릴 수 있고, 무엇을 왜
+ * 감췄는지 확인할 여지가 남습니다.
+ */
+export async function setReviewStatus(id: string, status: "visible" | "hidden"): Promise<boolean> {
+  const client = db();
+  if (!client) return false;
+
+  const { error } = await client
+    .from(TABLE)
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq("id", id);
+
+  if (error) console.error("[TripTalk] 후기 상태를 바꾸지 못했습니다:", error.message);
+  return !error;
+}
+
+/** 되돌릴 수 없습니다. 감추는 것으로 충분한지 먼저 생각하세요. */
+export async function deleteReview(id: string): Promise<boolean> {
+  const client = db();
+  if (!client) return false;
+
+  const { error } = await client.from(TABLE).delete().eq("id", id);
+  if (error) console.error("[TripTalk] 후기를 지우지 못했습니다:", error.message);
+  return !error;
+}

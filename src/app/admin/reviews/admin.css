@@ -1,0 +1,39 @@
+/* 후기 관리 — 운영자만 보는 화면이라 꾸미지 않고 읽기 쉬운 쪽으로만 둡니다. */
+.admin { width: min(100% - 32px, 820px); margin: 40px auto 80px; }
+.admin__head { margin-bottom: 24px; }
+.admin__head h1 { font-size: 26px; margin-bottom: 6px; }
+.admin__head p { font-size: 14px; color: var(--ink-3); line-height: 1.6; }
+
+.admin__key { display: flex; gap: 8px; margin: 18px 0 26px; flex-wrap: wrap; }
+.admin__key input {
+  flex: 1; min-width: 220px; padding: 11px 14px; border-radius: 11px;
+  border: 1.5px solid var(--line); outline: none; font: inherit;
+}
+.admin__key input:focus { border-color: var(--brand); }
+
+.admin__msg {
+  padding: 11px 14px; border-radius: 11px; font-size: 13.5px; margin-bottom: 18px;
+  background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c;
+}
+.admin__msg--ok { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+
+.admin__list { display: flex; flex-direction: column; gap: 10px; }
+.arow {
+  padding: 16px 18px; border-radius: 14px;
+  background: #fff; border: 1px solid var(--line);
+}
+.arow--hidden { background: var(--bg-tint); opacity: .72; }
+.arow__top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.arow__name { font-weight: 800; font-size: 14.5px; }
+.arow__meta { font-size: 12.5px; color: var(--ink-3); }
+.arow__tag {
+  padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700;
+  background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412;
+}
+.arow__body { font-size: 14.5px; line-height: 1.65; color: var(--ink-2); margin-bottom: 12px; }
+.arow__cta { display: flex; gap: 8px; flex-wrap: wrap; }
+.arow__cta .btn { font-size: 13px; padding: 8px 14px; }
+.btn--danger { background: #dc2626; color: #fff; }
+.btn--danger:hover { background: #b91c1c; }
+
+.admin__empty { padding: 40px; text-align: center; color: var(--ink-3); font-size: 14px; }
