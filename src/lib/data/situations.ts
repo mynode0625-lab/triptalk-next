@@ -32,6 +32,8 @@ export const SITUATIONS: Record<SituationKey, Situation[]> = {
       en: "Could I get an aisle seat, please?", ko: "통로 쪽 좌석으로 부탁드려도 될까요?", scene: "checkin" },
     { emoji: "🛂", lv: 3, title: "입국 심사", desc: "방문 목적과 체류 기간을 흔들림 없이 답하기.",
       en: "I'm here for sightseeing, for about ten days.", ko: "관광 목적으로 열흘 정도 머뭅니다.", scene: "immigration" },
+    { emoji: "🧳", lv: 2, title: "귀국 체크인", desc: "짐이 늘어난 채로 돌아가기. 무게 초과와 기내 반입 확인하기.",
+      en: "How much is the extra baggage fee?", ko: "추가 수하물 요금이 얼마인가요?", scene: "returncheckin" },
     { emoji: "🧳", lv: 2, title: "수하물 분실 신고", desc: "가방이 나오지 않았을 때의 신고와 배송 요청.",
       en: "My luggage didn't come out on the carousel.", ko: "제 짐이 컨베이어에 나오지 않았어요." },
     { emoji: "🍱", lv: 1, title: "기내 서비스 요청", desc: "식사 선택, 담요 요청, 자리 바꾸기.",
@@ -79,7 +81,9 @@ export const SITUATIONS: Record<SituationKey, Situation[]> = {
     { emoji: "🗺", lv: 1, title: "길 묻기", desc: "방향 듣고 이해하기, 다시 물어보기.",
       en: "Sorry, could you say that again more slowly?", ko: "죄송한데, 조금 더 천천히 다시 말씀해 주시겠어요?" },
     { emoji: "🎟", lv: 2, title: "티켓 구매 · 투어", desc: "입장권, 오디오 가이드, 할인 문의.",
-      en: "Do you offer a student discount?", ko: "학생 할인이 있나요?" },
+      en: "Do you offer a student discount?", ko: "학생 할인이 있나요?", scene: "tour" },
+    { emoji: "🏛", lv: 1, title: "관광지 입장", desc: "표를 사고 할인·마감 시간·짐 보관 확인하기.",
+      en: "Two adults, please. Do the lockers cost anything?", ko: "성인 두 장 주세요. 사물함은 돈을 내나요?", scene: "attraction" },
     { emoji: "📸", lv: 1, title: "사진 부탁하기", desc: "지나가는 사람에게 정중히 부탁하기.",
       en: "Would you mind taking a photo of us?", ko: "저희 사진 한 장 찍어주실 수 있을까요?" }
   ],
@@ -94,7 +98,7 @@ export const SITUATIONS: Record<SituationKey, Situation[]> = {
     { emoji: "🛍", lv: 2, title: "가격 흥정", desc: "시장에서 값을 깎아보는 표현.",
       en: "Would you take twenty for it?", ko: "20달러에 해주실 수 있나요?" },
     { emoji: "🎁", lv: 2, title: "면세점 쇼핑", desc: "면세 한도와 수령 장소 확인.",
-      en: "Where do I pick this up before boarding?", ko: "탑승 전에 어디서 수령하나요?" }
+      en: "Where do I pick this up before boarding?", ko: "탑승 전에 어디서 수령하나요?", scene: "dutyfree" }
   ],
 
   trouble: [
