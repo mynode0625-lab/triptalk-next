@@ -6,8 +6,16 @@
  *
  * **해당 제공자의 실제 키가 설정돼 있으면 거부합니다.** 그렇지 않으면 진짜 키가
  * 있는 배포본에서도 아무나 세션을 만들 수 있게 되기 때문입니다.
+ *
+ * ⚠ 이 경로는 **신원을 찍어내는 곳**입니다. 부를 때마다 새 `sub` 가 나오므로,
+ * 제한이 없으면 "한 계정 한 번" 같은 규칙이 계정을 갈아치우는 것만으로 무너지고
+ * 차단 목록도 무의미해집니다. IP 당 발급 수를 셉니다.
  */
+
+/** 한 IP 가 한 시간에 만들 수 있는 데모 세션 수. 사람이 쓰기에는 넉넉합니다. */
+const MAX_PER_IP_HOUR = 10;
 import type { NextRequest } from "next/server";
+import { HOUR, clientIp, hit } from "@/lib/server/rateLimit";
 import { issueSession } from "@/lib/auth/cookie";
 import { PROVIDERS } from "@/lib/auth/providers";
 import type { ProviderKey } from "@/types/session";
@@ -29,6 +37,14 @@ export async function POST(request: NextRequest) {
   if (CLIENT_IDS[provider]) {
     // 실제 로그인이 가능한 제공자라면 데모로 우회할 수 없어야 합니다.
     return Response.json({ error: "이 제공자는 실제 로그인을 사용합니다." }, { status: 409 });
+  }
+
+  const limit = hit("demo:session", clientIp(request), MAX_PER_IP_HOUR, HOUR);
+  if (!limit.ok) {
+    return Response.json(
+      { error: "잠시 후 다시 시도해 주세요." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } }
+    );
   }
 
   const meta = PROVIDERS[provider];

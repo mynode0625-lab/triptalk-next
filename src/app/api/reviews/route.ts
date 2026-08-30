@@ -10,9 +10,15 @@
  *
  *   1. 세션 쿠키가 있어야 한다 (서버가 서명을 검증한 것만)
  *   2. 차단 목록(`blocked_authors`)에 없어야 한다
- *   3. 길이·별점 검증
+ *   3. 길이·별점·장면 값 검증
  *   4. 한 계정에 후기 하나 — 두 번째 글은 자기 글을 고치는 것이 된다 (테이블 제약)
  *   5. 같은 출처에서 온 요청만 받는다
+ *   6. **IP 당 하루 작성 수** — 아래 참고
+ *
+ * ⚠ 로그인만으로는 도배가 막히지 않습니다. 지금 로그인은 데모라 계정을 무제한으로
+ * 새로 만들 수 있어서, `/api/auth/demo` 를 다시 부르고 글을 쓰는 것을 반복하면
+ * "한 계정 하나" 규칙이 계정을 갈아치우는 것만으로 무너집니다. 그래서 계정과 별개로
+ * IP 로도 셉니다. 두 규칙은 서로를 대신하지 못합니다.
  *
  * ⚠ 작성자 정보는 **요청 본문에서 읽지 않습니다.** 세션 쿠키에서만 얻습니다.
  * 본문의 이름·id 를 믿으면 그 자리가 곧 사칭이 됩니다. RLS 를 쓰지 않으므로
@@ -28,6 +34,11 @@ import {
 } from "@/lib/db/reviews";
 import { dbReady } from "@/lib/db/client";
 import { readSessionCookie } from "@/lib/auth/cookie";
+import { DAY, clientIp, hit } from "@/lib/server/rateLimit";
+import { SCENE_KEYS } from "@/lib/data/scenarios";
+
+/** 한 IP 가 하루에 만들 수 있는 후기 수 (고치는 것은 세지 않습니다) */
+const MAX_PER_IP_DAY = 3;
 
 function sameOrigin(request: NextRequest): boolean {
   const origin = request.headers.get("origin");
@@ -69,13 +80,30 @@ export async function POST(request: NextRequest) {
     return fail("후기를 남길 수 없는 계정입니다.", 403);
   }
 
+  /* 이미 남긴 사람이 자기 글을 고치는 것은 새 글이 아니므로 세지 않습니다.
+     세면 하루 세 번 고치고 나서 더는 못 고치게 됩니다. */
+  const mine = await findMyReview(session.provider, session.sub);
+  if (!mine) {
+    const limit = hit("review:create", clientIp(request), MAX_PER_IP_DAY, DAY);
+    if (!limit.ok) {
+      return Response.json(
+        { error: "오늘 남길 수 있는 후기를 모두 사용했습니다." },
+        { status: 429, headers: { "Retry-After": String(limit.retryAfter) } }
+      );
+    }
+  }
+
   let payload: Body;
   try { payload = (await request.json()) as Body; }
   catch { return fail("잘못된 요청 본문입니다.", 400); }
 
   const body = typeof payload.body === "string" ? payload.body.trim() : "";
   const rating = Number(payload.rating);
-  const sceneKey = typeof payload.sceneKey === "string" ? payload.sceneKey : null;
+
+  /* 아는 장면 값만 받습니다. 아무 문자열이나 그대로 저장하면 길이 제한도 없는
+     칸에 무엇이든 밀어 넣을 수 있습니다. */
+  const asked = typeof payload.sceneKey === "string" ? payload.sceneKey : null;
+  const sceneKey = asked && (SCENE_KEYS as string[]).includes(asked) ? asked : null;
 
   if (body.length < BODY_MIN || body.length > BODY_MAX) {
     return fail(`후기는 ${BODY_MIN}~${BODY_MAX}자로 적어주세요.`, 400);
