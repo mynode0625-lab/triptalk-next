@@ -23,7 +23,9 @@
  * 신고 버튼과 검토 화면은 아직 없습니다.
  */
 import type { NextRequest } from "next/server";
-import { BODY_MAX, BODY_MIN, isBlocked, listReviews, upsertReview } from "@/lib/db/reviews";
+import {
+  BODY_MAX, BODY_MIN, deleteMyReview, findMyReview, isBlocked, listReviews, upsertReview
+} from "@/lib/db/reviews";
 import { dbReady } from "@/lib/db/client";
 import { readSessionCookie } from "@/lib/auth/cookie";
 
@@ -34,15 +36,19 @@ function sameOrigin(request: NextRequest): boolean {
 }
 
 /**
- * 목록과 함께 "지금 이 사람이 쓸 수 있는지" 를 알려줍니다.
- * 화면이 로그인 안내를 띄울지 작성 폼을 띄울지 정하는 데 씁니다.
+ * 목록과 함께 "지금 이 사람이 쓸 수 있는지", "이미 남긴 글이 있는지" 를 알려줍니다.
+ * 화면이 로그인 안내를 띄울지, 새로 쓰기를 띄울지, 수정·삭제를 띄울지 정하는 데 씁니다.
  */
 export async function GET() {
-  if (!dbReady()) return Response.json({ reviews: [], enabled: false, canWrite: false });
+  if (!dbReady()) {
+    return Response.json({ reviews: [], enabled: false, canWrite: false, mine: null });
+  }
 
   const [reviews, session] = await Promise.all([listReviews(), readSessionCookie()]);
+  const mine = session ? await findMyReview(session.provider, session.sub) : null;
+
   return Response.json(
-    { reviews, enabled: true, canWrite: Boolean(session) },
+    { reviews, enabled: true, canWrite: Boolean(session), mine },
     { headers: { "Cache-Control": "no-store" } }
   );
 }
@@ -89,4 +95,21 @@ export async function POST(request: NextRequest) {
   if (!saved) return fail("후기를 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.", 500);
 
   return Response.json({ review: saved }, { status: 201 });
+}
+
+/**
+ * 자기 후기 삭제.
+ *
+ * 지울 대상을 **요청 본문에서 받지 않습니다.** 세션의 작성자로 찾아 지웁니다 —
+ * id 를 받으면 남의 id 를 보낸 사람이 남의 글을 지울 수 있습니다.
+ */
+export async function DELETE(request: NextRequest) {
+  if (!dbReady()) return fail("후기 기능이 아직 켜져 있지 않습니다.", 501);
+  if (!sameOrigin(request)) return fail("허용되지 않은 요청입니다.", 403);
+
+  const session = await readSessionCookie();
+  if (!session) return fail("로그인한 뒤에 지울 수 있습니다.", 401);
+
+  const ok = await deleteMyReview(session.provider, session.sub);
+  return ok ? Response.json({ ok: true }) : fail("지우지 못했습니다.", 500);
 }

@@ -53,7 +53,10 @@ export function Reviews() {
   const [state, setState] = useState<"loading" | "off" | "ready">("loading");
   const [reviews, setReviews] = useState<Review[]>([]);
   const [canWrite, setCanWrite] = useState(false);
+  /** 내가 이미 남긴 후기. 한 계정에 하나이므로 있거나 없거나 둘 중 하나입니다. */
+  const [mine, setMine] = useState<Review | null>(null);
   const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   /* 후기는 서버가 가진 목록이라 React 바깥에서 한 번 당겨옵니다.
      기능이 꺼져 있거나 못 읽으면 섹션을 숨깁니다 — 랜딩이 깨지는 것보다 낫습니다. */
@@ -61,18 +64,37 @@ export function Reviews() {
     let alive = true;
     void fetch("/api/reviews", { cache: "no-store" })
       .then(res => res.json() as Promise<{
-        reviews?: Review[]; enabled?: boolean; canWrite?: boolean;
+        reviews?: Review[]; enabled?: boolean; canWrite?: boolean; mine?: Review | null;
       }>)
       .then(data => {
         if (!alive) return;
         if (!data.enabled) { setState("off"); return; }
         setReviews(data.reviews ?? []);
         setCanWrite(Boolean(data.canWrite));
+        setMine(data.mine ?? null);
         setState("ready");
       })
       .catch(() => { if (alive) setState("off"); });
     return () => { alive = false; };
   }, []);
+
+  /** 내 후기 삭제 — 지울 대상은 서버가 세션에서 정합니다. */
+  const removeMine = async () => {
+    if (!mine || busy) return;
+    if (!window.confirm("남기신 후기를 지웁니다. 되돌릴 수 없습니다.")) return;
+
+    setBusy(true);
+    try {
+      const res = await fetch("/api/reviews", { method: "DELETE" });
+      if (!res.ok) return;
+      setReviews(prev => prev.filter(r => r.id !== mine.id));
+      setMine(null);
+    } catch {
+      /* 실패하면 화면을 그대로 둡니다 — 지워진 것처럼 보이는 쪽이 더 나쁩니다 */
+    } finally {
+      setBusy(false);
+    }
+  };
 
   if (state !== "ready") return null;
 
@@ -104,7 +126,9 @@ export function Reviews() {
 
         {open ? (
           <ReviewForm
+            existing={mine}
             onDone={review => {
+              setMine(review);
               /* 한 계정에 후기 하나라, 다시 쓰면 새 글이 아니라 자기 글이 고쳐집니다.
                  같은 id 가 있으면 갈아끼우고 없을 때만 앞에 붙입니다. */
               setReviews(prev => {
@@ -118,9 +142,30 @@ export function Reviews() {
         ) : (
           <div className="reviews__cta">
             {canWrite ? (
-              <button type="button" className="btn btn--outline" onClick={() => setOpen(true)}>
-                ✍️ 후기 남기기
-              </button>
+              mine ? (
+                <>
+                  <div className="reviews__mine">
+                    <button type="button" className="btn btn--outline" onClick={() => setOpen(true)}>
+                      ✍️ 내 후기 수정
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn--outline"
+                      disabled={busy}
+                      onClick={() => void removeMine()}
+                    >
+                      삭제
+                    </button>
+                  </div>
+                  <p className="reviews__why">
+                    후기는 한 분당 하나입니다. 다시 쓰면 새 글이 아니라 지금 글이 고쳐집니다.
+                  </p>
+                </>
+              ) : (
+                <button type="button" className="btn btn--outline" onClick={() => setOpen(true)}>
+                  ✍️ 후기 남기기
+                </button>
+              )
             ) : (
               <>
                 <Link href="/login" className="btn btn--outline">로그인하고 후기 남기기</Link>
@@ -140,13 +185,16 @@ export function Reviews() {
 /* ── 작성 폼 ────────────────────────────────────── */
 
 function ReviewForm({
-  onDone, onCancel
+  existing, onDone, onCancel
 }: {
+  existing: Review | null;
   onDone: (review: Review) => void;
   onCancel: () => void;
 }) {
-  const [body, setBody] = useState("");
-  const [rating, setRating] = useState(5);
+  /* 수정이면 지금 글에서 시작합니다. 빈 칸부터 다시 쓰게 하면 고치는 게 아니라
+     새로 쓰는 일이 됩니다. */
+  const [body, setBody] = useState(existing?.body ?? "");
+  const [rating, setRating] = useState(existing?.rating ?? 5);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -211,16 +259,16 @@ function ReviewForm({
       </label>
 
       <p className="rform__note">
-        남긴 글과 <b>로그인한 계정의 이름</b>이 함께 공개됩니다. 본문에는 연락처처럼
-        본인을 알아볼 수 있는 정보를 적지 말아 주세요.
-        한 분당 후기는 하나이고, 다시 쓰면 이전 글이 고쳐집니다.
+        이름은 <b>첫 글자만</b> 보입니다(예: 강**). 본문에는 연락처처럼 본인을 알아볼
+        수 있는 정보를 적지 말아 주세요. 한 분당 후기는 하나이고, 언제든 고치거나
+        지울 수 있습니다.
       </p>
 
       {error ? <p className="rform__error" role="alert">{error}</p> : null}
 
       <div className="rform__cta">
         <button type="submit" className="btn btn--primary" disabled={busy}>
-          {busy ? "남기는 중…" : "후기 남기기"}
+          {busy ? "저장 중…" : existing ? "수정하기" : "후기 남기기"}
         </button>
         <button type="button" className="btn btn--outline" onClick={onCancel} disabled={busy}>
           취소
