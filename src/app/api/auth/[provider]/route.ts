@@ -149,6 +149,7 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ provid
   /* ── 3. 세션 쿠키 발급 ──────────────────────────── */
   const session = {
     provider,
+    sub: profile.id,
     name: profile.name,
     email: profile.email,
     avatar: PROVIDERS[provider].avatar,

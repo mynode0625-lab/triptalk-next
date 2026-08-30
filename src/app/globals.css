@@ -476,7 +476,11 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
 .review figcaption b { font-weight: 800; }
 .review figcaption span { color: var(--ink-3); font-size: 12.5px; }
 
-.reviews__cta { display: flex; justify-content: center; }
+.reviews__cta { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.reviews__why {
+  max-width: 42ch; text-align: center;
+  font-size: 12.5px; line-height: 1.65; color: var(--ink-3);
+}
 
 /* 작성 폼 — 랜딩 안에서 바로 남길 수 있게 둡니다 */
 .rform {

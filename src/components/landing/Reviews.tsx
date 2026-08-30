@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 /**
  * 사용자 후기.
@@ -12,6 +13,10 @@ import { useEffect, useState } from "react";
  * 데이터는 Supabase 에 있고 `/api/reviews` 를 통해서만 오갑니다. 브라우저가
  * 데이터베이스를 직접 부르지 않습니다 — `src/lib/db/client.ts` 주석 참고.
  *
+ * **쓰기는 로그인한 사람만** 할 수 있습니다. 남용에 대응하려면 글이 계정에 묶여야
+ * 하기 때문입니다. 이름은 사용자가 입력하지 않고 로그인 정보에서 가져옵니다 —
+ * 입력받으면 남의 이름을 적을 수 있습니다.
+ *
  * 서버 컴포넌트로 두면 초기 HTML 에 후기가 담기지만, 랜딩 전체가 매 요청 렌더로
  * 바뀌고 방금 남긴 후기가 바로 보이지 않습니다. 후기를 남긴 사람이 자기 글을 즉시
  * 보는 편이 중요해서 클라이언트에서 읽습니다.
@@ -22,13 +27,12 @@ import { useEffect, useState } from "react";
 
 type Review = {
   id: string;
-  nickname: string;
+  authorName: string;
   rating: number;
   body: string;
   createdAt: string;
 };
 
-const NICKNAME_MAX = 12;
 const BODY_MIN = 5;
 const BODY_MAX = 200;
 
@@ -48,6 +52,7 @@ const Stars = ({ n }: { n: number }) => (
 export function Reviews() {
   const [state, setState] = useState<"loading" | "off" | "ready">("loading");
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [canWrite, setCanWrite] = useState(false);
   const [open, setOpen] = useState(false);
 
   /* 후기는 서버가 가진 목록이라 React 바깥에서 한 번 당겨옵니다.
@@ -55,11 +60,14 @@ export function Reviews() {
   useEffect(() => {
     let alive = true;
     void fetch("/api/reviews", { cache: "no-store" })
-      .then(res => res.json() as Promise<{ reviews?: Review[]; enabled?: boolean }>)
+      .then(res => res.json() as Promise<{
+        reviews?: Review[]; enabled?: boolean; canWrite?: boolean;
+      }>)
       .then(data => {
         if (!alive) return;
         if (!data.enabled) { setState("off"); return; }
         setReviews(data.reviews ?? []);
+        setCanWrite(Boolean(data.canWrite));
         setState("ready");
       })
       .catch(() => { if (alive) setState("off"); });
@@ -88,7 +96,7 @@ export function Reviews() {
                 <Stars n={r.rating} />
                 <blockquote>{r.body}</blockquote>
                 <figcaption>
-                  <b>{r.nickname}</b>
+                  <b>{r.authorName}</b>
                   <span>{formatDate(r.createdAt)}</span>
                 </figcaption>
               </figure>
@@ -99,16 +107,31 @@ export function Reviews() {
         {open ? (
           <ReviewForm
             onDone={review => {
-              setReviews(prev => [review, ...prev]);
+              /* 한 계정에 후기 하나라, 다시 쓰면 새 글이 아니라 자기 글이 고쳐집니다.
+                 같은 id 가 있으면 갈아끼우고 없을 때만 앞에 붙입니다. */
+              setReviews(prev => {
+                const without = prev.filter(r => r.id !== review.id);
+                return [review, ...without];
+              });
               setOpen(false);
             }}
             onCancel={() => setOpen(false)}
           />
         ) : (
           <div className="reviews__cta">
-            <button type="button" className="btn btn--outline" onClick={() => setOpen(true)}>
-              ✍️ 후기 남기기
-            </button>
+            {canWrite ? (
+              <button type="button" className="btn btn--outline" onClick={() => setOpen(true)}>
+                ✍️ 후기 남기기
+              </button>
+            ) : (
+              <>
+                <Link href="/login" className="btn btn--outline">로그인하고 후기 남기기</Link>
+                <p className="reviews__why">
+                  후기는 로그인한 분만 남길 수 있습니다. 남용이 있을 때 대응하려면 글이
+                  계정에 묶여 있어야 하기 때문입니다.
+                </p>
+              </>
+            )}
           </div>
         )}
       </div>
@@ -124,7 +147,6 @@ function ReviewForm({
   onDone: (review: Review) => void;
   onCancel: () => void;
 }) {
-  const [nickname, setNickname] = useState("");
   const [body, setBody] = useState("");
   const [rating, setRating] = useState(5);
   const [busy, setBusy] = useState(false);
@@ -140,7 +162,7 @@ function ReviewForm({
       const res = await fetch("/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nickname: nickname.trim(), body: body.trim(), rating })
+        body: JSON.stringify({ body: body.trim(), rating })
       });
       const data = (await res.json()) as { review?: Review; error?: string };
       if (!res.ok || !data.review) {
@@ -158,17 +180,6 @@ function ReviewForm({
   return (
     <form className="rform reveal" onSubmit={submit}>
       <div className="rform__row">
-        <label className="rform__field">
-          <span>이름</span>
-          <input
-            value={nickname}
-            onChange={e => setNickname(e.target.value)}
-            maxLength={NICKNAME_MAX}
-            placeholder="화면에 보일 이름"
-            required
-          />
-        </label>
-
         <fieldset className="rform__stars">
           <legend>별점</legend>
           {[1, 2, 3, 4, 5].map(n => (
@@ -202,8 +213,9 @@ function ReviewForm({
       </label>
 
       <p className="rform__note">
-        남긴 글과 이름은 <b>누구나 볼 수 있습니다.</b> 실명·연락처처럼 본인을 알아볼 수 있는
-        정보는 적지 말아 주세요.
+        남긴 글과 <b>로그인한 계정의 이름</b>이 함께 공개됩니다. 본문에는 연락처처럼
+        본인을 알아볼 수 있는 정보를 적지 말아 주세요.
+        한 분당 후기는 하나이고, 다시 쓰면 이전 글이 고쳐집니다.
       </p>
 
       {error ? <p className="rform__error" role="alert">{error}</p> : null}

@@ -253,7 +253,7 @@ AUTH_SECRET=$(openssl rand -base64 32)   # 세션 쿠키 서명 키
 
    ```
    SUPABASE_URL=https://xxxx.supabase.co
-   SUPABASE_SERVICE_ROLE_KEY=...        # NEXT_PUBLIC_ 을 붙이지 마세요
+   SUPABASE_SECRET_KEY=sb_secret_...    # NEXT_PUBLIC_ 을 붙이지 마세요
    ```
 
 환경변수가 없으면 `/api/reviews` 는 `enabled: false` 를 돌려주고 **후기 섹션이 아예

@@ -32,8 +32,23 @@ export async function POST(request: NextRequest) {
   }
 
   const meta = PROVIDERS[provider];
+
+  /* 데모 세션에도 **방문자마다 다른 id** 를 발급합니다.
+   *
+   * 예전에는 데모 세션이 전부 같은 사람이었습니다. 그 상태로 후기에 로그인을 걸면
+   * `unique (author_provider, author_sub)` 때문에 **두 번째 사람이 첫 사람의 글을
+   * 덮어씁니다.** 임시 신원을 주면 각자 자기 후기를 갖고, 남용자를 차단할 수도
+   * 있습니다.
+   *
+   * ⚠ 장벽으로는 약합니다 — 로그아웃하고 다시 들어오면 새 사람이 됩니다. 목적은
+   * 완벽한 차단이 아니라 사후 대응과 도배 방지입니다. 실제 연동 키가 들어오면
+   * 이 경로 자체가 막히고(위의 409) 진짜 계정으로 대체됩니다.
+   */
+  const sub = `demo-${crypto.randomUUID()}`;
+
   const session = {
     provider,
+    sub,
     name: meta.demo.name,
     email: meta.demo.email,
     avatar: meta.avatar,
