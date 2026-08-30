@@ -34,15 +34,6 @@ type Review = {
 };
 
 const BODY_MIN = 5;
-
-/**
- * 화면 확인용으로 넣어둔 예시 후기를 알아보는 표식.
- *
- * 실제 이용자 글이 아닌 것을 아무 표시 없이 섞으면, 바로 위의 "지어낸 후기는 싣지
- * 않습니다" 가 그 자리에서 거짓이 된다. 예시가 하나라도 있으면 그렇다고 밝힌다.
- * 실제 후기가 쌓여 예시를 지우면 이 안내도 저절로 사라진다.
- */
-const SAMPLE_PREFIX = "테스트 계정";
 const BODY_MAX = 200;
 
 function formatDate(iso: string): string {
@@ -83,8 +74,6 @@ export function Reviews() {
     return () => { alive = false; };
   }, []);
 
-  const hasSample = reviews.some(r => r.authorName.startsWith(SAMPLE_PREFIX));
-
   if (state !== "ready") return null;
 
   return (
@@ -93,17 +82,9 @@ export function Reviews() {
         <div className="section-head reveal">
           <span className="eyebrow">사용자 후기</span>
           <h2>연습해 본 사람들의 이야기</h2>
-          <p>
-            {reviews.length
-              ? "로그인한 분이 직접 남긴 글만 싣습니다."
-              : "아직 후기가 없습니다. 연습해 보셨다면 첫 번째로 남겨주세요."}
-          </p>
-          {hasSample ? (
-            <p className="reviews__sample-note">
-              아래 <b>‘{SAMPLE_PREFIX}’</b> 항목은 화면 확인용으로 넣어둔 예시입니다.
-              실제 이용자가 남긴 글이 아닙니다.
-            </p>
-          ) : null}
+          {reviews.length ? null : (
+            <p>아직 후기가 없습니다. 연습해 보셨다면 첫 번째로 남겨주세요.</p>
+          )}
         </div>
 
         {reviews.length ? (
