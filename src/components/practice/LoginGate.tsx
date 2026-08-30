@@ -19,8 +19,11 @@ export function LoginGate({ onClose }: Props) {
         <h2>무료 연습 {FREE_LIMIT}회를 모두 사용했습니다</h2>
 
         <p className="gate__body">
-          로그인하면 <b>제한 없이 이어서</b> 연습할 수 있습니다. 소셜 계정으로 3초면
-          끝나고, 새로 만들 비밀번호도 없습니다.
+          <b>신한 SOL</b> 계정으로 로그인하면 제한 없이 이어서 연습할 수 있습니다.
+          따로 만들 아이디도 비밀번호도 없습니다.
+          <span className="gate__note">
+            💱 슈퍼SOL 에서 환전하고 오신 분은 로그인 없이도 제한이 없습니다.
+          </span>
         </p>
 
         <div className="gate__cta">

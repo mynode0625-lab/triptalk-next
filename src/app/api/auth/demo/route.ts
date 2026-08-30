@@ -1,7 +1,7 @@
 /**
  * 데모 세션 발급
  *
- * 소셜 키를 하나도 넣지 않아도 로그인 "흐름"은 볼 수 있어야 합니다. 원본부터
+ * 신한 SOL 연동 키가 없어도 로그인 "흐름"은 볼 수 있어야 합니다. 원본부터
  * 있던 데모 모드를 서버 쪽으로 옮긴 것입니다.
  *
  * **해당 제공자의 실제 키가 설정돼 있으면 거부합니다.** 그렇지 않으면 진짜 키가
@@ -13,13 +13,10 @@ import { PROVIDERS } from "@/lib/auth/providers";
 import type { ProviderKey } from "@/types/session";
 
 const CLIENT_IDS: Record<ProviderKey, string | undefined> = {
-  kakao: process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID,
-  naver: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
-  google: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+  shinhan: process.env.NEXT_PUBLIC_SHINHAN_CLIENT_ID
 };
 
-const isProvider = (v: unknown): v is ProviderKey =>
-  v === "kakao" || v === "naver" || v === "google";
+const isProvider = (v: unknown): v is ProviderKey => v === "shinhan";
 
 export async function POST(request: NextRequest) {
   let provider: unknown;

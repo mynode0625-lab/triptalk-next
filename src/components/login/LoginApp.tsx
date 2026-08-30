@@ -102,7 +102,7 @@ export function LoginApp() {
     return () => { if (toastTimer.current) clearTimeout(toastTimer.current); };
   }, [handleOAuthCallback]);
 
-  /* ── 소셜 로그인 ──────────────────────────────── */
+  /* ── 신한 SOL 로그인 ──────────────────────────── */
   /** 실제 로그인: 각 서비스의 인가 페이지로 이동시킵니다. */
   const startRealLogin = (provider: ProviderKey) => {
     const meta = PROVIDERS[provider];
@@ -190,11 +190,6 @@ export function LoginApp() {
                 <li><span>🩺</span> 발음 교정 + 표현 교정 리포트</li>
               </ul>
             </div>
-
-            <figure className="auth__quote">
-              <blockquote>&quot;입국심사에서 처음으로 안 얼었어요.&quot;</blockquote>
-              <figcaption><b>김지현</b> · 3개월 사용 · 미국 서부</figcaption>
-            </figure>
           </div>
         </aside>
 
@@ -207,7 +202,7 @@ export function LoginApp() {
               <header className="auth__head">
                 <Badge>🧳 베타 기간 무료</Badge>
                 <h1>다시 만나서 반가워요</h1>
-                <p>소셜 계정으로 3초 만에 시작하세요.<br />비밀번호를 새로 만들 필요가 없습니다.</p>
+                <p>신한 SOL 계정으로 시작하세요.<br />따로 만들 아이디도, 비밀번호도 없습니다.</p>
               </header>
 
               <div className="social" id="socialButtons">
@@ -227,7 +222,7 @@ export function LoginApp() {
                     >
                       <span className="social__icon" aria-hidden="true"><Icon /></span>
                       <span className="social__label">
-                        {p === "google" ? "Google로 시작하기" : `${PROVIDERS[p].label}로 시작하기`}
+                        {`${PROVIDERS[p].label} 계정으로 시작하기`}
                         {demoProviders.includes(p) ? " (데모)" : ""}
                       </span>
                     </button>
@@ -236,8 +231,8 @@ export function LoginApp() {
               </div>
 
               <p className="auth__switch">
-                처음이신가요? 위 서비스로 시작하면 <b>그 자리에서 가입까지 끝납니다.</b><br />
-                따로 만들 비밀번호도, 외울 아이디도 없습니다.
+                처음이신가요? 신한 SOL 로 시작하면 <b>그 자리에서 가입까지 끝납니다.</b><br />
+                슈퍼SOL 에서 환전하고 오셨다면 <b>로그인 없이도</b> 제한 없이 쓰실 수 있습니다.
               </p>
 
               <p className="auth__terms">
@@ -248,9 +243,7 @@ export function LoginApp() {
               {demoProviders.length ? (
                 <p className="auth__demo" id="demoNotice">
                   <b>데모 모드</b>
-                  {demoProviders.length === PROVIDER_KEYS.length
-                    ? "실제 소셜 로그인 키가 설정되지 않아 로그인 흐름만 시연합니다. 외부로 전송되는 정보가 없습니다."
-                    : `${demoProviders.map(p => PROVIDERS[p].label).join(" · ")} — 키가 설정되지 않아 흐름만 시연합니다.`}
+                  신한 SOL 연동 키가 아직 없어 로그인 흐름만 시연합니다. 외부로 전송되는 정보가 없습니다.
                 </p>
               ) : null}
             </section>

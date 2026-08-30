@@ -118,10 +118,9 @@ body:has(.auth) { background: var(--bg-tint); }
 .social__btn[disabled] { opacity: .6; pointer-events: none; }
 
 /* 각 서비스 브랜드 가이드 색상 */
-.social__btn--kakao  { background: #FEE500; color: rgba(0,0,0,.85); }
-.social__btn--naver  { background: #03C75A; color: #fff; }
-.social__btn--google { background: #fff; color: #1f1f1f; border: 1.5px solid #dadce0; }
-.social__btn--google:hover { border-color: #c6c9cd; }
+/* 신한 SOL — 정확한 브랜드 색은 제휴 시 가이드를 받아 맞춰야 합니다. */
+.social__btn--shinhan { background: #0046ff; color: #fff; }
+.social__btn--shinhan:hover { background: #0039cc; }
 
 .social__icon { width: 22px; display: grid; place-items: center; flex: none; }
 .social__label { flex: 1; text-align: center; margin-left: -22px; }

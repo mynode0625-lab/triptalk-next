@@ -34,21 +34,28 @@ export function SetupScreen({
           캐릭터가 영어로 말을 걸면, <b>마이크를 누르고 소리 내어 답하면</b> 됩니다.
         </p>
 
-        {/* 남은 횟수를 미리 말합니다 — 다 쓰고 나서야 알게 되는 것보다 낫습니다. */}
+        {/* 남은 횟수를 미리 말합니다 — 다 쓰고 나서야 알게 되는 것보다 낫습니다.
+            환전 고객에게는 셀 것이 없으므로 잔량 대신 무료라는 사실만 알립니다. */}
         {trial.ready && trial.guest ? (
-          <p className={"trial" + (trial.locked ? " trial--out" : "")}>
-            {trial.locked ? (
-              <>
-                무료 연습 {FREE_LIMIT}회를 모두 사용했습니다.{" "}
-                <Link href="/login">로그인</Link>하면 제한 없이 이어서 연습할 수 있습니다.
-              </>
-            ) : (
-              <>
-                로그인 없이 <b>{trial.left}회</b> 더 연습할 수 있습니다.{" "}
-                <Link href="/login">로그인</Link>하면 제한이 풀립니다.
-              </>
-            )}
-          </p>
+          trial.partner ? (
+            <p className="trial trial--partner">
+              💱 슈퍼SOL 환전 고객님께는 <b>횟수 제한 없이</b> 제공됩니다. 로그인도 결제도 필요 없습니다.
+            </p>
+          ) : (
+            <p className={"trial" + (trial.locked ? " trial--out" : "")}>
+              {trial.locked ? (
+                <>
+                  무료 연습 {FREE_LIMIT}회를 모두 사용했습니다.{" "}
+                  <Link href="/login">로그인</Link>하면 제한 없이 이어서 연습할 수 있습니다.
+                </>
+              ) : (
+                <>
+                  로그인 없이 <b>{trial.left}회</b> 더 연습할 수 있습니다.{" "}
+                  <Link href="/login">로그인</Link>하면 제한이 풀립니다.
+                </>
+              )}
+            </p>
+          )
         ) : null}
 
         <div className="setup__grid" id="setupGrid">

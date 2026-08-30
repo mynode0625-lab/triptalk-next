@@ -1,4 +1,4 @@
-export type ProviderKey = "kakao" | "naver" | "google";
+export type ProviderKey = "shinhan";
 
 export type Session = {
   provider: ProviderKey;
