@@ -476,6 +476,13 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
 .review figcaption b { font-weight: 800; }
 .review figcaption span { color: var(--ink-3); font-size: 12.5px; }
 
+/* 예시 후기 안내 — 숨기지 않되 후기 본문보다 눈에 덜 띄게 둡니다. */
+.reviews__sample-note {
+  margin-top: 10px; padding: 9px 14px; border-radius: 10px;
+  background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412;
+  font-size: 12.5px; line-height: 1.6;
+}
+
 .reviews__cta { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .reviews__why {
   max-width: 42ch; text-align: center;
