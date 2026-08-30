@@ -68,12 +68,11 @@ export default function PrivacyPage() {
 
           <p className="legal__todo">
             <b>공개 전 확인 필요</b>
-            ① <b>운영 주체명·개인정보 보호책임자 성명·문의 연락처를 비워 두었습니다.</b>
+            <b>운영 주체명·개인정보 보호책임자 성명·문의 연락처를 비워 두었습니다.</b>
             아직 서비스하지 않는 사이트라 공란으로 두었으나, 개인정보 보호법 제30조상
             필수 기재사항이므로 실제 서비스 공개 전에 반드시 채워야 합니다. 연락처에는
             개인 주소 대신 서비스 전용 주소를 두는 편이 좋습니다.
-            ② 후기를 저장하는 데이터베이스(Supabase)의 <b>보관 국가가 아직 확정되지 않았습니다.</b>
-            프로젝트 리전을 정한 뒤 7장의 이전 국가를 채워야 합니다.
+
           </p>
 
           <nav className="legal__toc" aria-label="목차">
@@ -287,9 +286,18 @@ export default function PrivacyPage() {
           <section className="legal__sec" id="overseas">
             <h2>7. 처리위탁 및 국외 이전</h2>
             <p>
-              운영자는 아래와 같이 개인정보 처리 업무를 국외 사업자에게 위탁하고 있으며, 개인정보
-              보호법 제28조의8에 따라 이전에 관한 사항을 알립니다.
+              운영자는 아래와 같이 개인정보 처리 업무를 외부 사업자에게 위탁하고 있으며, 국외로
+              이전되는 항목에 대해서는 개인정보 보호법 제28조의8에 따라 이전에 관한 사항을 알립니다.
             </p>
+            <div className="legal__note">
+              <p>
+                <b>후기 데이터는 국외로 나가지 않습니다.</b> 저장소(Supabase)의 서버 위치를
+                <b> 대한민국</b>으로 지정해 두었으므로, 후기와 관련한 국외 이전은 발생하지 않습니다.
+                다만 수탁자가 국외에 본사를 둔 법인이므로 위탁 사실 자체는 함께 밝힙니다.
+                국외로 실제 이전되는 것은 아래 표의 <b>Vercel</b>(접속 기록)과
+                <b> OpenAI</b>(음성으로 읽어줄 텍스트) 두 곳입니다.
+              </p>
+            </div>
             <div className="legal__scroll">
               <table className="table--wide">
                 <thead>
@@ -305,7 +313,7 @@ export default function PrivacyPage() {
                 <tbody>
                   <tr>
                     <td>Supabase, Inc.<br />(privacy@supabase.io)</td>
-                    <td>확인 필요 — 아래 참고</td>
+                    <td>대한민국<br /><small>(국외 이전 아님 — 아래 참고)</small></td>
                     <td>후기의 이름 첫 글자, 내용, 별점, 작성·수정 일시, 계정 식별자</td>
                     <td>후기의 저장 및 게시</td>
                     <td>이용자가 후기를 남기는 시점에 네트워크를 통해 전송</td>
