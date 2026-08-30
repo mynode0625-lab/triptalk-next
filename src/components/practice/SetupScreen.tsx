@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { SCENES, SCENE_KEYS } from "@/lib/data/scenarios";
 import { FREE_LIMIT, PARTNER_DAILY_LIMIT, type FreeTrial } from "@/lib/practice/freeTrial";
+import { PastSessions } from "./PastSessions";
 
 /** 2026-09-15 → "9월 15일". 연도는 대개 같은 해라 생략합니다. */
 function formatDay(iso: string): string {
@@ -164,6 +165,8 @@ export function SetupScreen({
           보내 글자로 바꿉니다. 우리가 만든 동작은 아니지만 사용자의 목소리가 나가는
           일이므로, 마이크를 켜기 전에 화면에서 밝힙니다. — 한 줄 각주로 둡니다.
         */}
+        <PastSessions />
+
         <p className="setup__privacy">
           🎙 음성은 브라우저(Chrome·Safari)의 인식 기능으로 글자로 바뀌며, TripTalk 은
           음성도 말한 내용도 저장하지 않습니다. ⌨️ 타이핑으로 답해도 됩니다.{" "}

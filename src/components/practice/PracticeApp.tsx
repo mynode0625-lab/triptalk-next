@@ -103,6 +103,8 @@ export function PracticeApp() {
   const micBtnRef = useRef<HTMLButtonElement | null>(null);
   /** 마이크를 여는 예약. 두 번 눌러 두 개가 겹치지 않게 합니다. */
   const micTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** 한 번 끝낸 연습을 두 번 저장하지 않도록 */
+  const savedRef = useRef(false);
   const mainRef = useRef<HTMLDivElement | null>(null);
   const aliveRef = useRef(true);
 
@@ -348,6 +350,7 @@ export function PracticeApp() {
       setMode("answer");
       shadowTargetRef.current = null;
 
+      savedRef.current = false;
       setScreen("stage");
       setMsgs([]);
       setSpeaking(false);
@@ -550,6 +553,34 @@ export function PracticeApp() {
       if (aliveRef.current) startListening();
     }, 200);
   }, [micEnabled, startListening]);
+
+  /* 연습이 끝나면 기록을 남깁니다.
+     로그인 여부는 **서버가 쿠키로 판단**합니다 — 화면이 정하면 남의 것으로 저장할
+     길이 생깁니다. 저장에 실패해도 알리지 않습니다. 연습은 이미 끝났고, 리포트는
+     화면에 그대로 있으며, "저장 실패" 를 띄워서 사용자가 할 수 있는 일이 없습니다. */
+  useEffect(() => {
+    if (!finished || savedRef.current) return;
+    const key = sceneKeyRef.current;
+    if (!key) return;
+    savedRef.current = true;
+
+    const avg = scores.length
+      ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+      : null;
+
+    void fetch("/api/practice/sessions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sceneKey: key,
+        turns: msgs.filter(m => m.kind === "me").length,
+        avgScore: avg,
+        scores,
+        corrections: fixes,
+        words: [...practiceWords.values()]
+      })
+    }).catch(() => { /* 저장 실패는 화면을 막지 않습니다 */ });
+  }, [finished, fixes, msgs, practiceWords, scores]);
 
   /* 새 내용이 오면 아래(피드백)로 스크롤합니다.
      캐릭터 대사는 sticky 라 스크롤해도 위에 그대로 남습니다. */
