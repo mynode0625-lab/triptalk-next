@@ -44,7 +44,11 @@ export type SceneKey =
   | "askagain" | "numbers" | "greeting" | "askhelp"
   | "checkin" | "immigration" | "hotel" | "restaurant" | "taxi"
   /* 🛍 쇼핑 — 책들이 독립된 장으로 두는 구간 */
-  | "fitting" | "checkout" | "refund"
+  | "fitting" | "checkout" | "refund" | "dutyfree"
+  /* 🗺 관광 — 카드만 있고 연습이 없던 구간 */
+  | "attraction" | "tour"
+  /* ✈ 귀국 — 여행영어 책이 마지막 장에 두는 내용 */
+  | "returncheckin"
   /* 💳 돈 트랙 — 여행영어 책들이 여러 장에 흩어 놓는 금융 상황을 모은 묶음 */
   | "carddecline" | "atm" | "exchange" | "taxrefund" | "lostcard";
 

@@ -30,6 +30,17 @@ function SitBody({ s }: { s: Situation }) {
   );
 }
 
+/**
+ * 연습할 수 있는 카드를 앞에 놓습니다.
+ *
+ * 원래 순서는 여행 순서(표 사기 → 길 묻기 → 사진 부탁)였는데, 그러면 눌러볼 수
+ * 있는 카드가 "준비 중" 사이에 흩어져 처음 온 사람이 무엇부터 해봐야 할지
+ * 알기 어렵습니다. 같은 무리 안에서는 원래 순서를 그대로 둡니다.
+ */
+function orderPlayableFirst(list: readonly Situation[]): Situation[] {
+  return [...list].sort((a, b) => Number(!!b.scene) - Number(!!a.scene));
+}
+
 export function Situations() {
   // 기본 표현이 커리큘럼의 시작이라 첫 탭으로 엽니다 (연습실 순서와 동일)
   const [tab, setTab] = useState<SituationKey>("basics");
@@ -53,7 +64,7 @@ export function Situations() {
 
       {/* key 를 바꿔 탭 전환마다 rise 애니메이션이 다시 돌게 합니다 */}
       <div className="situations" id="situationGrid" key={tab}>
-        {SITUATIONS[tab].map((s, i) => {
+        {orderPlayableFirst(SITUATIONS[tab]).map((s, i) => {
           const delay = { animationDelay: `${i * 55}ms` };
 
           /* "연습 가능" 이라고 써 놓고 누를 수 없으면 그 배지는 안내가 아니라

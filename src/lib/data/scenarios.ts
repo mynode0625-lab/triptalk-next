@@ -405,6 +405,144 @@ export const SCENES: Record<SceneKey, Scene> = {
    * 여기서는 그 상황만 모아 하나의 트랙으로 둡니다.
    */
 
+  /* ── 🗺 관광 ─────────────────────────────────────────────
+     카드는 있는데 연습이 없던 구간. 여행의 목적 자체인데 비어 있었다. */
+
+  attraction: {
+    title: "관광지 입장", emoji: "🎟", lv: "입문",
+    char: { name: "Isabel", emoji: "🎫", role: "미술관 매표소 직원", lang: "en-US",
+      voice: { oa: "coral", rate: 1, pitch: 1,
+        inst: "Warm, patient American ticket clerk at a busy museum. Clear and unhurried, repeats numbers naturally." } },
+    desc: "표를 사고 할인·시간·보관함을 확인합니다. 숫자가 계속 나옵니다.",
+    turns: [
+      { ai: "Hi there. How many tickets would you like?", ko: "안녕하세요. 표 몇 장 드릴까요?",
+        hint: "인원 수를 말해보세요. 숫자를 또렷하게.",
+        models: [["Two adults, please.", "성인 두 장 주세요."], ["Just one, please.", "한 장만 주세요."]],
+        keys: ["two", "one", "adults", "adult", "please", "tickets", "just"] },
+      { ai: "That's forty dollars total. Do you have a student ID or a city pass?", ko: "총 40달러입니다. 학생증이나 시티패스 있으신가요?",
+        hint: "있으면 보여주겠다고, 없으면 없다고 답해보세요.",
+        models: [["No, I don't have one.", "아니요, 없습니다."], ["Yes, here's my student ID.", "네, 학생증 여기 있습니다."]],
+        keys: ["no", "yes", "don't", "have", "here", "student", "id", "pass"] },
+      { ai: "No problem. The special exhibition closes at five. Would you like to add it?", ko: "괜찮습니다. 특별전은 5시에 문을 닫습니다. 추가하시겠어요?",
+        hint: "시간을 확인하거나, 추가할지 답해보세요.",
+        models: [["Yes, please add it.", "네, 추가해 주세요."], ["What time is it now?", "지금 몇 시인가요?"]],
+        keys: ["yes", "add", "please", "what", "time", "now", "no", "thanks"] },
+      { ai: "Sure. Large bags aren't allowed inside — the lockers are down the hall.", ko: "네. 큰 가방은 안으로 못 가지고 들어가세요 — 사물함은 복도 끝에 있습니다.",
+        hint: "사물함이 유료인지, 어디인지 물어보세요.",
+        models: [["Are the lockers free?", "사물함은 무료인가요?"], ["Where exactly is the hall?", "복도가 정확히 어디인가요?"]],
+        keys: ["are", "lockers", "free", "where", "exactly", "hall", "much", "cost"] },
+      { ai: "They're free — you just need a one-dollar coin, and you get it back.", ko: "무료입니다 — 1달러 동전만 넣으시면 되고, 나중에 돌려받으세요.",
+        hint: "동전이 없으면 어떻게 하는지 물어보세요.",
+        models: [["I don't have any coins. Is there a change machine?", "동전이 없는데요. 환전기가 있나요?"], ["Got it, thank you.", "알겠습니다, 감사합니다."]],
+        keys: ["don't", "have", "coins", "change", "machine", "got", "it", "thank"] }
+    ],
+    closing: { ai: "There's one right next to the lockers. Enjoy the museum!", ko: "사물함 바로 옆에 하나 있습니다. 즐겁게 관람하세요!" },
+    done: "표를 사고 입장까지 스스로 해냈습니다 🎟"
+  },
+
+  tour: {
+    title: "투어 예약", emoji: "🗺", lv: "중급",
+    char: { name: "Tomas", emoji: "🧑‍🏫", role: "투어 데스크 직원", lang: "en-US",
+      voice: { oa: "ballad", rate: 1.02, pitch: 1,
+        inst: "Friendly, energetic American tour desk staffer. Speaks in a lively but clear rhythm, like someone who does this all day." } },
+    desc: "날짜와 인원을 정하고, 포함 여부와 취소 규정을 확인합니다.",
+    turns: [
+      { ai: "Welcome! Are you looking for the half-day tour or the full-day one?", ko: "어서 오세요! 반나절 투어를 찾으시나요, 하루 종일 투어를 찾으시나요?",
+        hint: "원하는 쪽을 고르거나, 차이를 물어보세요.",
+        models: [["What's the difference?", "차이가 뭔가요?"], ["The half-day tour, please.", "반나절 투어로 할게요."]],
+        keys: ["what", "difference", "half", "full", "day", "tour", "please"] },
+      { ai: "The full-day one includes lunch and two extra stops. Which day works for you?", ko: "하루 종일 투어는 점심과 두 곳을 더 갑니다. 어느 날이 괜찮으세요?",
+        hint: "날짜나 요일을 말해보세요.",
+        models: [["Tomorrow, if there's space.", "자리가 있으면 내일요."], ["Is Saturday available?", "토요일 가능한가요?"]],
+        keys: ["tomorrow", "saturday", "sunday", "available", "space", "if", "there's"] },
+      { ai: "Tomorrow morning still has seats. Is it just for you?", ko: "내일 오전에 아직 자리가 있습니다. 혼자 가시나요?",
+        hint: "인원을 말해보세요.",
+        models: [["It's for two people.", "두 명입니다."], ["Yes, just me.", "네, 저 혼자예요."]],
+        keys: ["two", "people", "yes", "just", "me", "for", "three"] },
+      { ai: "Great. The bus leaves at eight from this corner. Please come ten minutes early.", ko: "좋습니다. 버스는 8시에 이 모퉁이에서 출발합니다. 10분 일찍 와 주세요.",
+        hint: "시간이나 장소를 되짚어 확인해 보세요.",
+        models: [["Eight o'clock, right here?", "8시, 바로 여기서요?"], ["Sorry, what time again?", "죄송한데, 몇 시라고 하셨죠?"]],
+        keys: ["eight", "o'clock", "right", "here", "sorry", "what", "time", "again"] },
+      { ai: "That's right. And if it rains, you can cancel the night before for free.", ko: "맞습니다. 그리고 비가 오면 전날 밤까지 무료로 취소하실 수 있습니다.",
+        hint: "취소 방법을 물어보세요.",
+        models: [["How do I cancel?", "어떻게 취소하나요?"], ["Do I get a full refund?", "전액 환불되나요?"]],
+        keys: ["how", "cancel", "do", "get", "full", "refund", "money", "back"] }
+    ],
+    closing: { ai: "Just call the number on your receipt. See you tomorrow at eight!", ko: "영수증에 있는 번호로 전화만 주세요. 내일 8시에 뵙겠습니다!" },
+    done: "투어를 직접 예약하고 조건까지 확인했습니다 🗺"
+  },
+
+  /* ── 🛍 면세점 ───────────────────────────────────────────
+     사는 곳과 받는 곳이 다르다는 것을 모르면 공항에서 당황한다. */
+
+  dutyfree: {
+    title: "면세점과 인도장", emoji: "🛍", lv: "중급",
+    char: { name: "Hana", emoji: "💄", role: "면세점 판매 직원", lang: "en-US",
+      voice: { oa: "shimmer", rate: 1, pitch: 1,
+        inst: "Polished, courteous duty-free sales associate. Smooth and helpful, with the practiced warmth of retail." } },
+    desc: "면세점에서 사고, 공항 인도장에서 받습니다. 여권과 항공편을 묻습니다.",
+    turns: [
+      { ai: "Hello. May I see your passport and boarding pass?", ko: "안녕하세요. 여권과 탑승권을 보여주시겠어요?",
+        hint: "건네주며 답해보세요. 탑승권이 아직 없다면 그렇게 말해도 됩니다.",
+        models: [["Here you are.", "여기 있습니다."], ["I don't have my boarding pass yet.", "탑승권을 아직 못 받았어요."]],
+        keys: ["here", "you", "are", "don't", "have", "boarding", "pass", "yet", "passport"] },
+      { ai: "That's fine. Which flight are you taking today?", ko: "괜찮습니다. 오늘 어느 항공편 타시나요?",
+        hint: "항공편이나 목적지를 말해보세요.",
+        models: [["I'm flying to Seoul tonight.", "오늘 밤 서울로 갑니다."], ["It's the eight o'clock flight.", "8시 비행기입니다."]],
+        keys: ["flying", "to", "seoul", "tonight", "eight", "flight", "going"] },
+      { ai: "Got it. You'll pick this up at the airport, not here. Is that okay?", ko: "알겠습니다. 이건 여기가 아니라 공항에서 받으시게 됩니다. 괜찮으실까요?",
+        hint: "어디서 받는지 물어보세요. 이걸 모르면 공항에서 헤맵니다.",
+        models: [["Where exactly do I pick it up?", "정확히 어디서 받나요?"], ["Okay. What do I need to bring?", "네. 뭘 가져가야 하나요?"]],
+        keys: ["where", "exactly", "pick", "up", "okay", "what", "need", "bring"] },
+      { ai: "At the pickup counter near gate twelve. Bring this receipt and your passport.", ko: "12번 게이트 근처 인도장에서요. 이 영수증과 여권을 가져가세요.",
+        hint: "게이트 번호를 되짚어 확인해 보세요. 숫자는 흘려듣기 쉽습니다.",
+        models: [["Gate twelve, did you say?", "12번 게이트라고 하셨나요?"], ["How early should I go there?", "얼마나 일찍 가야 하나요?"]],
+        keys: ["gate", "twelve", "did", "you", "say", "how", "early", "should", "go"] },
+      { ai: "Yes, gate twelve. Go at least thirty minutes before boarding.", ko: "네, 12번 게이트요. 탑승 30분 전에는 가세요.",
+        hint: "못 찾으면 어떻게 하는지 물어보세요.",
+        models: [["What if I can't find it?", "못 찾으면 어떻게 하죠?"], ["Thirty minutes — got it, thanks.", "30분 전이요 — 알겠습니다, 감사합니다."]],
+        keys: ["what", "if", "can't", "find", "thirty", "minutes", "got", "it", "thanks"] }
+    ],
+    closing: { ai: "Just show the receipt to any staff — they'll walk you there. Safe travels!", ko: "아무 직원에게나 영수증을 보여주세요, 데려다 드릴 겁니다. 안전한 여행 되세요!" },
+    done: "면세품을 사고 받는 곳까지 확인했습니다 🛍"
+  },
+
+  /* ── ✈ 귀국 ─────────────────────────────────────────────
+     여행영어 책이 예외 없이 마지막 장에 두는 내용. 짐이 늘어 있고, 갈 때는
+     없던 문제(초과 수하물·기내 반입)가 돌아올 때 생긴다. */
+
+  returncheckin: {
+    title: "귀국 체크인", emoji: "🧳", lv: "중급",
+    char: { name: "Daniel", emoji: "👨‍✈️", role: "귀국편 항공사 직원", lang: "en-US",
+      voice: { oa: "onyx", rate: 1, pitch: 1,
+        inst: "Calm, efficient American airline agent at a departure counter. Professional and steady, slightly formal." } },
+    desc: "짐이 늘어난 채로 돌아갑니다. 무게 초과와 기내 반입을 다룹니다.",
+    turns: [
+      { ai: "Good evening. Checking in to Seoul? May I have your passport?", ko: "안녕하세요. 서울행 체크인이신가요? 여권 주시겠어요?",
+        hint: "여권을 건네며 답해보세요.",
+        models: [["Yes, here's my passport.", "네, 여권 여기 있습니다."], ["Yes, that's right.", "네, 맞습니다."]],
+        keys: ["yes", "here", "passport", "that's", "right", "seoul"] },
+      { ai: "Thank you. Your bag is three kilos over the limit.", ko: "감사합니다. 가방이 3킬로 초과입니다.",
+        hint: "얼마를 더 내야 하는지, 아니면 옮겨 담아도 되는지 물어보세요.",
+        models: [["How much is the extra fee?", "추가 요금이 얼마인가요?"], ["Can I move some things to my carry-on?", "기내용 가방으로 옮겨도 될까요?"]],
+        keys: ["how", "much", "extra", "fee", "can", "move", "carry", "on", "some"] },
+      { ai: "You can move things, or pay fifty dollars. Your carry-on looks full though.", ko: "옮기셔도 되고, 50달러를 내셔도 됩니다. 그런데 기내용 가방도 꽉 차 보이네요.",
+        hint: "어떻게 할지 정해 말해보세요.",
+        models: [["I'll pay the fee then.", "그럼 요금을 내겠습니다."], ["Let me try moving a few things first.", "먼저 몇 개 옮겨 볼게요."]],
+        keys: ["pay", "fee", "then", "let", "me", "try", "moving", "first", "few"] },
+      { ai: "All set. One more thing — do you have any liquids over 100 milliliters in your carry-on?", ko: "됐습니다. 하나만 더요 — 기내용 가방에 100밀리리터 넘는 액체가 있나요?",
+        hint: "있으면 어떻게 되는지 물어보세요. 면세품이 걸리는 지점입니다.",
+        models: [["I have duty-free perfume. Is that okay?", "면세 향수가 있는데요. 괜찮나요?"], ["No, I don't think so.", "아니요, 없는 것 같아요."]],
+        keys: ["have", "duty", "free", "perfume", "is", "that", "okay", "no", "don't", "think"] },
+      { ai: "Duty-free is fine if it's still sealed in the bag. Window or aisle seat?", ko: "면세품은 봉투가 봉인된 채면 괜찮습니다. 창가와 복도 중 어느 좌석 드릴까요?",
+        hint: "원하는 좌석을 말해보세요. 마지막 기회입니다.",
+        models: [["Aisle, please.", "복도 쪽으로 부탁드립니다."], ["A window seat, if you have one.", "가능하면 창가 자리요."]],
+        keys: ["aisle", "window", "please", "seat", "if", "you", "have", "one"] }
+    ],
+    closing: { ai: "You're in 32A, boarding at seven forty. Have a safe flight home!", ko: "32A 좌석이시고, 7시 40분 탑승입니다. 안전한 귀국 되세요!" },
+    done: "짐 문제까지 해결하고 귀국편에 올랐습니다 🧳"
+  },
+
   carddecline: {
     title: "카드 결제 거절", emoji: "💳", lv: "중급",
     char: { name: "Maya", emoji: "🧑‍💼", role: "상점 점원", lang: "en-US",
