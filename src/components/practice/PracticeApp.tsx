@@ -109,7 +109,7 @@ export function PracticeApp() {
 
   /* 비로그인 무료 횟수. 세션 확인이 끝나기 전에는 아무도 막지 않습니다. */
   const trial = useFreeTrial();
-  const { locked: trialLocked, consume: consumeTrial } = trial;
+  const { locked: trialLocked, reason: trialReason, consume: consumeTrial } = trial;
 
   const canListen = !!recog.supported && !!recog.secure;
   const typeBarOpen = typeBarOverride ?? !canListen;
@@ -731,7 +731,7 @@ export function PracticeApp() {
           </main>
         )}
 
-        {gateOpen ? <LoginGate onClose={() => setGateOpen(false)} /> : null}
+        {gateOpen && trialReason ? <LoginGate reason={trialReason} onClose={() => setGateOpen(false)} /> : null}
 
         {reportOpen && scene ? (
           <ReportModal

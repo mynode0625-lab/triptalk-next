@@ -3,7 +3,13 @@
 import Link from "next/link";
 
 import { SCENES, SCENE_KEYS } from "@/lib/data/scenarios";
-import { FREE_LIMIT, type FreeTrial } from "@/lib/practice/freeTrial";
+import { FREE_LIMIT, PARTNER_DAILY_LIMIT, type FreeTrial } from "@/lib/practice/freeTrial";
+
+/** 2026-09-15 → "9월 15일". 연도는 대개 같은 해라 생략합니다. */
+function formatDay(iso: string): string {
+  const [, m, d] = iso.split("-");
+  return `${Number(m)}월 ${Number(d)}일`;
+}
 import type { PracticeOptions, SceneKey } from "@/types/practice";
 
 type Props = {
@@ -38,8 +44,18 @@ export function SetupScreen({
             환전 고객에게는 셀 것이 없으므로 잔량 대신 무료라는 사실만 알립니다. */}
         {trial.ready && trial.guest ? (
           trial.partner ? (
-            <p className="trial trial--partner">
-              💱 슈퍼SOL 환전 고객님께는 <b>횟수 제한 없이</b> 제공됩니다. 로그인도 결제도 필요 없습니다.
+            <p className={"trial trial--partner" + (trial.locked ? " trial--out" : "")}>
+              {trial.locked ? (
+                <>
+                  오늘 몫인 {PARTNER_DAILY_LIMIT}회를 모두 사용했습니다.
+                  내일 다시 {PARTNER_DAILY_LIMIT}회가 채워집니다.
+                </>
+              ) : (
+                <>
+                  💱 슈퍼SOL 환전 고객님 — {trial.until ? <>여행일({formatDay(trial.until)})까지 </> : null}
+                  하루 {PARTNER_DAILY_LIMIT}회, 오늘 <b>{trial.left}회</b> 남았습니다.
+                </>
+              )}
             </p>
           ) : (
             <p className={"trial" + (trial.locked ? " trial--out" : "")}>
