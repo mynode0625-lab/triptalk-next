@@ -463,55 +463,6 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
   color: #c7cbdb; font-size: 20px; font-weight: 700;
 }
 
-/* ── 후기 ───────────────────────────────────────── */
-
-/* ── 요금제 ─────────────────────────────────────── */
-.plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: start; }
-.plan {
-  position: relative; padding: 32px 28px; border-radius: var(--radius);
-  background: #fff; border: 1px solid var(--line);
-  transition: transform .25s, box-shadow .25s;
-}
-.plan:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
-.plan--featured {
-  border: 2px solid var(--brand);
-  box-shadow: 0 20px 50px rgba(79,70,229,.16);
-  transform: scale(1.03);
-}
-.plan--featured:hover { transform: scale(1.03) translateY(-5px); }
-.plan__tag {
-  position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
-  padding: 5px 15px; border-radius: 999px; font-size: 12.5px; font-weight: 800; color: #fff;
-  background: linear-gradient(135deg, var(--brand), var(--brand-2));
-  box-shadow: 0 6px 16px rgba(79,70,229,.35);
-}
-.plan h3 { font-size: 21px; }
-.plan__desc { font-size: 14px; color: var(--ink-3); margin-top: 4px; }
-.plan__price { margin: 20px 0 22px; display: flex; align-items: baseline; gap: 4px; }
-.plan__price b { font-size: 38px; font-weight: 800; letter-spacing: -.045em; }
-.plan__price small { font-size: 14px; color: var(--ink-3); font-weight: 600; }
-/* 결제 연동 전까지, 적힌 금액이 지금 청구되는 것으로 읽히지 않게 합니다 */
-.plan__beta {
-  margin: -14px 0 18px; font-size: 12.5px; font-weight: 700;
-  color: var(--mint); letter-spacing: -.01em;
-}
-.plan ul { margin-bottom: 26px; display: flex; flex-direction: column; gap: 11px; }
-.plan li { font-size: 14.5px; color: var(--ink-2); padding-left: 25px; position: relative; }
-.plan li::before {
-  content: "✓"; position: absolute; left: 0; top: -1px;
-  color: var(--mint); font-weight: 800;
-}
-.plan li.off { color: #b6bac7; }
-.plan li.off::before { content: "×"; color: #d3d6e0; }
-/* 아직 만들지 않은 기능 — 지금 되는 것과 눈으로 구분되게 둡니다 */
-.plan li.soon { color: var(--ink-3); }
-.plan li.soon::before { content: "◦"; color: var(--ink-3); }
-.plan li.soon span {
-  margin-left: 6px; padding: 1px 7px; border-radius: 999px;
-  background: var(--bg-tint); border: 1px solid var(--line);
-  font-size: 11.5px; font-weight: 700; color: var(--ink-3); white-space: nowrap;
-}
-
 /* ── FAQ ────────────────────────────────────────── */
 .faq { display: flex; flex-direction: column; gap: 10px; }
 .faq__item {
@@ -593,11 +544,10 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
   .float-card--1 { left: 0; }
   .float-card--2 { right: 0; }
 
-  .pain__grid, .features, .situations, .steps, .plans { grid-template-columns: repeat(2, 1fr); }
+  .pain__grid, .features, .situations, .steps { grid-template-columns: repeat(2, 1fr); }
   .feature--wide { grid-column: span 2; }
   .characters { grid-template-columns: repeat(2, 1fr); }
   .step:not(:last-child)::after { display: none; }
-  .plan--featured, .plan--featured:hover { transform: none; }
   .demo { grid-template-columns: 1fr; }
   .footer__inner { grid-template-columns: 1fr; gap: 32px; }
 }
@@ -617,7 +567,7 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
 
   .section { padding: 72px 0; }
   .stats { grid-template-columns: repeat(2, 1fr); gap: 24px 12px; margin-top: 56px; }
-  .pain__grid, .features, .situations, .steps, .plans, .characters,
+  .pain__grid, .features, .situations, .steps, .characters,
   .footer__cols { grid-template-columns: 1fr; }
   .feature--wide { grid-column: span 1; }
   .phone { width: 285px; height: 570px; }

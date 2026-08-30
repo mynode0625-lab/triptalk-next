@@ -16,7 +16,6 @@ export function Footer() {
             <a href="#features">특징</a>
             <a href="#characters">AI 캐릭터</a>
             <a href="#situations">상황별 학습</a>
-            <a href="#pricing">요금제</a>
           </div>
           <div>
             <h4>지원</h4>
