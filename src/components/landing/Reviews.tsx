@@ -100,7 +100,7 @@ export function Reviews() {
 
   return (
     <section className="section section--tint" id="reviews">
-      <div className="container container--narrow">
+      <div className="container">
         <div className="section-head reveal">
           <span className="eyebrow">사용자 후기</span>
           <h2>연습해 본 사람들의 이야기</h2>
