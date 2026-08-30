@@ -143,24 +143,19 @@ export function Reviews() {
           <div className="reviews__cta">
             {canWrite ? (
               mine ? (
-                <>
-                  <div className="reviews__mine">
-                    <button type="button" className="btn btn--outline" onClick={() => setOpen(true)}>
-                      ✍️ 내 후기 수정
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn--outline"
-                      disabled={busy}
-                      onClick={() => void removeMine()}
-                    >
-                      삭제
-                    </button>
-                  </div>
-                  <p className="reviews__why">
-                    후기는 한 분당 하나입니다. 다시 쓰면 새 글이 아니라 지금 글이 고쳐집니다.
-                  </p>
-                </>
+                <div className="reviews__mine">
+                  <button type="button" className="btn btn--outline" onClick={() => setOpen(true)}>
+                    ✍️ 내 후기 수정
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn--outline"
+                    disabled={busy}
+                    onClick={() => void removeMine()}
+                  >
+                    삭제
+                  </button>
+                </div>
               ) : (
                 <button type="button" className="btn btn--outline" onClick={() => setOpen(true)}>
                   ✍️ 후기 남기기
@@ -260,8 +255,7 @@ function ReviewForm({
 
       <p className="rform__note">
         이름은 <b>첫 글자만</b> 보입니다(예: 강**). 본문에는 연락처처럼 본인을 알아볼
-        수 있는 정보를 적지 말아 주세요. 한 분당 후기는 하나이고, 언제든 고치거나
-        지울 수 있습니다.
+        수 있는 정보를 적지 말아 주세요. 남긴 뒤에도 언제든 고치거나 지울 수 있습니다.
       </p>
 
       {error ? <p className="rform__error" role="alert">{error}</p> : null}
