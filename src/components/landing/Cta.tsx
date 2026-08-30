@@ -1,37 +1,13 @@
-"use client";
+import Link from "next/link";
 
-import { useState } from "react";
-
-type Note = { text: string; tone: "" | "is-ok" | "is-error" };
-
-const DEFAULT_NOTE: Note = {
-  text: "베타 기간 무료입니다. 신용카드도 필요 없습니다.",
-  tone: ""
-};
-
+/**
+ * 마지막 전환 지점.
+ *
+ * 예전에는 이메일을 받는 폼이었는데, 받은 주소로 아무것도 하지 않았습니다.
+ * (제출하면 "데모 페이지라 실제로 발송되지 않습니다" 라고 실토했습니다.)
+ * 받아서 쓰지 않을 개인정보는 애초에 받지 않고, 바로 연습으로 보냅니다.
+ */
 export function Cta() {
-  const [email, setEmail] = useState("");
-  const [invalid, setInvalid] = useState(false);
-  const [note, setNote] = useState<Note>(DEFAULT_NOTE);
-
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const v = email.trim();
-    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
-
-    setInvalid(!valid);
-    if (!valid) {
-      setNote({ text: "올바른 이메일 주소를 입력해 주세요.", tone: "is-error" });
-      (e.currentTarget.querySelector("#ctaEmail") as HTMLInputElement | null)?.focus();
-      return;
-    }
-    setNote({
-      text: `${v} 로 체험 안내를 보냈습니다. (데모 페이지라 실제로 발송되지는 않습니다)`,
-      tone: "is-ok"
-    });
-    setEmail("");
-  };
-
   return (
     <section className="cta">
       <div className="container cta__inner reveal">
@@ -39,19 +15,14 @@ export function Cta() {
           다음 여행에선<br />망설이지 않기로 해요
         </h2>
         <p>오늘 10분이면, 공항에서의 3분이 편안해집니다.</p>
-        <form className="cta__form" id="ctaForm" noValidate onSubmit={onSubmit}>
-          <input
-            type="email"
-            id="ctaEmail"
-            placeholder="이메일 주소를 입력하세요"
-            aria-label="이메일 주소"
-            className={invalid ? "is-error" : undefined}
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-          />
-          <button className="btn btn--dark" type="submit">무료로 시작하기</button>
-        </form>
-        <small className={"cta__note " + note.tone} id="ctaNote">{note.text}</small>
+        <div className="cta__actions">
+          <Link href="/practice" className="btn btn--dark btn--lg">
+            🎙 지금 말하기 연습 시작
+          </Link>
+        </div>
+        <small className="cta__note">
+          가입도, 결제 수단도 필요 없습니다. 브라우저에서 바로 시작합니다.
+        </small>
       </div>
     </section>
   );

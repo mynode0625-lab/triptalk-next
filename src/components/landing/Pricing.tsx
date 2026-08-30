@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 /**
  * 요금제.
  *
@@ -18,7 +20,11 @@ export function Pricing({ sceneCount }: { sceneCount: number }) {
         <div className="section-head reveal">
           <span className="eyebrow">요금제</span>
           <h2>여행 한 번 값보다 쌉니다</h2>
-          <p>베타 기간에는 모든 기능을 무료로 쓸 수 있습니다. 아래는 정식 출시 때 적용할 예정 요금입니다.</p>
+          <p>
+            지금은 <b>모든 기능이 무료</b>이고 결제 수단을 받지 않습니다. 아래는 정식 출시 때
+            적용할 예정 요금이며, <b>준비 중</b>으로 표시한 기능은 아직 만들지 않았습니다.
+            유료로 전환할 때는 30일 전에 미리 알려드립니다.
+          </p>
         </div>
 
         <div className="plans">
@@ -33,7 +39,7 @@ export function Pricing({ sceneCount }: { sceneCount: number }) {
               <li className="off">발음 교정 리포트</li>
               <li className="off">여행 일정 연동</li>
             </ul>
-            <a href="/login" className="btn btn--outline btn--block">베타 참여하기</a>
+            <Link href="/practice" className="btn btn--outline btn--block">무료로 시작하기</Link>
           </article>
 
           <article className="plan plan--featured reveal">
@@ -50,9 +56,9 @@ export function Pricing({ sceneCount }: { sceneCount: number }) {
               <li>AI 캐릭터 8명 전부</li>
               <li>대화 무제한</li>
               <li>발음·문장 교정 리포트</li>
-              <li>여행 일정 연동 커리큘럼</li>
+              <li className="soon">여행 일정 연동 커리큘럼 <span>준비 중</span></li>
             </ul>
-            <a href="/login" className="btn btn--primary btn--block">베타 참여하기</a>
+            <Link href="/practice" className="btn btn--primary btn--block">무료로 시작하기</Link>
           </article>
 
           <article className="plan reveal">
@@ -65,12 +71,12 @@ export function Pricing({ sceneCount }: { sceneCount: number }) {
             <p className="plan__beta">베타 기간 무료</p>
             <ul>
               <li>Traveler의 모든 기능</li>
-              <li>계정 4개까지</li>
-              <li>어린이 전용 캐릭터</li>
-              <li>가족 학습 현황판</li>
-              <li>동행자 합동 롤플레이</li>
+              <li className="soon">계정 4개까지 <span>준비 중</span></li>
+              <li className="soon">어린이 전용 캐릭터 <span>준비 중</span></li>
+              <li className="soon">가족 학습 현황판 <span>준비 중</span></li>
+              <li className="soon">동행자 합동 롤플레이 <span>준비 중</span></li>
             </ul>
-            <a href="/login" className="btn btn--outline btn--block">베타 참여하기</a>
+            <Link href="/practice" className="btn btn--outline btn--block">무료로 시작하기</Link>
           </article>
         </div>
       </div>

@@ -59,8 +59,8 @@ export function Hero() {
             <div className="score">92<small>/100</small></div>
           </div>
           <div className="float-card float-card--2">
-            <b>오늘의 연속 학습</b>
-            <div className="score">🔥 14<small>일</small></div>
+            <b>표현 교정 카드</b>
+            <div className="score">✏️ 3<small>장</small></div>
           </div>
         </div>
       </div>

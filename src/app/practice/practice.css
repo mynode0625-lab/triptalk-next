@@ -42,11 +42,8 @@ body:has(.practice-page) { background: var(--bg-tint); }
 /* ── 경고 배너 ──────────────────────────────────── */
 /* 마이크·음성 처리 고지 — 경고가 아니라 사실 안내라 톤을 낮춥니다 */
 .setup__privacy {
-  margin: 0 0 18px; padding: 11px 14px;
-  border-radius: 12px; border: 1px solid var(--line); background: var(--bg-tint);
-  color: var(--ink-3); font-size: 12.5px; line-height: 1.7;
+  margin: 20px 0 0; color: var(--ink-3); font-size: 12px; line-height: 1.65;
 }
-.setup__privacy b { color: var(--ink-2); }
 
 .warn {
   width: min(100% - 32px, 1240px); margin: 14px auto 0;
@@ -67,6 +64,17 @@ body:has(.practice-page) { background: var(--bg-tint); }
 .setup h1 { font-size: clamp(26px, 3.4vw, 36px); }
 .setup__sub { margin: 12px 0 30px; color: var(--ink-3); font-size: 16px; }
 .setup__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+
+/* 비로그인 무료 횟수 안내 — 경고가 아니라 남은 잔량 표시라 톤을 낮춥니다. */
+.trial {
+  margin: -14px 0 22px; padding: 12px 16px; border-radius: 14px;
+  background: var(--brand-soft); color: var(--ink-2);
+  font-size: 13.5px; line-height: 1.6;
+}
+.trial b { color: var(--brand); }
+.trial a { color: var(--brand); font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+.trial--out { background: #fff7ed; color: #9a3412; }
+.trial--out a { color: #9a3412; }
 
 .scene-card {
   text-align: left; padding: 22px; border-radius: var(--radius);
@@ -104,42 +112,6 @@ body:has(.practice-page) { background: var(--bg-tint); }
   border: 1.5px solid var(--line); background: #fff; outline: none; font-weight: 600;
 }
 .opt select:focus { border-color: var(--brand); }
-
-/* ── 고급 음성 설정 ─────────────────────────────── */
-.adv {
-  margin-top: 14px; border-radius: var(--radius);
-  background: #fff; border: 1px solid var(--line); overflow: hidden;
-}
-.adv > summary {
-  padding: 16px 22px; font-weight: 800; font-size: 15px; cursor: pointer;
-  display: flex; align-items: center; gap: 9px; list-style: none;
-}
-.adv > summary::-webkit-details-marker { display: none; }
-.adv > summary::after { content: "▾"; margin-left: auto; color: var(--ink-3); transition: transform .25s; }
-.adv[open] > summary::after { transform: rotate(180deg); }
-.adv__tag {
-  padding: 3px 9px; border-radius: 999px; background: var(--brand-soft);
-  color: var(--brand); font-size: 11.5px; font-weight: 800;
-}
-.adv__body { padding: 0 22px 22px; border-top: 1px solid var(--line); padding-top: 18px; }
-.adv__lead { font-size: 14px; color: var(--ink-2); margin-bottom: 18px; }
-.adv__how { padding: 15px 17px; border-radius: 13px; background: var(--bg-tint); margin-bottom: 12px; }
-.adv__how > b { display: block; font-size: 14px; margin-bottom: 8px; }
-.adv__how ul { display: flex; flex-direction: column; gap: 6px; }
-.adv__how li { font-size: 13.5px; color: var(--ink-2); padding-left: 15px; position: relative; }
-.adv__how li::before { content: "·"; position: absolute; left: 4px; font-weight: 800; }
-.adv__warn {
-  font-size: 12.5px; color: #9a3412; background: #fff7ed; border: 1px solid #fdba74;
-  padding: 10px 12px; border-radius: 10px; margin-bottom: 12px; line-height: 1.6;
-}
-.adv__row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 9px; }
-.adv__row select, .adv__row input {
-  padding: 10px 13px; border-radius: 10px; border: 1.5px solid var(--line);
-  background: #fff; outline: none; font-size: 14px; flex: 1; min-width: 190px;
-}
-.adv__row select:focus, .adv__row input:focus { border-color: var(--brand); }
-.adv__status { font-size: 12.5px; font-weight: 700; color: var(--mint); flex-basis: 100%; }
-.adv__status.is-warn { color: #b45309; }
 
 /* ── 스테이지 레이아웃 ──────────────────────────── */
 .stage {
@@ -372,6 +344,12 @@ body:has(.practice-page) { background: var(--bg-tint); }
 .report__cta { display: flex; gap: 10px; }
 .report__cta .btn { flex: 1; }
 
+/* ── 로그인 안내 (무료 횟수 소진) ───────────────── */
+.modal__box--sm { width: min(100%, 460px); padding: 30px; }
+.gate__body { margin-bottom: 22px; color: var(--ink-2); font-size: 14.5px; line-height: 1.7; }
+.gate__cta { display: flex; gap: 10px; }
+.gate__cta .btn { flex: 1; display: inline-flex; align-items: center; justify-content: center; }
+
 /* ── 반응형 ─────────────────────────────────────── */
 @media (max-width: 1020px) {
   .stage { grid-template-columns: 1fr; }
@@ -390,9 +368,6 @@ body:has(.practice-page) { background: var(--bg-tint); }
   .setup__opts { flex-direction: column; align-items: stretch; gap: 14px; padding: 16px; }
   .opt { flex-wrap: wrap; }
   .opt select { max-width: none; }
-  .adv > summary { padding: 14px 16px; font-size: 14px; }
-  .adv__body { padding: 16px 16px 18px; }
-  .adv__row input, .adv__row select { min-width: 100%; }
 
   .stage { width: 100%; margin: 0; gap: 0; }
   .talk { border-radius: 0; border-left: 0; border-right: 0; min-height: calc(100dvh - 58px); }
@@ -530,11 +505,7 @@ body:has(.practice-page) { background: var(--bg-tint); }
   .log__head, .log__body { padding-inline: 14px; }
 }
 
-/* 음성 품질 안내 */
-.opt__hint {
-  flex-basis: 100%;
-  padding: 11px 14px; border-radius: 12px;
-  background: #fff7ed; border: 1px solid #fdba74; color: #9a3412;
-  font-size: 12.5px; line-height: 1.65;
+/* 연습이 끝난 뒤의 하단 바 — 입력 대신 마무리와 리포트 버튼만 남깁니다 */
+.micbar--done {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
 }
-.opt__hint--ok { background: #f0fdf4; border-color: #86efac; color: #166534; }

@@ -166,11 +166,6 @@ export function LoginApp() {
     showToast("로그아웃되었습니다");
   };
 
-  const noop = (e: React.MouseEvent) => {
-    e.preventDefault();
-    showToast("데모 사이트라 아직 준비되지 않은 화면입니다.");
-  };
-
   const providerMeta = session ? PROVIDERS[session.provider] : null;
 
   return (
@@ -246,8 +241,8 @@ export function LoginApp() {
               </p>
 
               <p className="auth__terms">
-                계속 진행하면 TripTalk의 <a href="#" onClick={noop}>이용약관</a> 및{" "}
-                <a href="#" onClick={noop}>개인정보처리방침</a>에 동의하는 것으로 간주됩니다.
+                계속 진행하면 TripTalk의 <Link href="/terms">이용약관</Link> 및{" "}
+                <Link href="/privacy">개인정보처리방침</Link>에 동의하는 것으로 간주됩니다.
               </p>
 
               {demoProviders.length ? (

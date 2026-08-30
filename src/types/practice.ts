@@ -34,6 +34,8 @@ export type Scene = {
   char: SceneCharacter;
   desc: string;
   turns: SceneTurn[];
+  /** 마지막 답변에 대한 캐릭터의 맺음말. 대화가 사용자 차례에서 끊기지 않게 합니다. */
+  closing: { ai: string; ko: string };
   done: string;
 };
 
