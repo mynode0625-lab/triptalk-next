@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
-import { CONTACT, EFFECTIVE, OPERATOR } from "@/lib/data/site";
+import { BLANK, CONTACT, EFFECTIVE } from "@/lib/data/site";
 
 /**
  * 이용약관
@@ -77,7 +77,7 @@ export default function TermsPage() {
           <section className="legal__sec" id="purpose">
             <h2>제1조 (목적)</h2>
             <p>
-              이 약관은 {OPERATOR}(이하 ‘운영자’)가 제공하는 여행 영어 말하기 연습 서비스
+              이 약관은 TripTalk 운영자(이하 ‘운영자’)가 제공하는 여행 영어 말하기 연습 서비스
               TripTalk(이하 ‘서비스’)의 이용에 관하여 운영자와 이용자 사이의 권리·의무 및 책임사항,
               기타 필요한 사항을 정하는 것을 목적으로 합니다.
             </p>
@@ -337,7 +337,7 @@ export default function TermsPage() {
             <p>
               운영자와 이용자는 서비스와 관련하여 분쟁이 발생한 경우 이를 원만하게 해결하기 위하여
               성실히 협의합니다. 문의와 분쟁 접수는{" "}
-              <b>{CONTACT}</b>로 하실 수 있습니다.
+              <b>{CONTACT || BLANK}</b>로 하실 수 있습니다.
             </p>
             <p>
               협의로 해결되지 않는 분쟁에 관한 소송은 <b>제소 당시 이용자의 주소를 관할하는 지방법원</b>에
