@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
-import { CONTACT } from "@/lib/data/site";
 
 export function Footer() {
   return (
@@ -21,7 +20,6 @@ export function Footer() {
             <h4>지원</h4>
             <a href="#faq">자주 묻는 질문</a>
             <a href="#demo">체험하기</a>
-            <a href={`mailto:${CONTACT}`}>문의하기</a>
           </div>
           <div>
             <h4>약관</h4>
