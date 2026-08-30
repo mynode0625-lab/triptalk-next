@@ -37,6 +37,7 @@ Node 20.9 이상이 필요합니다 (Next.js 16 요구사항).
 | `/api/auth/session` | 현재 세션 조회(GET) · 로그아웃(DELETE) |
 | `/api/auth/demo` | 연동 키가 없을 때의 데모 세션 발급 |
 | `/terms` · `/privacy` | 이용약관 · 개인정보처리방침 |
+| `/api/reviews` | 후기 읽기(GET) · 남기기(POST). Supabase 미설정이면 섹션 자체가 안 보임 |
 | `/api/tts` | 서버 TTS 폴백 — 아래 *AI 음성* 참고. 배포본에서는 키를 두지 않아 항상 501 |
 
 ## AI 음성 (OpenAI API)
@@ -234,3 +235,33 @@ AUTH_SECRET=$(openssl rand -base64 32)   # 세션 쿠키 서명 키
 
 이 사이트는 데모용으로 제작된 가상의 서비스 소개 페이지입니다.
 랜딩 페이지의 이용자 수 · 후기 · 요금은 실제 수치가 아닙니다.
+
+
+## 후기 (Supabase)
+
+랜딩의 후기 섹션은 **실제로 남긴 글만** 보여줍니다. 예전에 있던 지어낸 후기 네 개는
+지웠고, 비어 있으면 비어 있는 대로 "아직 후기가 없습니다" 를 보여줍니다.
+
+데이터는 Supabase 에 있고 브라우저는 데이터베이스를 직접 부르지 않습니다 —
+`service_role` 키가 나가야 하므로 애초에 불가능합니다. 모든 접근은 `/api/reviews`
+를 지나며, 쿼리는 `src/lib/db/` 안에서만 만듭니다.
+
+**켜는 방법**
+
+1. Supabase 프로젝트를 만들고 `supabase/migrations/0001_reviews.sql` 을 실행합니다
+2. 환경변수를 넣습니다 (Vercel 프로젝트 설정에도 동일하게)
+
+   ```
+   SUPABASE_URL=https://xxxx.supabase.co
+   SUPABASE_SERVICE_ROLE_KEY=...        # NEXT_PUBLIC_ 을 붙이지 마세요
+   ```
+
+환경변수가 없으면 `/api/reviews` 는 `enabled: false` 를 돌려주고 **후기 섹션이 아예
+그려지지 않습니다.** "준비 중" 같은 빈 껍데기를 두면 그것대로 사실이 아닌 화면이 됩니다.
+
+> ⚠ **누구나 쓸 수 있는 엔드포인트입니다.** 같은 출처 확인, 길이 상한(이름 12자·본문 200자),
+> IP 당 하루 3건으로 막아 두었지만 **자동 검열은 없습니다.** 부적절한 글이 올라오면
+> Supabase 대시보드에서 해당 행의 `hidden` 을 켜야 합니다. 신고 버튼과 검토 화면은
+> 아직 없습니다.
+
+RLS 를 쓰지 않는 이유와 그 대가는 `supabase-plan.md` 2장에 적어 두었습니다.

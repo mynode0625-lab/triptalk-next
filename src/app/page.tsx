@@ -9,6 +9,7 @@ import { Hero } from "@/components/landing/Hero";
 import { How } from "@/components/landing/How";
 import { Pain } from "@/components/landing/Pain";
 import { RevealObserver } from "@/components/landing/RevealObserver";
+import { Reviews } from "@/components/landing/Reviews";
 import { Situations } from "@/components/landing/Situations";
 import { ToTop } from "@/components/landing/ToTop";
 
@@ -46,6 +47,7 @@ export default function LandingPage() {
 
         <Demo />
         <How />
+        <Reviews />
 
         <section className="section section--tint" id="faq">
           <div className="container container--narrow">

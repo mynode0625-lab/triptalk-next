@@ -463,6 +463,62 @@ h1, h2, h3, h4 { line-height: 1.28; letter-spacing: -.03em; font-weight: 800; }
   color: #c7cbdb; font-size: 20px; font-weight: 700;
 }
 
+/* ── 사용자 후기 ─────────────────────────────────── */
+.reviews { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 26px; }
+.review {
+  padding: 24px 26px; border-radius: var(--radius);
+  background: #fff; border: 1px solid var(--line);
+}
+.review__stars { font-size: 14px; color: var(--brand); letter-spacing: 2px; }
+.review__stars i { color: #d7dae6; font-style: normal; }
+.review blockquote { margin: 12px 0 14px; font-size: 15px; line-height: 1.7; color: var(--ink-2); }
+.review figcaption { display: flex; align-items: baseline; gap: 8px; font-size: 13px; }
+.review figcaption b { font-weight: 800; }
+.review figcaption span { color: var(--ink-3); font-size: 12.5px; }
+
+.reviews__cta { display: flex; justify-content: center; }
+
+/* 작성 폼 — 랜딩 안에서 바로 남길 수 있게 둡니다 */
+.rform {
+  display: flex; flex-direction: column; gap: 16px;
+  padding: 26px; border-radius: var(--radius);
+  background: #fff; border: 1px solid var(--line);
+}
+.rform__row { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
+.rform__field { display: flex; flex-direction: column; gap: 7px; flex: 1; min-width: 200px; }
+.rform__field > span {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  font-size: 13.5px; font-weight: 700; color: var(--ink-2);
+}
+.rform__field > span small { font-weight: 600; color: var(--ink-3); font-size: 12px; }
+.rform__field input, .rform__field textarea {
+  padding: 12px 14px; border-radius: 11px; border: 1.5px solid var(--line);
+  background: #fff; outline: none; font: inherit; font-size: 15px; resize: vertical;
+  transition: border-color .18s;
+}
+.rform__field input:focus, .rform__field textarea:focus { border-color: var(--brand); }
+
+.rform__stars { display: flex; gap: 2px; border: 0; padding: 0; margin: 0; }
+.rform__stars legend {
+  font-size: 13.5px; font-weight: 700; color: var(--ink-2); margin-bottom: 7px; padding: 0;
+}
+.rform__star {
+  font-size: 26px; line-height: 1; color: #d7dae6; padding: 2px;
+  transition: color .15s, transform .15s;
+}
+.rform__star.is-on { color: var(--brand); }
+.rform__star:hover { transform: scale(1.15); }
+.rform__star:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
+
+.rform__note { font-size: 12.5px; line-height: 1.65; color: var(--ink-3); }
+.rform__note b { color: var(--ink-2); }
+.rform__error {
+  padding: 11px 14px; border-radius: 11px;
+  background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c;
+  font-size: 13.5px; font-weight: 600;
+}
+.rform__cta { display: flex; gap: 10px; }
+
 /* ── FAQ ────────────────────────────────────────── */
 .faq { display: flex; flex-direction: column; gap: 10px; }
 .faq__item {

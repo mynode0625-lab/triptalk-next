@@ -1,0 +1,221 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+/**
+ * 사용자 후기.
+ *
+ * 예전 이 자리에는 지어낸 후기 네 개가 있었습니다("김지현 · 3개월 사용"). 실제로
+ * 존재하지 않는 사람들이라 지웠고, 대신 **진짜로 남긴 글만 보이는 자리**를 만듭니다.
+ * 그래서 처음에는 비어 있습니다. 비어 있는 것이 지어낸 것보다 낫습니다.
+ *
+ * 데이터는 Supabase 에 있고 `/api/reviews` 를 통해서만 오갑니다. 브라우저가
+ * 데이터베이스를 직접 부르지 않습니다 — `src/lib/db/client.ts` 주석 참고.
+ *
+ * 서버 컴포넌트로 두면 초기 HTML 에 후기가 담기지만, 랜딩 전체가 매 요청 렌더로
+ * 바뀌고 방금 남긴 후기가 바로 보이지 않습니다. 후기를 남긴 사람이 자기 글을 즉시
+ * 보는 편이 중요해서 클라이언트에서 읽습니다.
+ *
+ * 기능이 꺼져 있으면(환경변수 없음) 이 섹션은 아예 그리지 않습니다. "준비 중" 같은
+ * 빈 껍데기를 두면 그것대로 사실이 아닌 화면이 됩니다.
+ */
+
+type Review = {
+  id: string;
+  nickname: string;
+  rating: number;
+  body: string;
+  createdAt: string;
+};
+
+const NICKNAME_MAX = 12;
+const BODY_MIN = 5;
+const BODY_MAX = 200;
+
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return `${d.getFullYear()}. ${d.getMonth() + 1}. ${d.getDate()}.`;
+}
+
+const Stars = ({ n }: { n: number }) => (
+  <span className="review__stars" aria-label={`5점 만점에 ${n}점`}>
+    {"★".repeat(n)}
+    <i>{"★".repeat(5 - n)}</i>
+  </span>
+);
+
+export function Reviews() {
+  const [state, setState] = useState<"loading" | "off" | "ready">("loading");
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [open, setOpen] = useState(false);
+
+  /* 후기는 서버가 가진 목록이라 React 바깥에서 한 번 당겨옵니다.
+     기능이 꺼져 있거나 못 읽으면 섹션을 숨깁니다 — 랜딩이 깨지는 것보다 낫습니다. */
+  useEffect(() => {
+    let alive = true;
+    void fetch("/api/reviews", { cache: "no-store" })
+      .then(res => res.json() as Promise<{ reviews?: Review[]; enabled?: boolean }>)
+      .then(data => {
+        if (!alive) return;
+        if (!data.enabled) { setState("off"); return; }
+        setReviews(data.reviews ?? []);
+        setState("ready");
+      })
+      .catch(() => { if (alive) setState("off"); });
+    return () => { alive = false; };
+  }, []);
+
+  if (state !== "ready") return null;
+
+  return (
+    <section className="section section--tint" id="reviews">
+      <div className="container container--narrow">
+        <div className="section-head reveal">
+          <span className="eyebrow">사용자 후기</span>
+          <h2>연습해 본 사람들의 이야기</h2>
+          <p>
+            {reviews.length
+              ? "직접 남겨주신 글입니다. 지어낸 후기는 싣지 않습니다."
+              : "아직 후기가 없습니다. 연습해 보셨다면 첫 번째로 남겨주세요."}
+          </p>
+        </div>
+
+        {reviews.length ? (
+          <div className="reviews">
+            {reviews.map(r => (
+              <figure className="review reveal" key={r.id}>
+                <Stars n={r.rating} />
+                <blockquote>{r.body}</blockquote>
+                <figcaption>
+                  <b>{r.nickname}</b>
+                  <span>{formatDate(r.createdAt)}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        ) : null}
+
+        {open ? (
+          <ReviewForm
+            onDone={review => {
+              setReviews(prev => [review, ...prev]);
+              setOpen(false);
+            }}
+            onCancel={() => setOpen(false)}
+          />
+        ) : (
+          <div className="reviews__cta">
+            <button type="button" className="btn btn--outline" onClick={() => setOpen(true)}>
+              ✍️ 후기 남기기
+            </button>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* ── 작성 폼 ────────────────────────────────────── */
+
+function ReviewForm({
+  onDone, onCancel
+}: {
+  onDone: (review: Review) => void;
+  onCancel: () => void;
+}) {
+  const [nickname, setNickname] = useState("");
+  const [body, setBody] = useState("");
+  const [rating, setRating] = useState(5);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (busy) return;
+    setBusy(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nickname: nickname.trim(), body: body.trim(), rating })
+      });
+      const data = (await res.json()) as { review?: Review; error?: string };
+      if (!res.ok || !data.review) {
+        setError(data.error ?? "후기를 저장하지 못했습니다.");
+        return;
+      }
+      onDone(data.review);
+    } catch {
+      setError("연결이 끊겼습니다. 잠시 후 다시 시도해 주세요.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <form className="rform reveal" onSubmit={submit}>
+      <div className="rform__row">
+        <label className="rform__field">
+          <span>이름</span>
+          <input
+            value={nickname}
+            onChange={e => setNickname(e.target.value)}
+            maxLength={NICKNAME_MAX}
+            placeholder="화면에 보일 이름"
+            required
+          />
+        </label>
+
+        <fieldset className="rform__stars">
+          <legend>별점</legend>
+          {[1, 2, 3, 4, 5].map(n => (
+            <button
+              key={n}
+              type="button"
+              className={"rform__star" + (n <= rating ? " is-on" : "")}
+              aria-label={`${n}점`}
+              aria-pressed={n === rating}
+              onClick={() => setRating(n)}
+            >
+              ★
+            </button>
+          ))}
+        </fieldset>
+      </div>
+
+      <label className="rform__field">
+        <span>
+          후기 <small>{body.length}/{BODY_MAX}</small>
+        </span>
+        <textarea
+          value={body}
+          onChange={e => setBody(e.target.value)}
+          minLength={BODY_MIN}
+          maxLength={BODY_MAX}
+          rows={3}
+          placeholder="어떤 상황을 연습했고 무엇이 도움이 됐는지 적어주세요."
+          required
+        />
+      </label>
+
+      <p className="rform__note">
+        남긴 글과 이름은 <b>누구나 볼 수 있습니다.</b> 실명·연락처처럼 본인을 알아볼 수 있는
+        정보는 적지 말아 주세요.
+      </p>
+
+      {error ? <p className="rform__error" role="alert">{error}</p> : null}
+
+      <div className="rform__cta">
+        <button type="submit" className="btn btn--primary" disabled={busy}>
+          {busy ? "남기는 중…" : "후기 남기기"}
+        </button>
+        <button type="button" className="btn btn--outline" onClick={onCancel} disabled={busy}>
+          취소
+        </button>
+      </div>
+    </form>
+  );
+}
