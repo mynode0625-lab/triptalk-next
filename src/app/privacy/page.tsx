@@ -68,8 +68,10 @@ export default function PrivacyPage() {
 
           <p className="legal__todo">
             <b>공개 전 확인 필요</b>
-            ① 운영 주체명과 개인정보 보호책임자 성명이 아직 비어 있습니다({OPERATOR}, {OFFICER}).
-            개인정보 보호법 제30조상 필수 기재사항이므로 실제 서비스 공개 전에 채워야 합니다.
+            ① 운영 주체명·개인정보 보호책임자 성명·문의 연락처가 아직 비어 있습니다
+            ({OPERATOR}, {OFFICER}, {CONTACT}). 개인정보 보호법 제30조상 필수 기재사항이므로
+            실제 서비스 공개 전에 채워야 합니다. 연락처에는 개인 주소 대신 서비스 전용
+            주소를 두는 편이 좋습니다.
             ② 후기를 저장하는 데이터베이스(Supabase)의 <b>보관 국가가 아직 확정되지 않았습니다.</b>
             프로젝트 리전을 정한 뒤 7장의 이전 국가를 채워야 합니다.
           </p>
@@ -336,7 +338,7 @@ export default function PrivacyPage() {
               이용자는 국외 이전을 거부할 수 있습니다. 다만 Vercel로의 이전을 거부하면 서비스에 접속
               자체가 불가능합니다. OpenAI로의 텍스트 전송은 <b>서버 음성을 사용하지 않으면 발생하지
               않으며</b>, 이 경우 브라우저에 내장된 음성으로 모든 연습을 그대로 이어갈 수 있습니다.
-              거부 의사는 <a href={`mailto:${CONTACT}`}>{CONTACT}</a>로 알려주시기 바랍니다.
+              거부 의사는 <b>{CONTACT}</b>로 알려주시기 바랍니다.
             </p>
           </section>
 
@@ -423,7 +425,7 @@ export default function PrivacyPage() {
             <h2>11. 정보주체의 권리와 행사 방법</h2>
             <p>
               이용자는 언제든지 개인정보의 <b>열람, 정정, 삭제, 처리정지</b>를 요구할 수 있습니다.
-              요구는 <a href={`mailto:${CONTACT}`}>{CONTACT}</a>로 보내주시면 지체 없이 처리하고
+              요구는 <b>{CONTACT}</b>로 보내주시면 지체 없이 처리하고
               결과를 알려드립니다. 대리인을 통해 요구할 경우 위임장을 제출해 주셔야 합니다.
             </p>
             <p>
@@ -452,7 +454,7 @@ export default function PrivacyPage() {
             <p>
               만 14세 미만 아동의 개인정보가 법정대리인의 동의 없이 처리되고 있는 사실을 알게 되면,
               운영자는 지체 없이 해당 정보를 파기합니다. 이런 사실을 발견하셨다면{" "}
-              <a href={`mailto:${CONTACT}`}>{CONTACT}</a>로 알려주시기 바랍니다.
+              <b>{CONTACT}</b>로 알려주시기 바랍니다.
             </p>
           </section>
 
@@ -481,7 +483,7 @@ export default function PrivacyPage() {
               <dl>
                 <div><dt>운영 주체</dt><dd>{OPERATOR}</dd></div>
                 <div><dt>보호책임자</dt><dd>{OFFICER}</dd></div>
-                <div><dt>연락처</dt><dd><a href={`mailto:${CONTACT}`}>{CONTACT}</a></dd></div>
+                <div><dt>연락처</dt><dd><b>{CONTACT}</b></dd></div>
                 <div><dt>접수·처리</dt><dd>이메일 접수 후 10일 이내 회신</dd></div>
               </dl>
             </div>
