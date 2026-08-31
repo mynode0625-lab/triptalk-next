@@ -89,6 +89,19 @@ code{font-family:var(--mono); font-size:12.5px; background:var(--panel); padding
 .stack .t{font-weight:600; font-size:16.5px}
 .stack .d{grid-column:2; margin-top:4px; color:var(--ink-2); font-size:15px; line-height:1.72; max-width:60ch}
 
+/* ── 대상 카드 ───────────────────────────── */
+.persona{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:2px; margin-top:22px}
+.persona > div{padding:20px 22px; background:var(--panel); border-radius:3px}
+.persona .who{font-family:var(--mono); font-size:10.5px; color:var(--brand); letter-spacing:.06em; text-transform:uppercase}
+.persona h4{margin:6px 0 0; font-size:16px; font-weight:700; letter-spacing:-.02em; text-wrap:balance}
+.persona ul{margin:12px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px}
+.persona li{font-size:14px; color:var(--ink-2); line-height:1.6; padding-left:14px; position:relative}
+.persona li::before{content:"·"; position:absolute; left:2px; color:var(--brand); font-weight:700}
+.persona .need{
+  margin:14px 0 0; padding-top:12px; border-top:1px dashed var(--rule);
+  font-size:13.5px; color:var(--ink); font-weight:600; line-height:1.6;
+}
+
 /* ── 지표 ────────────────────────────────── */
 .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:2px; margin:22px 0}
 .stats div{padding:20px 22px; background:var(--panel); border-radius:3px}
@@ -240,6 +253,43 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
         <span class="d">환전은 도착 장, 세금 환급은 쇼핑 장, 카드 분실은 사건·사고 장. <strong>“돈 때문에 곤란할 때”를 한 번에 준비할 방법이 없습니다.</strong></span>
       </li>
     </ul>
+
+    <h3>대상</h3>
+    <p>“영어를 배우려는 사람”이 아니라 <strong>여행 때문에 영어가 필요해진 사람</strong>입니다. 학습 동기가 뚜렷하고 기간이 정해져 있어 짧게 집중하고 끝납니다 — <strong>슈퍼SOL 의 환전 고객이 정확히 이 사람들입니다.</strong></p>
+
+    <div class="persona">
+      <div>
+        <span class="who">Primary</span>
+        <h4>출국일이 정해진 여행자</h4>
+        <ul>
+          <li>2~3주 뒤 출국, 환전을 막 마쳤다</li>
+          <li>영어를 다시 배울 시간은 없다</li>
+          <li>공항·호텔·식당에서 막힐까 걱정한다</li>
+        </ul>
+        <p class="need">필요한 건 커리큘럼이 아니라 “그 상황 한 번 말해 보기”</p>
+      </div>
+      <div>
+        <span class="who">Secondary</span>
+        <h4>돈 문제가 무서운 여행자</h4>
+        <ul>
+          <li>해외에서 카드가 거절된 적이 있다</li>
+          <li>따지고 싶은데 영어가 안 나와 넘어갔다</li>
+          <li>ATM·택스 리펀드 창구가 부담스럽다</li>
+        </ul>
+        <p class="need">손해를 막는 다섯 장면을 미리 연습</p>
+      </div>
+      <div>
+        <span class="who">Tertiary</span>
+        <h4>말하기가 부끄러운 학습자</h4>
+        <ul>
+          <li>사람 앞에서 틀리는 것이 싫다</li>
+          <li>어학원은 시간·비용이 부담된다</li>
+          <li>시도 자체를 줄이게 된다</li>
+        </ul>
+        <p class="need">틀려도 되는 상대, 무제한 다시 하기</p>
+      </div>
+    </div>
+
   </section>
 
   <!-- ── 03 ─────────────────────────────── -->
