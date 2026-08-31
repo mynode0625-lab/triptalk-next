@@ -153,10 +153,12 @@ td.num{font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:n
 
 /* ── 로드맵 ──────────────────────────────── */
 .road{display:flex; flex-direction:column; gap:2px; margin-top:22px}
-.road__row{display:grid; grid-template-columns:auto 1fr; gap:4px 18px; padding:18px 22px; background:var(--panel); border-radius:3px}
+.road__row{display:grid; grid-template-columns:auto 1fr auto; gap:4px 18px; padding:18px 22px; background:var(--panel); border-radius:3px}
+/* 개발 예상 기간. 단계 이름과 같은 줄 오른쪽 끝에 둡니다. */
+.road__eta{font-family:var(--mono); font-size:11.5px; color:var(--ink-3); white-space:nowrap; align-self:center}
 .road__when{font-family:var(--mono); font-size:11.5px; color:var(--brand); font-weight:500; white-space:nowrap}
 .road__what{font-weight:600; font-size:16px}
-.road__d{grid-column:2; margin-top:4px; font-size:14.5px; color:var(--ink-2); line-height:1.7}
+.road__d{grid-column:2 / -1; margin-top:4px; font-size:14.5px; color:var(--ink-2); line-height:1.7}
 
 /* ── 유의 ────────────────────────────────── */
 .note{margin-top:22px; padding:18px 22px; border-radius:3px; background:var(--caution-soft); border-left:3px solid var(--caution)}
@@ -221,7 +223,6 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
       <li><b>08.</b> 무료로 제공하는 데 드는 비용</li>
       <li><b>09.</b> PoC 계획</li>
       <li><b>10.</b> 로드맵</li>
-      <li><b>11.</b> 팀</li>
     </ol>
   </nav>
 
@@ -650,48 +651,36 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
     <div class="road">
       <div class="road__row">
         <span class="road__when">1단계</span>
-        <span class="road__what">슈퍼SOL 연결</span>
+        <span class="road__what">슈퍼SOL 연결</span><span class="road__eta">협의 후 1주</span>
         <span class="road__d">환전·카드 발급 완료 화면에서 링크로 잇습니다. 지금 배포본에서 이미 동작하므로 TripTalk 쪽 추가 개발이 없습니다.</span>
       </div>
       <div class="road__row">
         <span class="road__when">2단계</span>
-        <span class="road__what">발음 평가 고도화</span>
+        <span class="road__what">발음 평가 고도화</span><span class="road__eta">약 1개월</span>
         <span class="road__d">음소 단위 분석을 붙여 “어느 소리가 어떻게 틀렸는지”를 짚습니다. 제품이 파는 약속의 핵심입니다.</span>
       </div>
       <div class="road__row">
         <span class="road__when">3단계</span>
-        <span class="road__what">자유 대화</span>
+        <span class="road__what">자유 대화</span><span class="road__eta">약 2~3개월</span>
         <span class="road__d">대본을 벗어난 답변에도 대응합니다. 대사가 매번 달라지므로 모범 문장과 힌트도 함께 생성해야 하고, 여행 상황에서 벗어나지 않게 붙잡는 장치가 필요합니다. 비용보다 이쪽이 더 큰 일입니다.</span>
       </div>
       <div class="road__row">
         <span class="road__when">4단계</span>
-        <span class="road__what">다국어 확장</span>
+        <span class="road__what">다국어 확장</span><span class="road__eta">언어당 약 1개월</span>
         <span class="road__d">자유 대화가 붙은 뒤에 하면 콘텐츠 제작 비용이 크게 줄어듭니다. <strong>어느 언어부터 만들지는 환전 통화 분포로 정합니다</strong> — 추측이 아니라 데이터로.</span>
       </div>
     </div>
   </section>
 
-  <!-- ── 11 ─────────────────────────────── -->
-  <section>
-    <div class="sec-head"><span class="sec-num">11</span><h2>팀</h2></div>
-
-    <div class="tablewrap">
-      <table>
-        <thead><tr><th>구분</th><th>내용</th></tr></thead>
-        <tbody>
-          <tr><td>대표</td><td><span class="fill">&nbsp;</span></td></tr>
-          <tr><td>구성</td><td><span class="fill">&nbsp;</span></td></tr>
-          <tr><td>주요 이력</td><td><span class="fill">&nbsp;</span></td></tr>
-          <tr><td>연락처</td><td><span class="fill">&nbsp;</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="tnote">제출 전에 채워야 하는 칸입니다. 3인 이하 팀 기준.</p>
-  </section>
 
   <div class="endnote">
     <p><b>실행 화면</b> — <a href="https://triptalk-next-mynode.vercel.app">triptalk-next-mynode.vercel.app</a> · 설치 없이 확인하실 수 있고, 로그인 없이 3회 이용 가능합니다.</p>
     <p>이 문서는 공모 요강이 필수로 요구한 <b>“신한 슈퍼SOL 과의 연계를 통한 기대효과”</b>를 05장에 담고 있습니다.</p>
+  </div>
+
+  <div class="signoff">
+    <p><b>주식회사 마이노드</b></p>
+    <p>강선영 · <a href="mailto:mynode0625@gmail.com">mynode0625@gmail.com</a></p>
   </div>
 
 </div>

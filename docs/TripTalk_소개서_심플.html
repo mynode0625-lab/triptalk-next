@@ -187,6 +187,14 @@ caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5
   .screen{grid-template-columns:1fr}
   .screen__n{grid-row:auto; margin-bottom:4px}
 }
+
+/* ── 서명 ────────────────────────────────── */
+.signoff{margin-top:26px; padding-top:18px; border-top:1px solid var(--line);
+  font-size:13px; color:var(--ink-3); line-height:1.7}
+.signoff p{margin:0}
+.signoff b{color:var(--ink); font-weight:700; letter-spacing:-.01em}
+.signoff a{color:inherit}
+
 @media print{
   :root{--bg:#fff; --tint:#f4f5f9; --line:#d8dbe6; --ink-3:#5f6672}
   .page{max-width:none; padding:0}
@@ -358,8 +366,8 @@ caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5
       </div>
       <div>
         <span class="cap">상품 접점</span>
-        <b>배너가 아니라<br>학습 상황 안에서</b>
-        <span>상품이 고객이 스스로 들어온 맥락에서 설명됩니다.</span>
+        <b>배너가 아니라<br>고객이 먼저 찾을 때</b>
+        <span>카드 거절·ATM 수수료·분실 신고를 연습한 고객이 스스로 그 메뉴를 열 때 안내가 놓입니다.</span>
       </div>
       <div>
         <span class="cap">데이터</span>
@@ -406,6 +414,11 @@ caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5
   <div class="foot">
     <p><b>지금 확인하실 수 있습니다</b> — <a href="https://triptalk-next-mynode.vercel.app">triptalk-next-mynode.vercel.app</a> · 설치 없이 브라우저에서 실행되며, 로그인 없이 3회 연습할 수 있습니다.</p>
     <p>TripTalk v0.1.0 · 2026년 8월 기준 · 자세한 내용은 상세 소개서를 참고해 주세요.</p>
+  </div>
+
+  <div class="signoff">
+    <p><b>주식회사 마이노드</b></p>
+    <p>강선영 · <a href="mailto:mynode0625@gmail.com">mynode0625@gmail.com</a></p>
   </div>
 
 </div>
