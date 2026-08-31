@@ -14,14 +14,12 @@ import Link from "next/link";
  * 데이터베이스를 직접 부르지 않습니다 — `src/lib/db/client.ts` 주석 참고.
  *
  * **쓰기는 로그인한 사람만** 할 수 있습니다. 남용에 대응하려면 글이 계정에 묶여야
- * 하기 때문입니다. 표시 이름은 사용자가 입력하지 않고 로그인 정보에서 가져옵니다 —
- * 입력받으면 남의 이름을 적을 수 있습니다.
+ * 하기 때문입니다. 다만 **누구인지(계정)와 뭐라고 보일지(닉네임)는 다른 값입니다.**
  *
- * ⚠ 화면에는 **닉네임**이라고 적어 두었지만, 실제로 가려서 저장하는 값은 아직
- * 로그인 계정의 이름입니다. 닉네임 입력칸이 없기 때문입니다. 지금은 데모 로그인의
- * 이름이 비어 있어(`lib/auth/providers.ts`) 실명이 나갈 경로가 없지만, 신한 SOL
- * 연동으로 실명이 들어오는 순간 이 말이 사실과 어긋납니다. 그 전에 닉네임
- * 입력칸을 붙여야 합니다.
+ * 글의 주인은 세션의 `(provider, sub)` 이고 이건 요청 본문에서 받지 않습니다.
+ * 화면에 걸리는 닉네임은 반대로 **이용자가 직접 적습니다.** 로그인 이름으로 만들면
+ * 제공자가 주는 실명이 공개 글에 걸리고, 이용자에게는 고칠 방법이 없습니다.
+ * 닉네임을 사칭에 써도 계정은 여전히 세션이 쥐고 있으므로 남용 대응은 그대로입니다.
  *
  * 서버 컴포넌트로 두면 초기 HTML 에 후기가 담기지만, 랜딩 전체가 매 요청 렌더로
  * 바뀌고 방금 남긴 후기가 바로 보이지 않습니다. 후기를 남긴 사람이 자기 글을 즉시
@@ -41,6 +39,8 @@ type Review = {
 
 const BODY_MIN = 5;
 const BODY_MAX = 200;
+/** `lib/db/reviews.ts` 의 NICK_MAX 와 같은 값. 서버가 최종적으로 자릅니다. */
+const NICK_MAX = 20;
 
 function formatDate(iso: string): string {
   const d = new Date(iso);
@@ -196,6 +196,10 @@ function ReviewForm({
      새로 쓰는 일이 됩니다. */
   const [body, setBody] = useState(existing?.body ?? "");
   const [rating, setRating] = useState(existing?.rating ?? 5);
+  /* 저장돼 있는 것은 이미 가린 값("D**")뿐이라 원래 닉네임을 되살릴 수 없습니다.
+     그 값을 그대로 넣어 두면 손대지 않았을 때 같은 값으로 다시 저장됩니다
+     (maskName("D**") === "D**"). 고치고 싶으면 새로 적으면 됩니다. */
+  const [nickname, setNickname] = useState(existing?.authorName ?? "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -209,7 +213,7 @@ function ReviewForm({
       const res = await fetch("/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ body: body.trim(), rating })
+        body: JSON.stringify({ body: body.trim(), rating, nickname: nickname.trim() })
       });
       const data = (await res.json()) as { review?: Review; error?: string };
       if (!res.ok || !data.review) {
@@ -243,6 +247,18 @@ function ReviewForm({
           ))}
         </fieldset>
       </div>
+
+      <label className="rform__field">
+        <span>닉네임</span>
+        <input
+          type="text"
+          value={nickname}
+          onChange={e => setNickname(e.target.value)}
+          maxLength={NICK_MAX}
+          placeholder="비워 두면 익명"
+          autoComplete="off"
+        />
+      </label>
 
       <label className="rform__field">
         <span>
