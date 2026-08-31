@@ -215,14 +215,25 @@ caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5
 }
 
 
+@page{ size:A4; margin:14mm 13mm; }
 @media print{
   :root{--bg:#fff; --tint:#f4f5f9; --line:#d8dbe6; --ink-3:#5f6672}
   .page{max-width:none; padding:0}
   /* 섹션을 통째로 붙잡으면 하나가 다음 장으로 밀리면서 빈 공간이 생깁니다.
      쪼개지면 안 되는 것은 카드·표뿐입니다. */
   section{padding-top:30px}
-  .head,h3{break-after:avoid}
-  .leg,.persona>div,.screen,.values>div,.closing,.tablewrap,.mock{break-inside:avoid}
+
+  /* 쪼개지면 안 되는 덩어리 — 표, 카드, 목록 항목 하나. */
+  .leg,.persona>div,.screen,.values>div,.closing,.tablewrap,.mock,
+  .probs li{break-inside:avoid}
+  table,thead,tbody,tr{break-inside:avoid}
+  thead{display:table-header-group}
+
+  .head,h3,h4{break-after:avoid}
+  .tablewrap,.mock{break-after:avoid}
+  .tnote,.mock-cap,.journey-note{break-before:avoid; break-inside:avoid}
+  p,li{orphans:2; widows:2}
+
   a{color:var(--ink)}
 }
 </style>
@@ -419,7 +430,7 @@ caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5
 
     <div class="lead">
       <p>이 제안에서 TripTalk 은 <em>수익 사업이 아닙니다.</em></p>
-      <p>슈퍼SOL 고객에게 전액 무료로 제공합니다. 구독료도, 건별 과금도, 결제 수단 등록도 없습니다. 그래서 검토하실 질문은 “얼마를 받느냐”가 아니라 <strong>“무료로 제공하는 데 얼마가 드느냐”</strong>입니다.</p>
+      <p>슈퍼SOL 고객에게 전액 무료로 제공합니다. 구독료도, 건별 과금도, 결제 수단 등록도 없습니다. 검토하실 것은 <strong>“무료로 제공하는 데 얼마가 드느냐”</strong>입니다.</p>
     </div>
 
     <h3>지금 AI 가 맡은 일은 “목소리”뿐입니다</h3>

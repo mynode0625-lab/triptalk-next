@@ -46,3 +46,20 @@ Pretendard 는 CDN 에서 받아 쓴다. 인터넷이 없으면 시스템 서체
 
 내용·수치·구조는 같다. 어휘와 문장 구조, 일부 장 제목만 다르다.
 리포트체 요약본은 어휘가 길어져 인쇄 여백을 조금 줄여 A4 4쪽을 맞췄다.
+
+## PDF
+
+`docs/pdf/` 에 네 파일을 굽는다. 다시 만들 때:
+
+```
+CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+"$CHROME" --headless --disable-gpu --no-pdf-header-footer \
+  --print-to-pdf="docs/pdf/<이름>.pdf" "file://$PWD/docs/<이름>.html"
+```
+
+여백은 문서가 `@page{ size:A4; margin:14mm 13mm }` 로 직접 정한다.
+브라우저 기본값에 기대면 설정에 따라 쪽수가 달라진다.
+
+표·카드·목록 항목은 `break-inside:avoid` 로 묶어 쪽 경계에서 갈리지 않게 했다.
+다만 **격자 전체**(`.values`, `.persona`, `.screens`)를 묶으면 안 된다 — 통째로
+다음 장으로 밀리면서 빈 장이 생긴다. 묶는 단위는 항목 하나다.

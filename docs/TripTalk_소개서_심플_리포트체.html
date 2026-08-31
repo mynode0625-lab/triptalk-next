@@ -215,6 +215,7 @@ caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5
 }
 
 
+@page{ size:A4; margin:14mm 13mm; }
 @media print{
   :root{--bg:#fff; --tint:#f4f5f9; --line:#d8dbe6; --ink-3:#5f6672}
   .page{max-width:none; padding:0}
@@ -222,12 +223,22 @@ caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5
      쪼개지면 안 되는 것은 카드·표뿐입니다. */
   /* 리포트체는 어휘가 길어져 상세본보다 줄이 늘어납니다.
      A4 4쪽을 유지하려고 인쇄에서만 여백을 조금 줄입니다. */
-  section{padding-top:22px}
-  .values>div{padding:17px}
+  section{padding-top:18px}
+  .values>div{padding:15px}
   .mock{margin-top:12px; padding:14px 16px}
-  .persona>div{padding:16px 17px}
-  .head,h3{break-after:avoid}
-  .leg,.persona>div,.screen,.values>div,.closing,.tablewrap,.mock{break-inside:avoid}
+  .persona>div{padding:14px 16px}
+
+  /* 쪼개지면 안 되는 덩어리 — 표, 카드, 목록 항목 하나. */
+  .leg,.persona>div,.screen,.values>div,.closing,.tablewrap,.mock,
+  .probs li{break-inside:avoid}
+  table,thead,tbody,tr{break-inside:avoid}
+  thead{display:table-header-group}
+
+  .head,h3,h4{break-after:avoid}
+  .tablewrap,.mock{break-after:avoid}
+  .tnote,.mock-cap,.journey-note{break-before:avoid; break-inside:avoid}
+  p,li{orphans:2; widows:2}
+
   a{color:var(--ink)}
 }
 </style>
