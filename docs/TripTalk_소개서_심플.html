@@ -50,7 +50,7 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
   margin-bottom:14px;
 }
 /* globals.css 의 .logo 비율 그대로 — 상자 1.6 / 비행기 0.75 / 라운드 0.5 / 간격 0.45 */
-.logo{display:flex; align-items:center; gap:.45em; font-size:26px; font-weight:800; letter-spacing:-.04em}
+.logo{display:flex; align-items:center; gap:.45em; font-size:clamp(26px,4vw,34px); line-height:1.05; font-weight:800; letter-spacing:-.04em}
 .logo__mark{
   display:grid; place-items:center; flex:none;
   font-size:.75em; width:2.133em; height:2.133em; border-radius:.667em;
@@ -59,10 +59,13 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
 }
 .logo b{font-weight:800; color:var(--brand)}
 .slogan{
-  margin:18px 0 0; font-size:clamp(26px,4.2vw,34px); font-weight:800;
+  margin:14px 0 0; font-size:clamp(26px,4.2vw,34px); font-weight:800;
   line-height:1.22; letter-spacing:-.035em; text-wrap:balance;
 }
-.sub{margin:15px 0 0; font-size:16.5px; color:var(--ink-2)}
+.sub{
+  margin:14px 0 0; font-weight:500; font-size:clamp(17px,2.6vw,21px);
+  line-height:1.6; letter-spacing:-.015em; color:var(--ink-2);
+}
 .badges{display:flex; flex-wrap:wrap; gap:7px; margin-top:20px}
 .badge{
   word-break:break-all;
