@@ -130,9 +130,10 @@ h3{margin:26px 0 8px; font-size:16px; font-weight:600; letter-spacing:-.015em}
 /* ── 화면 ─────────────────────────────────── */
 .screens{display:flex; flex-direction:column; gap:3px; margin-top:20px}
 .screen{
-  display:block;
+  display:grid; grid-template-columns:auto 1fr; gap:0 14px; align-items:baseline;
   padding:16px 18px; background:var(--tint); border-radius:10px;
 }
+.screen__n{font-family:var(--mono); font-size:11.5px; font-weight:600; color:var(--brand)}
 .screen__t .q{font-style:normal; font-weight:400; font-size:12.5px; color:var(--brand); font-family:var(--mono)}
 .screen__t{display:block; font-weight:700; font-size:16px; letter-spacing:-.02em}
 .screen__ui{
@@ -141,7 +142,7 @@ h3{margin:26px 0 8px; font-size:16px; font-weight:600; letter-spacing:-.015em}
   background:var(--brand-soft); padding:2px 8px; border-radius:4px;
   display:inline-block; margin-top:6px;
 }
-.screen__d{font-size:14.5px; color:var(--ink-2); line-height:1.7; margin-top:6px; text-wrap:pretty}
+.screen__d{grid-column:2; margin-top:6px; font-size:14.5px; color:var(--ink-2); line-height:1.7; text-wrap:pretty}
 .screen__d b{color:var(--ink); font-weight:600}
 
 /* ── 표 ───────────────────────────────────── */
@@ -319,18 +320,22 @@ caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5
 
     <div class="screens">
       <div class="screen">
+        <span class="screen__n">01</span>
         <span class="screen__t">상황 고르기 <em class="q">“어떤 상황을 연습할까요?”</em></span>
         <span class="screen__d">21개 시나리오가 여행 순서 그대로. 레벨이 아니라 <b>원하는 상황부터 연습합니다.</b></span>
       </div>
       <div class="screen">
+        <span class="screen__n">02</span>
         <span class="screen__t">소리 내어 답하기 <em class="q">“마이크를 누르고 영어로 답해보세요”</em></span>
         <span class="screen__d">캐릭터가 <b>원어민이 실제로 쓰는 말</b>로 건넵니다. 타이핑으로도 됩니다.</span>
       </div>
       <div class="screen">
+        <span class="screen__n">03</span>
         <span class="screen__t">즉시 피드백</span>
         <span class="screen__d"><b>전달됐는지</b>, 더 자연스러운 표현은 무엇인지, <b>핵심을 놓치지 않았는지</b>를 바로 돌려줍니다.</span>
       </div>
       <div class="screen">
+        <span class="screen__n">04</span>
         <span class="screen__t">마무리 리포트 <em class="q">“평균 발음 점수 · 교정된 표현”</em></span>
         <span class="screen__d">한 상황이 끝나면 리포트가 뜨고, 바로 다시 하거나 다른 상황으로 넘어갑니다.</span>
       </div>
