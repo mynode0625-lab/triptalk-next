@@ -121,6 +121,21 @@ strong{font-weight:600; color:var(--ink)}
 em{font-style:normal; background:linear-gradient(transparent 62%,var(--brand-soft) 62%); font-weight:500}
 code{font-family:var(--mono); font-size:12.5px; background:var(--panel); padding:1px 5px; border-radius:2px; word-break:break-all}
 
+/* ── 화면 예시 ────────────────────────────
+   서비스의 리포트 카드를 문서 안에 그대로 옮긴 것입니다. 이미지가 아니라
+   같은 마크업이라 인쇄해도 흐려지지 않습니다. */
+.mock{margin-top:22px; padding:18px 20px; border:1px solid var(--rule); border-radius:10px; background:var(--panel)}
+.mock__h{display:block; font-weight:700; font-size:14px; margin-bottom:7px}
+.mock__t{display:block; font-size:14px; color:var(--ink-2); line-height:1.6}
+.mock__menu{
+  display:block; margin-top:10px; padding:9px 12px;
+  border:1px dashed var(--ink-3); border-radius:8px; background:#fff;
+  font-size:13.5px; font-weight:700; color:var(--ink-2);
+}
+.mock__note{display:block; margin-top:9px; font-size:12px; line-height:1.55; color:var(--ink-3)}
+.mock__note b{color:var(--ink-2); font-weight:700}
+.mock-cap{margin-top:10px; font-size:12.5px; color:var(--ink-3); line-height:1.6}
+
 /* ── 강조 블록 ───────────────────────────── */
 .lead{margin:0 0 22px; padding:26px 28px; background:var(--brand-soft); border-radius:3px; border-left:3px solid var(--brand)}
 .lead p{margin:0; font-weight:600; font-size:clamp(18px,2.8vw,21px); line-height:1.6; letter-spacing:-.02em}
@@ -232,7 +247,7 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
   .page{max-width:none; padding:0}
   section{break-inside:auto; margin-top:38px}
   .sec-head,h3{break-after:avoid}
-  .lead,.ledger>div,.road__row,.step,.note,.tablewrap,.stats,.filing,.leg,.persona>div{break-inside:avoid}
+  .lead,.ledger>div,.road__row,.step,.note,.tablewrap,.stats,.filing,.leg,.persona>div,.mock{break-inside:avoid}
   a{color:var(--ink); text-decoration:none}
 }
 </style>
@@ -481,6 +496,15 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
     </ul>
 
     <p style="margin-top:20px">광고 배너가 아니라 <strong>고객이 스스로 해당 메뉴에 진입하여 문제를 확인하는 시점</strong>에 안내를 배치할 수 있습니다 — 해외 결제 설정, ATM 수수료, 분실 신고. 거부감이 가장 낮은 형태의 접점이며, <strong>연계를 통해 비로소 열리는 지면</strong>입니다.</p>
+
+    <div class="mock">
+      <span class="mock__h">💳 방금 상황과 관련된 설정</span>
+      <span class="mock__t">해외에서 카드가 거절되는 가장 흔한 원인은 해외 결제 차단 설정입니다.</span>
+      <span class="mock__menu">슈퍼SOL › 카드 › 해외 결제 설정</span>
+      <span class="mock__note"><b>제안 예시 · 미연동</b> — 제휴 연계 시 이 자리에서 해당 메뉴로 바로 이동합니다. 지금은 이동하지 않습니다.</span>
+    </div>
+    <p class="mock-cap">「카드 결제 거절」 상황을 마쳤을 때 리포트 화면에 실제로 뜨는 안내입니다. 배포본에서 확인하실 수 있으며, 연계 전이므로 <b>링크를 걸지 않고 미연동임을 화면에 밝혀 두었습니다.</b> 연계 시 이 자리가 슈퍼SOL 메뉴로 연결됩니다.</p>
+
 
     <p><strong>셋째, SOL트래블 카드의 해외 실사용이 증가합니다.</strong> 환전 고객 전원이 현지에서 신한 카드를 사용하지는 않습니다. 해외 결제·ATM·택스 리펀드 상황을 <strong>사전에 경험한 고객</strong>은 해당 수단을 실제로 사용하며, 수수료 면제 혜택 또한 출국 전에 인지한 상태가 됩니다. 접점 지표가 아니라 <strong>결제액에 직접 연결되는 항목</strong>입니다.</p>
 
