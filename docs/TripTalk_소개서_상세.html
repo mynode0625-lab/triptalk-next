@@ -163,7 +163,8 @@ code{font-family:var(--mono); font-size:12.5px; background:var(--panel); padding
 /* ── 표 ──────────────────────────────────── */
 .tablewrap{overflow-x:auto; margin-top:22px; border:1px solid var(--rule); border-radius:3px}
 table{width:100%; border-collapse:collapse; font-size:14.5px; min-width:480px}
-caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5px; color:var(--ink-3); line-height:1.6}
+/* 표 아래 주석. 표 테두리 안이 아니라 상자 밖에 놓습니다. */
+.tnote{margin-top:12px; font-size:12.5px; color:var(--ink-3); line-height:1.65; text-wrap:pretty}
 th,td{padding:12px 16px; text-align:left; border-bottom:1px solid var(--rule-soft); vertical-align:top}
 thead th{
   font-family:var(--mono); font-size:11px; font-weight:500; letter-spacing:.07em;
@@ -576,7 +577,7 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
     <div class="sec-head"><span class="sec-num">07</span><h2>유사·경쟁 서비스와 차별점</h2></div>
 
     <div class="tablewrap">
-      <table><caption>현재 연습실의 대사는 모두 미리 생성해 파일로 내보내고 있습니다. 그래서 이용자가 백 명이든 십만 명이든 음성 비용은 위의 1회성 $0.20 에서 늘지 않습니다.</caption>
+      <table>
         <thead><tr><th></th><th>기존 방식</th><th>TripTalk</th></tr></thead>
         <tbody>
           <tr><td>커리큘럼</td><td>레벨·문법 순서</td><td><strong>여행 일정 순서</strong> — 원하는 상황부터 연습</td></tr>
@@ -588,6 +589,7 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
         </tbody>
       </table>
     </div>
+    <p class="tnote">현재 연습실의 대사는 모두 미리 생성해 파일로 내보내고 있습니다. 그래서 이용자가 백 명이든 십만 명이든 음성 비용은 위의 1회성 $0.20 에서 늘지 않습니다.</p>
 
     <h3>가장 가까운 경쟁자부터</h3>
     <p><strong>AI 회화 앱</strong>(스픽 등)은 소리 내어 말하고 피드백을 받는 <strong>형태가 같습니다.</strong> 갈라지는 곳은 커리큘럼입니다. 일상 대화와 레벨 순서로 짜여 있어, 출국까지 2주 남은 사람이 필요한 장면만 골라 쓰기 어렵습니다. <strong>어학 앱</strong>(듀오링고 등)은 장기 학습과 습관 형성이 목적이고 여행은 여러 단원 중 하나입니다. <strong>번역 앱</strong>(파파고 등)은 현장에서 대신 말해 주는 도구여서 <em>말하기 연습</em>은 일어나지 않고, 매번 휴대폰을 꺼내야 합니다.</p>
@@ -646,7 +648,7 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
     <p>PoC 이후 실제 대화 모델을 붙이면 <strong>두 가지가 동시에 바뀝니다.</strong> 대사를 만드는 비용이 매 턴 새로 들고, 그 대사는 미리 만들어 둘 수 없으므로 <strong>지금 0인 음성 비용도 이용량에 비례하게</strong> 됩니다.</p>
 
     <div class="tablewrap">
-      <table><caption>자체 산정입니다. 연습 1회는 캐릭터 대사 5회와 사용자 답변 5회를 기준으로 했습니다.</caption>
+      <table>
         <thead><tr><th>구성</th><th>지금 (대본)</th><th>대화 모델을 붙이면</th></tr></thead>
         <tbody>
           <tr><td>대사를 만드는 비용</td><td class="num">0</td><td class="num">연습 1회당 약 3원</td></tr>
@@ -656,12 +658,13 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
         </tbody>
       </table>
     </div>
+    <p class="tnote">자체 산정입니다. 연습 1회는 캐릭터 대사 5회와 사용자 답변 5회를 기준으로 했습니다.</p>
 
     <p style="margin-top:22px">규모를 가늠하시라고 적으면, <strong>월 1만 명이 각각 10회씩 연습하면 10만 회 → 월 약 230만 원</strong>입니다. 이용량에 정확히 비례하므로 상한을 두어 통제할 수 있습니다.</p>
 
     <h3>이용 범위</h3>
     <div class="tablewrap">
-      <table><caption>환전에서 비롯된 자격이므로 그 여행이 끝나면 근거도 끝납니다. 다음 여행의 환전 때 다시 만나는 구조이고, 하루 5회 상한은 비용을 통제하는 장치이기도 합니다.</caption>
+      <table>
         <thead><tr><th>대상</th><th>제공 범위</th></tr></thead>
         <tbody>
           <tr><td>그냥 들어온 방문자</td><td>연습 3회 (로그인 없이)</td></tr>
@@ -669,9 +672,10 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
         </tbody>
       </table>
     </div>
+    <p class="tnote">환전에서 비롯된 자격이므로 그 여행이 끝나면 근거도 끝납니다. 다음 여행의 환전 때 다시 만나는 구조이고, 하루 5회 상한은 비용을 통제하는 장치이기도 합니다.</p>
 
     <h3>그러면 TripTalk 은 무엇을 얻습니까</h3>
-    <p>솔직하게 적습니다. 이 구조에서 즉각적인 매출은 없습니다. 얻는 것은 셋입니다 — <strong>실사용 데이터</strong>(어떤 장면에서 사람들이 막히는지를 추측이 아니라 기록으로), <strong>콘텐츠 우선순위의 근거</strong>(환전 통화 분포), <strong>검증된 환경에서의 운영 경험</strong>. 장기적인 수익 모델은 PoC 결과를 보고 신한과 함께 정하는 것이 맞다고 판단합니다.</p>
+    <p>이 구조에서 즉각적인 매출은 없지만 얻는 것은 세 가지입니다 — <strong>실사용 데이터</strong>(어떤 장면에서 사람들이 막히는지를 추측이 아니라 기록으로), <strong>콘텐츠 우선순위의 근거</strong>(환전 통화 분포), <strong>검증된 환경에서의 운영 경험</strong>. 장기적인 수익 모델은 PoC 결과를 보고 신한과 함께 정하는 것이 맞다고 판단합니다.</p>
   </section>
 
   <!-- ── 09 ─────────────────────────────── -->
@@ -681,7 +685,7 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
     <p>MVP 는 있고 실사용 검증이 없습니다. 그래서 PoC 의 목적은 “더 만드는 것”이 아니라 <strong>가정을 확인하는 것</strong>입니다. 확인할 가정과 그 방법을 먼저 적습니다.</p>
 
     <div class="tablewrap">
-      <table><caption>목표 수치를 지금 적지 않는 이유는, 기준선이 될 데이터를 저희가 아직 갖고 있지 않기 때문입니다. 기준선을 만드는 것이 PoC 의 첫 결과물입니다.</caption>
+      <table>
         <thead><tr><th>확인할 가정</th><th>무엇을 보나</th></tr></thead>
         <tbody>
           <tr><td><strong>환전은 학습 창이 열리는 시점이다</strong></td><td>환전일과 출국일의 실제 간격 분포. 이 제안 전체가 여기에 걸려 있습니다.</td></tr>
@@ -692,6 +696,7 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
         </tbody>
       </table>
     </div>
+    <p class="tnote">목표 수치를 지금 적지 않는 이유는, 기준선이 될 데이터를 저희가 아직 갖고 있지 않기 때문입니다. 기준선을 만드는 것이 PoC 의 첫 결과물입니다.</p>
 
     <h3>진행 방식</h3>
     <ul class="stack">
@@ -748,7 +753,7 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
     <div class="sec-head"><span class="sec-num">11</span><h2>팀</h2></div>
 
     <div class="tablewrap">
-      <table><caption>제출 전에 채워야 하는 칸입니다. 3인 이하 팀 기준.</caption>
+      <table>
         <thead><tr><th>구분</th><th>내용</th></tr></thead>
         <tbody>
           <tr><td>대표</td><td><span class="fill">&nbsp;</span></td></tr>
@@ -758,6 +763,7 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
         </tbody>
       </table>
     </div>
+    <p class="tnote">제출 전에 채워야 하는 칸입니다. 3인 이하 팀 기준.</p>
   </section>
 
   <div class="endnote">
