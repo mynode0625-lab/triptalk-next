@@ -1,10 +1,13 @@
 "use client";
 
-import type { CorrectionItem, PracticeWord } from "@/types/practice";
+import type { CorrectionItem, PracticeWord, SceneKey } from "@/types/practice";
+import { bankHintFor } from "@/lib/practice/bankHint";
 import { SpeakButton } from "./tools";
 
 type Props = {
   title: string;
+  /** 방금 끝낸 상황. 돈 트랙이면 아래에 은행 안내가 한 장 붙습니다. */
+  sceneKey: SceneKey | null;
   avg: number | string;
   turns: number;
   words: PracticeWord[];
@@ -15,7 +18,9 @@ type Props = {
 };
 
 /** 마무리 리포트 — practice.js §14 */
-export function ReportModal({ title, avg, turns, words, fixes, onClose, onAgain, onOther }: Props) {
+export function ReportModal({ title, sceneKey, avg, turns, words, fixes, onClose, onAgain, onOther }: Props) {
+  const bank = bankHintFor(sceneKey);
+
   return (
     <div className="modal" id="report">
       <div className="modal__box">
@@ -66,6 +71,18 @@ export function ReportModal({ title, avg, turns, words, fixes, onClose, onAgain,
               고칠 만한 어색한 표현이 없었습니다. 아주 좋습니다.
             </div>
           )}
+
+          {bank ? (
+            <div className="card card--bank">
+              <h4>💳 방금 상황과 관련된 설정</h4>
+              {bank.why}
+              <span className="bank__menu">{bank.menu}</span>
+              <span className="bank__note">
+                <b>제안 예시 · 미연동</b> — 제휴 연계 시 이 자리에서 해당 메뉴로 바로
+                이동합니다. 지금은 이동하지 않습니다.
+              </span>
+            </div>
+          ) : null}
         </div>
 
         <div className="report__cta">

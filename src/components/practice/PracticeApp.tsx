@@ -798,6 +798,7 @@ export function PracticeApp() {
         {reportOpen && scene ? (
           <ReportModal
             title={scene.done}
+            sceneKey={sceneKey}
             avg={avg === null ? "–" : avg}
             turns={scores.length}
             words={wordList}

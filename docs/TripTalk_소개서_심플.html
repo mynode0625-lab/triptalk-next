@@ -1,0 +1,432 @@
+<title>TripTalk 소개서 심플</title>
+<style>
+:root{
+  /* 서비스의 실제 토큰(globals.css)을 그대로 씁니다 */
+  --ink:#14161c;
+  --ink-2:#3d4350;
+  --ink-3:#6b7280;
+  --line:#e7e9ef;
+  --line-soft:#f0f2f7;
+  --bg:#ffffff;
+  --tint:#f6f7fb;
+  --brand:#4f46e5;
+  --brand-soft:#eef0ff;
+  --brand-2:#7c3aed;
+  --accent:#ff7a59;
+  --accent-soft:#fff1ec;
+  --mint:#10b981;
+  --mint-soft:#ecfdf5;
+  /* 브랜드 면(面)과 그 위의 글자 */
+  --brand-fill:#4f46e5;
+  --on-brand:#ffffff;
+  --sans:Pretendard,"Pretendard Variable",-apple-system,BlinkMacSystemFont,
+         "Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-size:15.5px; line-height:1.72;
+  letter-spacing:-.01em; -webkit-font-smoothing:antialiased;
+  /* 한글은 기본값이 음절 단위 개행이라 어절 한가운데서 줄이 끊깁니다. */
+  word-break:keep-all;
+  /* 다만 끊을 곳이 없는 긴 영문·URL 은 넘치는 대신 잘라야 합니다. */
+  overflow-wrap:break-word;
+}
+.page{max-width:780px; margin:0 auto; padding:0 28px 90px}
+p{margin:0 0 14px; text-wrap:pretty}
+h3,.leg__what,.probs .t,.persona h4,.screen__t,.values b{text-wrap:balance}
+p:last-child{margin-bottom:0}
+strong{font-weight:600}
+a{color:var(--brand); text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radius:3px}
+
+/* ── 표지 ─────────────────────────────────── */
+.cover{padding:28px 0 26px; border-bottom:1px solid var(--line)}
+/* 상세 소개서와 같은 표지 형식 — 눈썹 · 로고 · 제목 순서 */
+.eyebrow{
+  font-size:11.5px; font-weight:600; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--brand); font-family:var(--mono);
+  margin-bottom:14px;
+}
+/* globals.css 의 .logo 비율 그대로 — 상자 1.6 / 비행기 0.75 / 라운드 0.5 / 간격 0.45 */
+.logo{display:flex; align-items:center; gap:.45em; font-size:clamp(26px,4vw,34px); line-height:1.05; font-weight:800; letter-spacing:-.04em}
+.logo__mark{
+  display:grid; place-items:center; flex:none;
+  font-size:.75em; width:2.133em; height:2.133em; border-radius:.667em;
+  color:#fff; background:linear-gradient(135deg,var(--brand),var(--brand-2));
+  transform:rotate(-8deg);
+}
+.logo b{font-weight:800; color:var(--brand)}
+.slogan{
+  margin:14px 0 0; font-size:clamp(26px,4.2vw,34px); font-weight:800;
+  line-height:1.22; letter-spacing:-.035em; text-wrap:balance;
+}
+.sub{
+  margin:14px 0 0; font-weight:500; font-size:clamp(17px,2.6vw,21px);
+  line-height:1.6; letter-spacing:-.015em; color:var(--ink-2);
+}
+.badges{display:flex; flex-wrap:wrap; gap:7px; margin-top:20px}
+.badge{
+  word-break:break-all;
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.04em;
+  padding:5px 11px; border-radius:999px; border:1px solid var(--line);
+  color:var(--ink-3); background:var(--tint);
+}
+.badge.is-live{color:var(--mint); border-color:var(--mint); background:var(--mint-soft); font-weight:600}
+/* 주소 배지는 실제로 눌러서 사이트로 갑니다. 본문 링크처럼 파랗게 만들지 않고
+   배지 모양을 유지하되, 누를 수 있다는 것만 커서와 호버로 알립니다. */
+.badge.is-link{
+  color:var(--brand); border-color:var(--brand-soft); background:var(--brand-soft);
+  text-decoration:none; cursor:pointer;
+}
+.badge.is-link:hover{border-color:var(--brand)}
+.badge.is-link:focus-visible{outline:2px solid var(--brand); outline-offset:2px}
+
+/* ── 섹션 ─────────────────────────────────── */
+section{padding-top:40px}
+/* 제목 아래 가는 선과 여백. 없으면 본문과 붙어 어디서 장이 바뀌는지 안 보입니다. */
+.head{
+  display:flex; align-items:baseline; gap:12px;
+  border-bottom:1px solid var(--line); padding-bottom:10px; margin-bottom:20px;
+}
+.head .no{
+  font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.08em;
+  color:var(--brand); flex:none;
+}
+h2{margin:0; font-size:clamp(20px,3vw,24px); font-weight:700; letter-spacing:-.03em; text-wrap:balance}
+h3{margin:26px 0 8px; font-size:16px; font-weight:600; letter-spacing:-.015em}
+.en{margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--ink-3); letter-spacing:.06em; text-transform:uppercase}
+
+/* ── 여정 띠 ──────────────────────────────── */
+.journey{display:grid; grid-template-columns:repeat(auto-fit,minmax(128px,1fr)); gap:3px; margin:20px 0 6px}
+.leg{padding:14px 15px 16px; background:var(--tint); border-radius:10px; border-top:3px solid var(--line)}
+.leg.is-bank{border-top-color:var(--ink-3)}
+.leg.is-gap{border-top-color:var(--accent); background:var(--accent-soft)}
+.leg.is-ours{border-top-color:var(--brand); background:var(--brand-soft)}
+.leg__when{font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; color:var(--ink-3)}
+.leg__what{display:block; margin-top:6px; font-weight:700; font-size:14.5px; letter-spacing:-.02em}
+.leg__d{display:block; margin-top:5px; font-size:12.5px; color:var(--ink-2); line-height:1.6; text-wrap:pretty}
+.journey-note{font-size:13px; color:var(--ink-3); margin-top:12px}
+.tnote{margin-top:14px; font-size:13px; color:var(--ink-3); line-height:1.65}
+
+/* ── 문제 목록 ────────────────────────────── */
+.probs{list-style:none; margin:22px 0 0; padding:0; display:flex; flex-direction:column; gap:14px}
+.probs li{display:grid; grid-template-columns:auto 1fr; gap:0 14px; align-items:baseline}
+.probs .k{font-family:var(--mono); font-size:11.5px; color:var(--accent); font-weight:600; padding-top:3px}
+.probs .t{font-weight:600; font-size:16px}
+.probs .d{grid-column:2; margin-top:3px; font-size:14.5px; color:var(--ink-2); line-height:1.7; text-wrap:pretty}
+
+/* ── 타겟 ─────────────────────────────────── */
+.persona{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:3px; margin-top:20px}
+.persona > div{padding:20px; background:var(--tint); border-radius:12px}
+.persona h4{margin:0; font-size:16px; font-weight:700; letter-spacing:-.02em}
+.persona .who{font-family:var(--mono); font-size:10.5px; color:var(--brand); letter-spacing:.06em; text-transform:uppercase}
+.persona ul{margin:12px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px}
+.persona li{font-size:14px; color:var(--ink-2); line-height:1.6; padding-left:14px; position:relative}
+.persona li::before{content:"·"; position:absolute; left:2px; color:var(--brand); font-weight:700}
+.persona .need{
+  margin:14px 0 0; padding-top:12px; border-top:1px dashed var(--line);
+  font-size:13.5px; color:var(--ink); font-weight:600;
+}
+
+/* ── 화면 ─────────────────────────────────── */
+.screens{display:flex; flex-direction:column; gap:3px; margin-top:20px}
+.screen{
+  display:grid; grid-template-columns:auto 1fr; gap:0 14px; align-items:baseline;
+  padding:16px 18px; background:var(--tint); border-radius:10px;
+}
+.screen__n{font-family:var(--mono); font-size:11.5px; font-weight:600; color:var(--brand)}
+.screen__t .q{font-style:normal; font-weight:400; font-size:12.5px; color:var(--brand); font-family:var(--mono)}
+.screen__t{display:block; font-weight:700; font-size:16px; letter-spacing:-.02em}
+.screen__ui{
+  word-break:break-all;
+  font-family:var(--mono); font-size:12px; color:var(--brand);
+  background:var(--brand-soft); padding:2px 8px; border-radius:4px;
+  display:inline-block; margin-top:6px;
+}
+.screen__d{grid-column:2; margin-top:6px; font-size:14.5px; color:var(--ink-2); line-height:1.7; text-wrap:pretty}
+.screen__d b{color:var(--ink); font-weight:600}
+
+/* ── 표 ───────────────────────────────────── */
+/* ── 강조 블록 ───────────────────────────── */
+.lead{margin:20px 0 0; padding:20px 22px; background:var(--brand-soft); border-radius:12px; border-left:3px solid var(--brand)}
+.lead p{margin:0; font-weight:600; font-size:17px; line-height:1.55; letter-spacing:-.02em}
+.lead p + p{margin-top:10px; font-size:14.5px; font-weight:400; color:var(--ink-2); line-height:1.7}
+.lead em{font-style:normal; background:linear-gradient(transparent 60%,#fff 60%); font-weight:700}
+
+.tablewrap{overflow-x:auto; margin-top:20px; border:1px solid var(--line); border-radius:12px}
+table{width:100%; border-collapse:collapse; font-size:14.5px; min-width:460px}
+th,td{padding:13px 16px; text-align:left; border-bottom:1px solid var(--line-soft); vertical-align:top}
+thead th{
+  font-family:var(--mono); font-size:10.5px; font-weight:500; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--ink-3); background:var(--tint); border-bottom:1px solid var(--line);
+}
+tbody tr:last-child td{border-bottom:0}
+tr.is-total td{font-weight:600; background:var(--tint)}
+td.num{font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+.src{font-family:var(--mono); font-size:10.5px; color:var(--ink-3); white-space:nowrap}
+caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5px; color:var(--ink-3); line-height:1.6}
+
+/* ── 가치 ─────────────────────────────────── */
+.values{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:3px; margin-top:20px}
+.values > div{padding:20px; background:var(--tint); border-radius:12px}
+.values .cap{font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3)}
+.values b{display:block; margin-top:7px; font-size:18px; font-weight:800; letter-spacing:-.03em; line-height:1.3}
+.values span{display:block; margin-top:8px; font-size:13.5px; color:var(--ink-2); line-height:1.65}
+
+.closing{
+  margin-top:20px; padding:22px 24px; border-radius:14px;
+  background:var(--brand-fill); color:var(--on-brand);
+}
+.closing p{color:var(--on-brand); font-size:clamp(16px,2.4vw,18.5px); font-weight:600; line-height:1.6; letter-spacing:-.02em}
+.closing p + p{margin-top:10px; font-size:15px; font-weight:400; opacity:.9}
+
+
+/* ── 서명 ────────────────────────────────── */
+.signoff{margin-top:26px; padding-top:18px; border-top:1px solid var(--line);
+  font-size:13px; color:var(--ink-3); line-height:1.7}
+.signoff p{margin:0}
+.signoff b{color:var(--ink); font-weight:700; letter-spacing:-.01em}
+.signoff a{color:inherit}
+
+.foot{margin-top:36px; padding-top:20px; border-top:1px solid var(--line); font-size:13px; color:var(--ink-3); line-height:1.7}
+
+@media (max-width:560px){
+  .page{padding:0 20px 70px}
+  .cover{padding-top:52px}
+  .screen{grid-template-columns:1fr}
+  .screen__n{grid-row:auto; margin-bottom:4px}
+}
+
+
+@media print{
+  :root{--bg:#fff; --tint:#f4f5f9; --line:#d8dbe6; --ink-3:#5f6672}
+  .page{max-width:none; padding:0}
+  /* 섹션을 통째로 붙잡으면 하나가 다음 장으로 밀리면서 빈 공간이 생깁니다.
+     쪼개지면 안 되는 것은 카드·표뿐입니다. */
+  section{padding-top:30px}
+  .head,h3{break-after:avoid}
+  .leg,.persona>div,.screen,.values>div,.closing,.tablewrap{break-inside:avoid}
+  a{color:var(--ink)}
+}
+</style>
+
+<div class="page">
+
+  <header class="cover">
+    <div class="eyebrow">서비스 소개서 · 요약본</div>
+    <div class="logo"><span class="logo__mark">✈</span><span>Trip<b>Talk</b></span></div>
+    <h1 class="slogan">환전 이후 계속되는 슈퍼SOL 고객 경험</h1>
+    <p class="sub">환전 버튼을 누른 고객은 그 순간 여행이 확정된 사람입니다. TripTalk 은 환전 완료 화면에서 시작해, <b>환전에서 멈추던 고객 경험</b>을 출국, 여행지, 다음 여행까지 이어 가는 여행 영어 서비스입니다. 슈퍼SOL 고객에게 <b>무료로</b> 제공됩니다.</p>
+    <div class="badges">
+      <span class="badge is-live">v0.1.0 · MVP 운영 중</span>
+      <span class="badge">웹 · 설치 불필요</span>
+      <a class="badge is-link" href="https://triptalk-next-mynode.vercel.app">triptalk-next-mynode.vercel.app</a>
+    </div>
+  </header>
+
+  <!-- ── 01 ───────────────────────────────── -->
+  <section>
+    <div class="head"><span class="no">01</span><h2>환전 이후 단절된 고객 경험</h2><span class="en">Problem</span></div>
+
+    <p>여행 준비에서 <strong>금융 앱의 역할은 환전 한 번으로 끝납니다.</strong> 하지만 환전은 여행이 확정된 순간이고, 고객의 여행은 그때부터 시작됩니다. 돈으로 발생되는 상황들은 모두 그 이후에 있습니다.</p>
+
+    <div class="journey">
+      <div class="leg is-bank">
+        <span class="leg__when">D-14 전후</span>
+        <span class="leg__what">환전</span>
+        <span class="leg__d">금융 앱의 역할이 여기서 끝납니다.</span>
+      </div>
+      <div class="leg is-gap">
+        <span class="leg__when">D-14 → D-DAY</span>
+        <span class="leg__what">출국 전까지</span>
+        <span class="leg__d">그동안에도 고객은 여행을 준비하고 있습니다.</span>
+      </div>
+      <div class="leg is-ours">
+        <span class="leg__when">출국 전</span>
+        <span class="leg__what">TripTalk 연습</span>
+        <span class="leg__d">원하는 상황부터 하루 한 상황, 10분.</span>
+      </div>
+      <div class="leg is-ours">
+        <span class="leg__when">여행 중</span>
+        <span class="leg__what">돈 트랙이 쓰이는 순간</span>
+        <span class="leg__d">미리 연습한 상황이 그대로 나옵니다.</span>
+      </div>
+      <div class="leg is-bank">
+        <span class="leg__when">귀국 이후</span>
+        <span class="leg__what">다음 여행</span>
+        <span class="leg__d">기록이 남아 다음 환전 때 이어집니다.</span>
+      </div>
+    </div>
+    <p class="journey-note">주황 구간이 지금 비어 있는 자리이고, TripTalk 이 채우려는 구간입니다.</p>
+
+  </section>
+
+  <!-- ── 02 ───────────────────────────────── -->
+  <section>
+    <div class="head"><span class="no">02</span><h2>그 구간에서 고객이 겪는 문제</h2><span class="en">Customer</span></div>
+
+    <ul class="probs">
+      <li>
+        <span class="k">01</span>
+        <span class="t">돈 문제는 모든 상황에서 발생한다</span>
+        <span class="d">환전, 세금 환급, 쇼핑, 카드 분실 등. <b>말을 못 하면 그 자리에서 손해가 나는데</b>, 한 번에 준비할 방법이 없습니다.</span>
+      </li>
+      <li>
+        <span class="k">02</span>
+        <span class="t">아는데 말이 안 나온다</span>
+        <span class="d">“Can I have the bill?” 을 몰라서 못 하는 사람은 드뭅니다. 아는데 입이 안 떨어지고, 상대가 예상 밖의 말을 하면 굳습니다. <b>읽는 연습과 말하는 연습은 다른 일입니다.</b></span>
+      </li>
+      <li>
+        <span class="k">03</span>
+        <span class="t">필요한 건 “그 상황에서의 할 말”</span>
+        <span class="d">시중의 영어 교재와 어학 앱은 레벨 순서로 짜여 있습니다. 출국 전에 다 읽는 사람은 거의 없습니다. <b>우리는 그 상황에 필요한 할 말을 먼저 연습합니다.</b></span>
+      </li>
+    </ul>
+
+  
+
+    <h3>대상</h3>
+    <p>“영어를 배우려는 사람”이 아니라 <strong>여행 때문에 영어가 필요해진 사람</strong>입니다. 학습 동기가 뚜렷하고 기간이 정해져 있어 짧게 집중하고 끝납니다 — <strong>슈퍼SOL 의 환전 고객이 정확히 이 사람들입니다.</strong></p>
+
+    <div class="persona">
+      <div>
+        <span class="who">Primary</span>
+        <h4>출국일이 정해진 여행자</h4>
+        <ul>
+          <li>2~3주 뒤 출국, 환전을 막 마쳤다</li>
+          <li>영어를 다시 배울 시간은 없다</li>
+          <li>공항·호텔·식당에서 막힐까 걱정한다</li>
+        </ul>
+        <p class="need">필요한 건 커리큘럼이 아니라 “그 상황 한 번 말해 보기”</p>
+      </div>
+      <div>
+        <span class="who">Secondary</span>
+        <h4>돈 문제가 무서운 여행자</h4>
+        <ul>
+          <li>해외에서 카드가 거절된 적이 있다</li>
+          <li>따지고 싶은데 영어가 안 나와 넘어갔다</li>
+          <li>ATM·택스 리펀드 창구가 부담스럽다</li>
+        </ul>
+        <p class="need">손해를 막는 다섯 상황을 미리 연습</p>
+      </div>
+      <div>
+        <span class="who">Tertiary</span>
+        <h4>말하기가 부끄러운 학습자</h4>
+        <ul>
+          <li>사람 앞에서 틀리는 것이 싫다</li>
+          <li>어학원은 시간·비용이 부담된다</li>
+          <li>시도 자체를 줄이게 된다</li>
+        </ul>
+        <p class="need">틀려도 되는 상대, 무제한 다시 하기</p>
+      </div>
+    </div>
+  </section>
+
+
+    <!-- ── 03 ───────────────────────────────── -->
+  <section>
+    <div class="head"><span class="no">03</span><h2>TripTalk 이 그 자리를 채웁니다</h2><span class="en">Product</span></div>
+
+    <p><strong>TripTalk 은 여행지에서 자주 겪는 상황을 AI 캐릭터와 소리 내어 말해보고 미리 연습해 보는 여행 영어 서비스입니다.</strong> 신한 SOL 환전 서비스를 이용한 고객은 설치도 가입도 없이 브라우저에서 바로 시작할 수 있고, 한 상황에 대한 연습은 10분이면 끝납니다.</p>
+
+    <div class="screens">
+      <div class="screen">
+        <span class="screen__n">01</span>
+        <span class="screen__t">상황 고르기 <em class="q">“어떤 상황을 연습할까요?”</em></span>
+        <span class="screen__d">21개 시나리오가 여행 순서 그대로. 레벨이 아니라 <b>원하는 상황부터 연습합니다.</b></span>
+      </div>
+      <div class="screen">
+        <span class="screen__n">02</span>
+        <span class="screen__t">소리 내어 답하기 <em class="q">“마이크를 누르고 영어로 답해보세요”</em></span>
+        <span class="screen__d">캐릭터가 <b>원어민이 실제로 쓰는 말</b>로 건넵니다. 타이핑으로도 됩니다.</span>
+      </div>
+      <div class="screen">
+        <span class="screen__n">03</span>
+        <span class="screen__t">즉시 피드백</span>
+        <span class="screen__d"><b>전달됐는지</b>, 더 자연스러운 표현은 무엇인지, <b>핵심을 놓치지 않았는지</b>를 바로 돌려줍니다.</span>
+      </div>
+      <div class="screen">
+        <span class="screen__n">04</span>
+        <span class="screen__t">마무리 리포트 <em class="q">“평균 발음 점수 · 교정된 표현”</em></span>
+        <span class="screen__d">상황 연습이 끝나면 리포트가 뜨고, 바로 다시 하거나 다른 상황으로 넘어갑니다.</span>
+      </div>
+    </div>
+
+    <p class="tnote">발음 점수는 현재 <b>음성 인식이 얼마나 정확히 알아들었는지</b>를 기준으로 합니다. 음소 단위 분석은 다음 단계 과제입니다.</p>
+  </section>
+
+<!-- ── 4 ───────────────────────────────── -->
+  <section>
+    <div class="head"><span class="no">04</span><h2>슈퍼SOL 연계 기대효과</h2><span class="en">Value</span></div>
+
+    <p>환전을 마친 고객에게 남는 것은 “이제 뭘 하지”입니다. TripTalk 은 그 자리에 <strong>오늘 1개의 상황 연습</strong>을 제안합니다. 출국까지 매일 하나씩, 여행 중에는 미리 연습한 상황이 재연됩니다. 돌아온 뒤에는 연습 기록이 남아있어 다음 여행으로 이어집니다.</p>
+
+    <div class="values">
+      <div>
+        <span class="cap">재방문</span>
+        <b>환전 → 출국,<br>매일 슈퍼SOL 에 접속할 이유</b>
+        <span>1회성 거래로 끝나던 구간에 방문이 생깁니다. 체류 자체가 아니라 <b>이후 3가지 기대효과의 베이스</b>가 됩니다.</span>
+      </div>
+      <div>
+        <span class="cap">상품 접점</span>
+        <b>배너가 아니라<br>고객이 먼저 찾을 때</b>
+        <span>카드 거절·ATM 수수료·분실 신고를 연습한 고객이 스스로 그 메뉴를 열 때 안내가 놓입니다.</span>
+      </div>
+      <div>
+        <span class="cap">카드 실사용</span>
+        <b>결제 상황을<br>미리 겪어 본 고객</b>
+        <span>해외 결제·ATM·택스 리펀드를 연습한 고객은 현지에서 그 수단을 실제로 사용합니다.</span>
+      </div>
+      <div>
+        <span class="cap">재환전</span>
+        <b>다음 여행의<br>환전도 신한에서</b>
+        <span>연습 기록이 남아 다음 여행 준비 때 다시 열립니다.<br>환전 → 학습 → 여행 → 다음 환전.</span>
+      </div>
+    </div>
+
+    <p class="tnote">네 가지 모두 PoC 에서 <b>실제로 잴 지표</b>가 정해져 있습니다 — 출국일까지의 방문 횟수, 상품 메뉴 진입률, 해외 결제 건수 차이, 다음 환전까지의 기간. 목표 수치는 기준선이 될 데이터가 아직 없어 적지 않았습니다.</p>
+  </section>
+
+  <!-- ── 5 ───────────────────────────────── -->
+  <section>
+    <div class="head"><span class="no">05</span><h2>무료 서비스 유지 비용</h2><span class="en">Cost</span></div>
+
+    <div class="lead">
+      <p>이 제안에서 TripTalk 은 <em>수익 사업이 아닙니다.</em></p>
+      <p>슈퍼SOL 고객에게 전액 무료로 제공합니다. 구독료도, 건별 과금도, 결제 수단 등록도 없습니다. 그래서 검토하실 질문은 “얼마를 받느냐”가 아니라 <strong>“무료로 제공하는 데 얼마가 드느냐”</strong>입니다.</p>
+    </div>
+
+    <h3>지금 AI 가 맡은 일은 “목소리”뿐입니다</h3>
+    <p>현재 외부 AI 를 쓰는 곳은 <strong>글자를 사람 목소리로 바꾸는 것(음성 합성)</strong> 하나입니다. 캐릭터가 무슨 말을 할지는 사람이 미리 쓴 대본입니다. 대본이 고정이라 음성을 <strong>미리 만들어 파일로 둘 수 있었고</strong>, 그래서 이용자가 늘어도 음성 비용이 늘지 않습니다.</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>구성</th><th>비용 성격</th><th>이용자가 늘면</th><th>현재 상태</th></tr></thead>
+        <tbody>
+          <tr><td>정해진 대사 음성</td><td>사전 1회 생성 후 파일 재사용</td><td class="num">늘지 않음</td><td class="src">지금 이 방식으로 동작</td></tr>
+          <tr><td>대본에 없는 문장</td><td>호출할 때만 발생</td><td class="num">호출한 만큼</td><td class="src">예비 경로로만 사용</td></tr>
+          <tr class="is-total"><td>대사 254개 전체 생성 실비</td><td class="num">$0.20</td><td class="num">1회성</td><td class="src">실측 · 8,077토큰</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="closing">
+      <p>여행은 환전에서 끝나지 않습니다.</p>
+      <p><strong>환전에서 멈추던 고객 경험</strong>을 출국, 여행지, 다음 여행까지 이어 가는 것이 TripTalk 의 목표입니다.</p>
+    </div>
+  </section>
+
+  <div class="foot">
+    <p><b>지금 확인하실 수 있습니다</b> — <a href="https://triptalk-next-mynode.vercel.app">triptalk-next-mynode.vercel.app</a> · 설치 없이 브라우저에서 실행되며, 로그인 없이 3회 연습할 수 있습니다.</p>
+    <p>TripTalk v0.1.0 · 2026년 8월 기준 · 자세한 내용은 상세 소개서를 참고해 주세요.</p>
+  </div>
+
+  <div class="signoff">
+    <p><b>주식회사 마이노드</b></p>
+    <p><a href="mailto:mynode0625@gmail.com">mynode0625@gmail.com</a></p>
+  </div>
+
+
+</div>
