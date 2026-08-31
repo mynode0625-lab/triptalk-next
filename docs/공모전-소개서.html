@@ -87,6 +87,7 @@ code{font-family:var(--mono); font-size:12.5px; background:var(--panel); padding
 .stack li{display:grid; grid-template-columns:auto 1fr; gap:0 16px; align-items:baseline}
 .stack .marker{font-family:var(--mono); font-size:12px; font-weight:500; color:var(--brand); padding-top:4px}
 .stack .t{font-weight:600; font-size:16.5px}
+.stack .t .q{font-style:normal; font-weight:400; font-size:12.5px; color:var(--brand); font-family:var(--mono); letter-spacing:0}
 .stack .d{grid-column:2; margin-top:4px; color:var(--ink-2); font-size:15px; line-height:1.72; max-width:60ch}
 
 /* ── 대상 카드 ───────────────────────────── */
@@ -299,10 +300,10 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
     <p><strong>TripTalk 은 여행지에서 자주 겪는 상황을 AI 캐릭터와 소리 내어 말해보고 미리 연습해 보는 여행 영어 서비스입니다.</strong> 신한 SOL 환전 서비스를 이용한 고객은 설치도 가입도 없이 브라우저에서 바로 시작할 수 있고, 한 상황에 대한 연습은 10분이면 끝납니다.</p>
 
     <ul class="stack">
-      <li><span class="marker">01</span><span class="t">상황을 고른다</span><span class="d">호텔 체크인, 카드 결제 거절, 택스 리펀드처럼 실제로 마주치는 장면을 고릅니다.</span></li>
-      <li><span class="marker">02</span><span class="t">캐릭터가 영어로 말을 건다</span><span class="d">사람 목소리로 읽어줍니다. 못 알아들으면 다시 듣거나 천천히 들을 수 있습니다.</span></li>
-      <li><span class="marker">03</span><span class="t">소리 내어 답한다</span><span class="d">마이크를 누르고 말합니다. 말하기 어려운 곳에서는 타이핑으로도 됩니다.</span></li>
-      <li><span class="marker">04</span><span class="t">바로 피드백을 받는다</span><span class="d">얼마나 또렷하게 전달됐는지, 더 자연스러운 표현은 무엇인지, 질문의 핵심을 놓치지 않았는지 알려줍니다.</span></li>
+      <li><span class="marker">01</span><span class="t">상황 고르기 <em class="q">“어떤 상황을 연습할까요?”</em></span><span class="d">21개 시나리오가 여행 순서 그대로. 레벨이 아니라 <strong>원하는 상황부터 연습합니다.</strong></span></li>
+      <li><span class="marker">02</span><span class="t">소리 내어 답하기 <em class="q">“마이크를 누르고 영어로 답해보세요”</em></span><span class="d">캐릭터가 <strong>원어민이 실제로 쓰는 말</strong>로 건넵니다. 타이핑으로도 됩니다.</span></li>
+      <li><span class="marker">03</span><span class="t">즉시 피드백</span><span class="d"><strong>전달됐는지</strong>, 더 자연스러운 표현은 무엇인지, <strong>핵심을 놓치지 않았는지</strong>를 바로 돌려줍니다.</span></li>
+      <li><span class="marker">04</span><span class="t">마무리 리포트 <em class="q">“평균 발음 점수 · 교정된 표현”</em></span><span class="d">한 상황이 끝나면 리포트가 뜨고, 바로 다시 하거나 다른 상황으로 넘어갑니다.</span></li>
     </ul>
 
     <h3>외우는 말이 실제로 쓰는 말입니다</h3>
