@@ -260,6 +260,9 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
   /* 표와 그 아래 주석, 예시 화면과 그 설명은 한 장에 같이 둡니다. */
   .tablewrap,.mock{break-after:avoid}
   .tnote,.mock-cap,.journey-note{break-before:avoid; break-inside:avoid}
+  /* 맺음말과 서명은 한 덩어리로 둡니다. */
+  .endnote,.foot{break-after:avoid; break-inside:avoid}
+  .signoff{break-before:avoid; break-inside:avoid}
   /* 문단이 한 줄만 남거나 한 줄만 넘어가지 않게 합니다. */
   p,li{orphans:2; widows:2}
 
@@ -812,8 +815,7 @@ a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radiu
   </div>
 
   <div class="signoff">
-    <p><b>주식회사 마이노드</b></p>
-    <p><a href="mailto:mynode0625@gmail.com">mynode0625@gmail.com</a></p>
+    <p><b>주식회사 마이노드</b> · <a href="mailto:mynode0625@gmail.com">mynode0625@gmail.com</a></p>
   </div>
 
 
