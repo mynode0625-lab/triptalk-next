@@ -182,6 +182,7 @@ caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5
 .closing p{color:var(--on-brand); font-size:clamp(16px,2.4vw,18.5px); font-weight:600; line-height:1.6; letter-spacing:-.02em}
 .closing p + p{margin-top:10px; font-size:15px; font-weight:400; opacity:.9}
 
+.signoff{margin-top:14px; color:var(--ink-2)}
 .foot{margin-top:36px; padding-top:20px; border-top:1px solid var(--line); font-size:13px; color:var(--ink-3); line-height:1.7}
 
 @media (max-width:560px){
@@ -191,12 +192,6 @@ caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5
   .screen__n{grid-row:auto; margin-bottom:4px}
 }
 
-/* ── 서명 ────────────────────────────────── */
-.signoff{margin-top:26px; padding-top:18px; border-top:1px solid var(--line);
-  font-size:13px; color:var(--ink-3); line-height:1.7}
-.signoff p{margin:0}
-.signoff b{color:var(--ink); font-weight:700; letter-spacing:-.01em}
-.signoff a{color:inherit}
 
 @media print{
   :root{--bg:#fff; --tint:#f4f5f9; --line:#d8dbe6; --ink-3:#5f6672}
@@ -419,11 +414,8 @@ caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5
   <div class="foot">
     <p><b>지금 확인하실 수 있습니다</b> — <a href="https://triptalk-next-mynode.vercel.app">triptalk-next-mynode.vercel.app</a> · 설치 없이 브라우저에서 실행되며, 로그인 없이 3회 연습할 수 있습니다.</p>
     <p>TripTalk v0.1.0 · 2026년 8월 기준 · 자세한 내용은 상세 소개서를 참고해 주세요.</p>
+    <p class="signoff">주식회사 마이노드 · <a href="mailto:mynode0625@gmail.com">mynode0625@gmail.com</a></p>
   </div>
 
-  <div class="signoff">
-    <p><b>주식회사 마이노드</b></p>
-    <p>강선영 · <a href="mailto:mynode0625@gmail.com">mynode0625@gmail.com</a></p>
-  </div>
 
 </div>
