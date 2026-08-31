@@ -16,7 +16,7 @@ export function Hero() {
         <div className="hero__copy reveal">
           <Badge>🎧 하루 10분, 말하기 중심 학습</Badge>
           <h1 className="hero__title">
-            여행에서 진짜 쓰는 영어,<br />
+            여행에서 쓰는 진짜 영어,<br />
             <span className="grad">AI 캐릭터</span>와 미리 체험하세요
           </h1>
           <p className="hero__desc">
