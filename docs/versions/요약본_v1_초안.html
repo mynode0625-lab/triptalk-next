@@ -1,0 +1,402 @@
+<title>TripTalk 앱 소개서</title>
+<style>
+:root{
+  /* 서비스의 실제 토큰(globals.css)을 그대로 씁니다 */
+  --ink:#14161c;
+  --ink-2:#3d4350;
+  --ink-3:#6b7280;
+  --line:#e7e9ef;
+  --line-soft:#f0f2f7;
+  --bg:#ffffff;
+  --tint:#f6f7fb;
+  --brand:#4f46e5;
+  --brand-soft:#eef0ff;
+  --brand-2:#7c3aed;
+  --accent:#ff7a59;
+  --accent-soft:#fff1ec;
+  --mint:#10b981;
+  --mint-soft:#ecfdf5;
+  /* 브랜드 면(面)과 그 위의 글자 */
+  --brand-fill:#4f46e5;
+  --on-brand:#ffffff;
+  --sans:Pretendard,"Pretendard Variable",-apple-system,BlinkMacSystemFont,
+         "Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.75;
+  letter-spacing:-.01em; -webkit-font-smoothing:antialiased;
+  /* 한글은 기본값이 음절 단위 개행이라 어절 한가운데서 줄이 끊깁니다. */
+  word-break:keep-all;
+  /* 다만 끊을 곳이 없는 긴 영문·URL 은 넘치는 대신 잘라야 합니다. */
+  overflow-wrap:break-word;
+}
+.page{max-width:880px; margin:0 auto; padding:0 28px 90px}
+p{margin:0 0 14px; max-width:64ch; text-wrap:pretty}
+h3,.leg__what,.probs .t,.persona h4,.screen__t,.values b{text-wrap:balance}
+p:last-child{margin-bottom:0}
+strong{font-weight:600}
+a{color:var(--brand); text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radius:3px}
+
+/* ── 표지 ─────────────────────────────────── */
+.cover{padding:72px 0 34px; border-bottom:1px solid var(--line)}
+.logo{display:flex; align-items:center; gap:10px; font-size:26px; font-weight:700; letter-spacing:-.03em}
+.logo__mark{
+  display:grid; place-items:center; width:42px; height:42px; border-radius:12px;
+  background:var(--brand-fill); color:var(--on-brand); font-size:20px; transform:rotate(-8deg);
+}
+.logo b{font-weight:800; color:var(--brand)}
+.slogan .hl{
+  background:linear-gradient(transparent 58%,var(--accent-soft) 58%);
+  border-bottom:2px solid var(--accent);
+}
+.slogan{
+  margin:26px 0 0; font-size:clamp(30px,5.4vw,46px); font-weight:800;
+  line-height:1.2; letter-spacing:-.04em; max-width:16em; text-wrap:balance;
+}
+.sub{margin:16px 0 0; font-size:17px; color:var(--ink-2)}
+.badges{display:flex; flex-wrap:wrap; gap:8px; margin-top:26px}
+.badge{
+  word-break:break-all;
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.04em;
+  padding:5px 11px; border-radius:999px; border:1px solid var(--line);
+  color:var(--ink-3); background:var(--tint);
+}
+.badge.is-live{color:var(--mint); border-color:var(--mint); background:var(--mint-soft); font-weight:600}
+
+/* ── 섹션 ─────────────────────────────────── */
+section{padding-top:56px}
+.head{display:flex; align-items:baseline; gap:12px; margin-bottom:20px}
+.head .no{
+  font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.1em;
+  color:var(--brand); background:var(--brand-soft); padding:4px 8px; border-radius:4px;
+}
+h2{margin:0; font-size:clamp(21px,3.2vw,26px); font-weight:700; letter-spacing:-.03em; text-wrap:balance}
+h3{margin:26px 0 8px; font-size:16px; font-weight:600; letter-spacing:-.015em}
+.en{font-family:var(--mono); font-size:11.5px; color:var(--ink-3); letter-spacing:.06em; text-transform:uppercase}
+
+/* ── 여정 띠 ──────────────────────────────── */
+.journey{display:grid; grid-template-columns:repeat(auto-fit,minmax(128px,1fr)); gap:3px; margin:20px 0 6px}
+.leg{padding:16px 16px 18px; background:var(--tint); border-radius:10px; border-top:3px solid var(--line)}
+.leg.is-bank{border-top-color:var(--ink-3)}
+.leg.is-gap{border-top-color:var(--accent); background:var(--accent-soft)}
+.leg.is-ours{border-top-color:var(--brand); background:var(--brand-soft)}
+.leg__when{font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; color:var(--ink-3)}
+.leg__what{display:block; margin-top:6px; font-weight:700; font-size:14.5px; letter-spacing:-.02em}
+.leg__d{display:block; margin-top:5px; font-size:12.5px; color:var(--ink-2); line-height:1.6; text-wrap:pretty}
+.journey-note{font-size:13px; color:var(--ink-3); margin-top:12px}
+.tnote{margin-top:14px; font-size:13px; color:var(--ink-3); line-height:1.65}
+
+/* ── 문제 목록 ────────────────────────────── */
+.probs{list-style:none; margin:22px 0 0; padding:0; display:flex; flex-direction:column; gap:14px}
+.probs li{display:grid; grid-template-columns:auto 1fr; gap:0 14px; align-items:baseline}
+.probs .k{font-family:var(--mono); font-size:11.5px; color:var(--accent); font-weight:600; padding-top:3px}
+.probs .t{font-weight:600; font-size:16px}
+.probs .d{grid-column:2; margin-top:3px; font-size:14.5px; color:var(--ink-2); line-height:1.7; text-wrap:pretty}
+
+/* ── 타겟 ─────────────────────────────────── */
+.persona{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:3px; margin-top:20px}
+.persona > div{padding:22px; background:var(--tint); border-radius:12px}
+.persona h4{margin:0; font-size:16px; font-weight:700; letter-spacing:-.02em}
+.persona .who{font-family:var(--mono); font-size:10.5px; color:var(--brand); letter-spacing:.06em; text-transform:uppercase}
+.persona ul{margin:12px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px}
+.persona li{font-size:14px; color:var(--ink-2); line-height:1.6; padding-left:14px; position:relative}
+.persona li::before{content:"·"; position:absolute; left:2px; color:var(--brand); font-weight:700}
+.persona .need{
+  margin:14px 0 0; padding-top:12px; border-top:1px dashed var(--line);
+  font-size:13.5px; color:var(--ink); font-weight:600;
+}
+
+/* ── 화면 ─────────────────────────────────── */
+.screens{display:flex; flex-direction:column; gap:3px; margin-top:20px}
+.screen{
+  display:grid; grid-template-columns:52px 1fr; gap:4px 18px;
+  padding:22px; background:var(--tint); border-radius:12px;
+}
+.screen__n{
+  grid-row:1 / span 3; display:grid; place-items:center; align-self:start;
+  width:52px; height:52px; border-radius:14px; background:var(--bg);
+  border:1px solid var(--line); font-size:22px;
+}
+.screen__t .q{font-style:normal; font-weight:400; font-size:12.5px; color:var(--brand); font-family:var(--mono)}
+.screen__t{font-weight:700; font-size:16px; letter-spacing:-.02em}
+.screen__ui{
+  word-break:break-all;
+  font-family:var(--mono); font-size:12px; color:var(--brand);
+  background:var(--brand-soft); padding:2px 8px; border-radius:4px;
+  display:inline-block; margin-top:6px;
+}
+.screen__d{font-size:14.5px; color:var(--ink-2); line-height:1.7; margin-top:6px; text-wrap:pretty}
+.screen__d b{color:var(--ink); font-weight:600}
+
+/* ── 표 ───────────────────────────────────── */
+/* ── 강조 블록 ───────────────────────────── */
+.lead{margin:20px 0 0; padding:20px 22px; background:var(--brand-soft); border-radius:12px; border-left:3px solid var(--brand)}
+.lead p{margin:0; font-weight:600; font-size:17px; line-height:1.55; letter-spacing:-.02em}
+.lead p + p{margin-top:10px; font-size:14.5px; font-weight:400; color:var(--ink-2); line-height:1.7}
+.lead em{font-style:normal; background:linear-gradient(transparent 60%,#fff 60%); font-weight:700}
+
+.tablewrap{overflow-x:auto; margin-top:20px; border:1px solid var(--line); border-radius:12px}
+table{width:100%; border-collapse:collapse; font-size:14.5px; min-width:460px}
+th,td{padding:13px 16px; text-align:left; border-bottom:1px solid var(--line-soft); vertical-align:top}
+thead th{
+  font-family:var(--mono); font-size:10.5px; font-weight:500; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--ink-3); background:var(--tint); border-bottom:1px solid var(--line);
+}
+tbody tr:last-child td{border-bottom:0}
+tr.is-total td{font-weight:600; background:var(--tint)}
+td.num{font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+.src{font-family:var(--mono); font-size:10.5px; color:var(--ink-3); white-space:nowrap}
+caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5px; color:var(--ink-3); line-height:1.6}
+
+/* ── 가치 ─────────────────────────────────── */
+.values{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:3px; margin-top:20px}
+.values > div{padding:22px; background:var(--tint); border-radius:12px}
+.values .cap{font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3)}
+.values b{display:block; margin-top:7px; font-size:18px; font-weight:800; letter-spacing:-.03em; line-height:1.3}
+.values span{display:block; margin-top:8px; font-size:13.5px; color:var(--ink-2); line-height:1.65}
+
+.closing{
+  margin-top:26px; padding:26px 28px; border-radius:14px;
+  background:var(--brand-fill); color:var(--on-brand);
+}
+.closing p{color:var(--on-brand); font-size:clamp(16px,2.4vw,18.5px); font-weight:600; line-height:1.6; letter-spacing:-.02em}
+.closing p + p{margin-top:10px; font-size:15px; font-weight:400; opacity:.9}
+
+.foot{margin-top:56px; padding-top:20px; border-top:1px solid var(--line); font-size:13px; color:var(--ink-3); line-height:1.7}
+
+@media (max-width:560px){
+  .page{padding:0 20px 70px}
+  .cover{padding-top:52px}
+  .screen{grid-template-columns:1fr}
+  .screen__n{grid-row:auto; margin-bottom:4px}
+}
+@media print{
+  :root{--bg:#fff; --tint:#f4f5f9; --line:#d8dbe6; --ink-3:#5f6672}
+  .page{max-width:none; padding:0}
+  /* 섹션을 통째로 붙잡으면 하나가 다음 장으로 밀리면서 빈 공간이 생깁니다.
+     쪼개지면 안 되는 것은 카드·표뿐입니다. */
+  section{padding-top:30px}
+  .head,h3{break-after:avoid}
+  .leg,.persona>div,.screen,.values>div,.closing,.tablewrap{break-inside:avoid}
+  a{color:var(--ink)}
+}
+</style>
+
+<div class="page">
+
+  <header class="cover">
+    <div class="logo"><span class="logo__mark">✈</span><span>Trip<b>Talk</b></span></div>
+
+    <h1 class="slogan">여행에서 진짜 쓰는 영어,<br><span class="hl">AI 캐릭터</span>와 미리 체험하세요</h1>
+    <p class="sub">환전으로 끝나던 여행 준비를, 출국까지의 며칠과 여행 중의 순간들로 이어 주는 여행 영어 연습 서비스입니다.</p>
+
+    <div class="badges">
+      <span class="badge is-live">v0.1.0 · MVP 운영 중</span>
+      <span class="badge">2026. 08</span>
+      <span class="badge">웹 · 설치 불필요</span>
+      <span class="badge">영어 · 시나리오 21</span>
+      <span class="badge">triptalk-next-mynode.vercel.app</span>
+    </div>
+  </header>
+
+  <!-- ── 01 개요 ──────────────────────────── -->
+  <section>
+    <div class="head"><span class="no">01</span><h2>서비스 개요</h2><span class="en">Overview</span></div>
+
+    <p><strong>TripTalk 은 여행지에서 마주칠 상황을 AI 캐릭터와 소리 내어 미리 겪어 보는 여행 영어 연습 서비스입니다.</strong> 설치도 가입도 없이 브라우저에서 바로 시작하고, 한 상황이 3분에 끝납니다.</p>
+
+    <h3>기획 배경 — 환전에서 끊기는 고객 경험</h3>
+    <p>여행 준비에서 금융 앱이 맡는 구간은 <strong>환전 한 번으로 끝납니다.</strong> 그런데 환전은 여행이 확정된 순간이고, 고객의 여행은 그때부터 시작됩니다. 출국까지의 며칠, 그리고 여행 중에 실제로 돈 때문에 곤란해지는 순간들이 전부 그 뒤에 있습니다.</p>
+
+    <div class="journey">
+      <div class="leg is-bank">
+        <span class="leg__when">D-14 전후</span>
+        <span class="leg__what">환전</span>
+        <span class="leg__d">여행이 확정되는 지점. 금융 앱의 역할이 여기서 끝납니다.</span>
+      </div>
+      <div class="leg is-gap">
+        <span class="leg__when">D-14 → D-DAY</span>
+        <span class="leg__what">비어 있던 며칠</span>
+        <span class="leg__d">앱을 다시 열 이유가 없습니다. 고객은 준비하고 싶지만 방법이 없습니다.</span>
+      </div>
+      <div class="leg is-ours">
+        <span class="leg__when">출국 전</span>
+        <span class="leg__what">TripTalk 연습</span>
+        <span class="leg__d">갈 곳의 장면부터 골라 하루 3분. 매일 다시 올 이유가 생깁니다.</span>
+      </div>
+      <div class="leg is-ours">
+        <span class="leg__when">여행 중</span>
+        <span class="leg__what">돈 트랙이 쓰이는 순간</span>
+        <span class="leg__d">카드 거절·ATM·택스 리펀드. 미리 해 본 장면이 그대로 나옵니다.</span>
+      </div>
+      <div class="leg is-bank">
+        <span class="leg__when">귀국 이후</span>
+        <span class="leg__what">다음 여행</span>
+        <span class="leg__d">어려웠던 장면이 기록으로 남고, 다음 환전 때 다시 이어집니다.</span>
+      </div>
+    </div>
+    <p class="journey-note">주황 구간이 지금 비어 있는 자리이고, TripTalk 이 채우려는 구간입니다.</p>
+
+    <h3>해결하려는 문제</h3>
+    <ul class="probs">
+      <li>
+        <span class="k">01</span>
+        <span class="t">아는데 말이 안 나온다</span>
+        <span class="d">“Can I have the bill?” 을 몰라서 못 하는 사람은 드뭅니다. 아는데 입이 안 떨어지고, 상대가 예상 밖의 말을 하면 굳습니다. <b>읽는 연습과 말하는 연습은 다른 일입니다.</b></span>
+      </li>
+      <li>
+        <span class="k">02</span>
+        <span class="t">교재는 처음부터 읽게 되어 있다</span>
+        <span class="d">필요한 건 “다음 주에 갈 곳”의 한 장면인데, 교재와 어학 앱은 레벨 순서로 짜여 있습니다. 출국 전에 다 읽는 사람은 거의 없습니다.</span>
+      </li>
+      <li>
+        <span class="k">03</span>
+        <span class="t">돈 문제는 여러 장에 흩어져 있다</span>
+        <span class="d">환전은 도착 장, 세금 환급은 쇼핑 장, 카드 분실은 사건·사고 장. <b>말을 못 하면 그 자리에서 손해가 나는데</b>, 한 번에 준비할 방법이 없습니다.</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ── 02 타겟 ──────────────────────────── -->
+  <section>
+    <div class="head"><span class="no">02</span><h2>타겟 사용자</h2><span class="en">Target</span></div>
+
+    <p>“영어를 배우려는 사람”이 아니라 <strong>여행 때문에 영어가 필요해진 사람</strong>입니다. 학습 동기가 뚜렷하고 기간이 정해져 있어 짧게 집중하고 끝납니다 — 어학 시장에서 보기 드문 조건입니다.</p>
+
+    <div class="persona">
+      <div>
+        <span class="who">Primary</span>
+        <h4>출국일이 정해진 여행자</h4>
+        <ul>
+          <li>2~3주 뒤 출국, 환전을 막 마쳤다</li>
+          <li>영어를 다시 배울 시간은 없다</li>
+          <li>공항·호텔·식당에서 막힐까 걱정한다</li>
+        </ul>
+        <p class="need">필요한 건 커리큘럼이 아니라 “그 장면 한 번 해 보기”</p>
+      </div>
+      <div>
+        <span class="who">Secondary</span>
+        <h4>돈 문제가 무서운 여행자</h4>
+        <ul>
+          <li>해외에서 카드가 거절된 적이 있다</li>
+          <li>따지고 싶은데 영어가 안 나와 넘어갔다</li>
+          <li>ATM·택스 리펀드 창구가 부담스럽다</li>
+        </ul>
+        <p class="need">손해를 막는 다섯 장면을 미리 연습</p>
+      </div>
+      <div>
+        <span class="who">Tertiary</span>
+        <h4>말하기가 부끄러운 학습자</h4>
+        <ul>
+          <li>사람 앞에서 틀리는 것이 싫다</li>
+          <li>어학원은 시간·비용이 부담된다</li>
+          <li>시도 자체를 줄이게 된다</li>
+        </ul>
+        <p class="need">틀려도 되는 상대, 무제한 다시 하기</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 03 핵심 기능 ─────────────────────── -->
+  <section>
+    <div class="head"><span class="no">03</span><h2>핵심 기능</h2><span class="en">Key Features</span></div>
+
+    <p>아래 다섯 화면이 한 번의 연습을 이룹니다. 인용된 문구는 <strong>실제 화면에 쓰여 있는 그대로</strong>입니다.</p>
+
+    <div class="screens">
+      <div class="screen">
+        <span class="screen__n">🗂</span>
+        <span class="screen__t">상황 고르기</span>
+        <span class="screen__ui">“어떤 상황을 연습할까요?”</span>
+        <span class="screen__d">기본 표현·공항·숙소·식사·이동·관광·쇼핑·돌발·귀국까지 <b>21개 시나리오</b>가 여행 순서 그대로 놓입니다. 레벨 순서가 아니라 <b>갈 곳부터 꺼내 씁니다.</b> 말하기 속도·튜터 목소리·자막을 여기서 정합니다.</span>
+      </div>
+      <div class="screen">
+        <span class="screen__n">🎙</span>
+        <span class="screen__t">소리 내어 답하기</span>
+        <span class="screen__ui">“마이크를 누르고 영어로 답해보세요”</span>
+        <span class="screen__d">캐릭터가 <b>원어민이 실제로 쓰는 말</b>로 먼저 건넵니다 — <i>“Yep, real close. You can’t miss it.”</i> 처럼 축약과 구어가 그대로입니다. 마이크를 눌러 답하고, 말하기 어려운 곳에서는 타이핑으로도 됩니다. 못 알아들으면 다시 듣기·따라 말하기.</span>
+      </div>
+      <div class="screen">
+        <span class="screen__n">✅</span>
+        <span class="screen__t">즉시 피드백</span>
+        <span class="screen__ui">직전 답변 + 교정이 화면에 남음</span>
+        <span class="screen__d">얼마나 또렷하게 <b>전달됐는지</b>, 더 자연스러운 표현은 무엇인지, 질문의 <b>핵심을 놓치지 않았는지</b>를 바로 돌려줍니다. 교정은 “무엇을 → 어떻게 → 왜”가 함께 나옵니다.</span>
+      </div>
+      <div class="screen">
+        <span class="screen__n">📊</span>
+        <span class="screen__t">마무리 리포트</span>
+        <span class="screen__ui">“평균 발음 점수 · 말한 문장 · 연습할 단어 · 교정된 표현”</span>
+        <span class="screen__d">한 상황(5턴)이 끝나면 리포트가 뜹니다. 이어서 <b>“한 번 더 연습”</b> 또는 <b>“다른 상황 하기”</b>. 부끄러움이 없으니 시도 횟수가 늘고, 시도가 늘어야 입이 트입니다.</span>
+      </div>
+      <div class="screen">
+        <span class="screen__n">🕘</span>
+        <span class="screen__t">지난 연습</span>
+        <span class="screen__ui">로그인한 경우에만 표시</span>
+        <span class="screen__d">끝낸 연습이 장면·점수·교정과 함께 남습니다. <b>어려웠던 장면을 다음 여행 준비에 다시 꺼낼 수 있는 자리</b>이고, 화면에서 직접 지울 수 있습니다.</span>
+      </div>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>구분</th><th>기존 학습 방식</th><th>TripTalk</th></tr></thead>
+        <tbody>
+          <tr><td>커리큘럼</td><td>레벨·문법 순서</td><td><strong>여행 일정 순서</strong></td></tr>
+          <tr><td>대사의 말투</td><td>교과서 문장</td><td><strong>원어민이 실제로 쓰는 말</strong></td></tr>
+          <tr><td>돈 관련 상황</td><td>여행 단계별로 흩어짐</td><td><strong>돈 트랙 5장면</strong></td></tr>
+          <tr><td>한 판의 길이</td><td>장기 코스</td><td>상황 하나 5턴 · <strong>3분</strong></td></tr>
+          <tr><td>시작 장벽</td><td>설치·가입·결제</td><td>브라우저에서 바로</td></tr>
+        </tbody>
+      </table>
+      <caption>발음 점수는 현재 <b>음성 인식이 얼마나 정확히 알아들었는지</b>를 기준으로 합니다. 음소 단위 분석은 다음 단계 과제이며, 화면에도 이 기준을 그대로 밝히고 있습니다.</caption>
+    </div>
+  </section>
+
+  <!-- ── 04 기대 효과 ─────────────────────── -->
+  <section>
+    <div class="head"><span class="no">04</span><h2>기대 효과 및 비전</h2><span class="en">Value Proposition</span></div>
+
+    <h3>사용자 경험 — 준비가 끊기지 않습니다</h3>
+    <p>환전을 마친 고객에게 남는 것은 “이제 뭘 하지”입니다. TripTalk 은 그 자리에 <strong>오늘 할 3분</strong>을 놓습니다. 출국까지 매일 한 장면씩, 여행 중에는 미리 해 본 장면이 그대로 나오고, 돌아온 뒤에는 기록이 남아 다음 여행으로 이어집니다.</p>
+
+    <div class="values">
+      <div>
+        <span class="cap">체류</span>
+        <b>환전 → 출국,<br>매일 열 이유</b>
+        <span>1회성 거래로 끝나던 구간에 반복 방문이 생깁니다. 신규 획득 비용 없이 늘어나는 접점입니다.</span>
+      </div>
+      <div>
+        <span class="cap">상품 접점</span>
+        <b>배너가 아니라<br>학습 장면 안에서</b>
+        <span>해외 결제 설정, ATM 수수료, 택스 리펀드, 분실 신고 — 고객이 스스로 연습하려 들어온 맥락에서 설명됩니다.</span>
+      </div>
+      <div>
+        <span class="cap">데이터</span>
+        <b>어디서 막히는지<br>기록으로</b>
+        <span>장면별 이탈·재시도가 다음에 만들 콘텐츠의 근거가 됩니다. 감이 아니라 사용 기록으로 정합니다.</span>
+      </div>
+      <div>
+        <span class="cap">운영 비용</span>
+        <b>대사 음성<br>1회성 $0.20</b>
+        <span>정해진 대사는 미리 만들어 파일로 둡니다. 이용자가 늘어도 음성 비용은 늘지 않습니다.</span>
+      </div>
+    </div>
+
+    <h3>비전</h3>
+    <p>다음 순서는 <strong>발음 평가 고도화 → 자유 대화 → 다국어 확장</strong>입니다. 특히 어느 언어를 먼저 만들지는 추측이 아니라 <strong>실제 이용 기록과 여행 목적지 분포로</strong> 정합니다.</p>
+
+    <div class="closing">
+      <p>여행은 환전에서 끝나지 않습니다.</p>
+      <p>TripTalk 은 확정된 여행과 실제 여행 사이의 며칠을 채우고, 그 여행이 끝난 뒤 다음 여행까지 고객 곁에 남는 것을 목표로 합니다.</p>
+    </div>
+  </section>
+
+  <div class="foot">
+    <p><b>지금 확인하실 수 있습니다</b> — <a href="https://triptalk-next-mynode.vercel.app">triptalk-next-mynode.vercel.app</a> · 설치 없이 브라우저에서 실행되며, 로그인 없이 3회 연습할 수 있습니다.</p>
+    <p>TripTalk v0.1.0 · 2026년 8월 기준</p>
+  </div>
+
+</div>

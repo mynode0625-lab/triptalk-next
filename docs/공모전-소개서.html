@@ -1,0 +1,636 @@
+<title>TripTalk 소개서</title>
+<style>
+:root{
+  /* 팔레트는 서비스의 실제 토큰(globals.css)을 그대로 씁니다 — 세 소개서 모두 동일. */
+  --ink:#14161c;
+  --ink-2:#3d4350;
+  --ink-3:#6b7280;
+  --rule:#e7e9ef;
+  --rule-soft:#f0f2f7;
+  --bg:#ffffff;
+  --panel:#f6f7fb;
+  --brand:#4f46e5;
+  --brand-soft:#eef0ff;
+  --accent:#ff7a59;
+  --accent-soft:#fff1ec;
+  --caution:#b45309;
+  --caution-soft:#fff1ec;
+  --ok:#0b8a63;
+  /* Pretendard 가 없으면 시스템 UI 서체로 떨어집니다. */
+  --sans:Pretendard,"Pretendard Variable",-apple-system,BlinkMacSystemFont,
+         "Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-weight:400;
+  font-size:16px; line-height:1.78; letter-spacing:-.01em;
+  -webkit-font-smoothing:antialiased;
+}
+.page{max-width:840px; margin:0 auto; padding:60px 28px 96px}
+
+/* ── 표지 ────────────────────────────────── */
+.cover{border-bottom:2px solid var(--ink); padding-bottom:28px; display:flex; flex-direction:column; gap:14px}
+.eyebrow{
+  font-size:11.5px; font-weight:600; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--brand); font-family:var(--mono);
+}
+.cover h1{
+  font-weight:800; font-size:clamp(38px,7vw,58px);
+  line-height:1.08; letter-spacing:-.04em; margin:0; text-wrap:balance;
+}
+.cover .deck{
+  font-weight:500; font-size:clamp(17px,2.6vw,21px);
+  line-height:1.6; letter-spacing:-.015em; color:var(--ink-2); margin:0; max-width:33em;
+}
+.meta{
+  display:flex; flex-wrap:wrap; gap:6px 22px;
+  font-family:var(--mono); font-size:12px; color:var(--ink-3); padding-top:6px;
+}
+
+/* ── 접수 정보 ───────────────────────────── */
+.filing{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:2px; margin-top:26px}
+.filing div{padding:16px 20px; background:var(--panel); border-radius:3px}
+.filing dt{font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); margin:0}
+.filing dd{margin:5px 0 0; font-size:15px; font-weight:600; line-height:1.5}
+
+/* ── 목차 ────────────────────────────────── */
+.toc{margin-top:38px; padding:24px 26px; background:var(--panel); border-radius:3px}
+.toc h2{font-size:12px; font-family:var(--mono); letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); margin:0 0 14px}
+.toc ol{margin:0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:8px 24px}
+.toc li{display:flex; gap:10px; font-size:14.5px; color:var(--ink-2)}
+.toc li b{font-family:var(--mono); font-size:12px; color:var(--brand); flex:none; padding-top:2px}
+.toc li.is-key{color:var(--ink); font-weight:600}
+.toc .sub{display:block; font-size:13px; font-weight:400; color:var(--ink-3); line-height:1.6}
+
+/* ── 섹션 ────────────────────────────────── */
+section{margin-top:56px}
+.sec-head{display:flex; align-items:baseline; gap:14px; border-bottom:1px solid var(--rule); padding-bottom:10px; margin-bottom:22px}
+.sec-num{font-family:var(--mono); font-size:12px; font-weight:500; color:var(--brand); letter-spacing:.06em; flex:none}
+.sec-tag{margin-left:auto; font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--brand); background:var(--brand-soft); padding:3px 9px; border-radius:2px; flex:none}
+h2{font-weight:700; font-size:clamp(22px,3.4vw,27px); line-height:1.3; letter-spacing:-.03em; margin:0; text-wrap:balance}
+h3{font-weight:600; font-size:16.5px; margin:30px 0 8px; letter-spacing:-.015em}
+p{margin:0 0 15px; max-width:66ch; text-wrap:pretty}
+p:last-child{margin-bottom:0}
+strong{font-weight:600; color:var(--ink)}
+em{font-style:normal; background:linear-gradient(transparent 62%,var(--brand-soft) 62%); font-weight:500}
+code{font-family:var(--mono); font-size:12.5px; background:var(--panel); padding:1px 5px; border-radius:2px; word-break:break-all}
+
+/* ── 강조 블록 ───────────────────────────── */
+.lead{margin:0 0 22px; padding:26px 28px; background:var(--brand-soft); border-radius:3px; border-left:3px solid var(--brand)}
+.lead p{margin:0; font-weight:600; font-size:clamp(18px,2.8vw,21px); line-height:1.6; letter-spacing:-.02em}
+.lead p + p{margin-top:12px; font-size:15.5px; font-weight:400; color:var(--ink-2); line-height:1.75}
+
+/* ── 목록 ────────────────────────────────── */
+.stack{display:flex; flex-direction:column; gap:18px; margin:22px 0 0; padding:0; list-style:none}
+.stack li{display:grid; grid-template-columns:auto 1fr; gap:0 16px; align-items:baseline}
+.stack .marker{font-family:var(--mono); font-size:12px; font-weight:500; color:var(--brand); padding-top:4px}
+.stack .t{font-weight:600; font-size:16.5px}
+.stack .d{grid-column:2; margin-top:4px; color:var(--ink-2); font-size:15px; line-height:1.72; max-width:60ch}
+
+/* ── 지표 ────────────────────────────────── */
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:2px; margin:22px 0}
+.stats div{padding:20px 22px; background:var(--panel); border-radius:3px}
+.stats b{display:block; font-size:26px; font-weight:800; letter-spacing:-.04em; font-variant-numeric:tabular-nums}
+.stats span{display:block; margin-top:4px; font-size:12.5px; color:var(--ink-3); line-height:1.5}
+
+/* ── 표 ──────────────────────────────────── */
+.tablewrap{overflow-x:auto; margin-top:22px; border:1px solid var(--rule); border-radius:3px}
+table{width:100%; border-collapse:collapse; font-size:14.5px; min-width:480px}
+caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5px; color:var(--ink-3); line-height:1.6}
+th,td{padding:12px 16px; text-align:left; border-bottom:1px solid var(--rule-soft); vertical-align:top}
+thead th{
+  font-family:var(--mono); font-size:11px; font-weight:500; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--ink-3); background:var(--panel); border-bottom:1px solid var(--rule);
+}
+tbody tr:last-child td{border-bottom:0}
+tr.is-total td{font-weight:600; background:var(--panel)}
+td.num{font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap}
+.src{font-family:var(--mono); font-size:10.5px; color:var(--ink-3); white-space:nowrap}
+
+/* ── 되는 것 / 아닌 것 ───────────────────── */
+.ledger{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:2px; margin-top:22px}
+.ledger > div{padding:22px 24px; background:var(--panel); border-radius:3px}
+.ledger h4{margin:0 0 14px; font-family:var(--mono); font-size:11px; font-weight:500; letter-spacing:.08em; text-transform:uppercase}
+.ledger .yes h4{color:var(--ok)}
+.ledger .no h4{color:var(--caution)}
+.ledger ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:9px}
+.ledger li{font-size:14.5px; line-height:1.6; color:var(--ink-2); padding-left:16px; position:relative}
+.ledger li::before{position:absolute; left:0; top:0; font-family:var(--mono); font-size:12px}
+.ledger .yes li::before{content:"+"; color:var(--ok)}
+.ledger .no li::before{content:"–"; color:var(--caution)}
+.ledger li b{color:var(--ink); font-weight:600}
+
+/* ── 붙이는 단계 ─────────────────────────── */
+.steps{display:flex; flex-direction:column; gap:2px; margin-top:22px}
+.step{display:grid; grid-template-columns:auto 1fr auto; gap:4px 16px; padding:20px 22px; background:var(--panel); border-radius:3px}
+.step__n{font-family:var(--mono); font-size:12px; font-weight:600; color:var(--brand); padding-top:3px}
+.step__t{font-weight:600; font-size:16.5px}
+.step__tag{font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; color:var(--ink-3); white-space:nowrap; padding-top:5px}
+.step__tag.is-now{color:var(--ok); font-weight:600}
+.step__d{grid-column:2 / -1; margin-top:5px; font-size:15px; color:var(--ink-2); line-height:1.72}
+
+/* ── 로드맵 ──────────────────────────────── */
+.road{display:flex; flex-direction:column; gap:2px; margin-top:22px}
+.road__row{display:grid; grid-template-columns:auto 1fr; gap:4px 18px; padding:18px 22px; background:var(--panel); border-radius:3px}
+.road__when{font-family:var(--mono); font-size:11.5px; color:var(--brand); font-weight:500; white-space:nowrap}
+.road__what{font-weight:600; font-size:16px}
+.road__d{grid-column:2; margin-top:4px; font-size:14.5px; color:var(--ink-2); line-height:1.7}
+
+/* ── 유의 ────────────────────────────────── */
+.note{margin-top:22px; padding:18px 22px; border-radius:3px; background:var(--caution-soft); border-left:3px solid var(--caution)}
+.note h4{margin:0 0 8px; font-family:var(--mono); font-size:11px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--caution)}
+.note p{font-size:14.5px; color:var(--ink-2); line-height:1.72; margin-bottom:8px}
+.note p:last-child{margin-bottom:0}
+
+.fill{display:inline-block; min-width:8em; border-bottom:1px solid var(--ink-3); color:var(--ink-3); font-family:var(--mono); font-size:13px}
+
+.endnote{margin-top:64px; padding-top:22px; border-top:1px solid var(--rule); font-size:13px; color:var(--ink-3); line-height:1.7}
+.endnote p{margin-bottom:6px}
+a{color:var(--brand); text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radius:2px}
+
+@media (max-width:560px){
+  .page{padding:44px 20px 72px}
+  .lead{padding:22px}
+  .step{grid-template-columns:auto 1fr}
+  .step__tag{grid-column:2; padding-top:0}
+}
+@media print{
+  :root{--bg:#fff; --ink:#12151d; --ink-2:#3b4453; --ink-3:#5c6473; --panel:#f2f4f9; --rule:#d5dae5}
+  .page{max-width:none; padding:0}
+  section{break-inside:auto; margin-top:38px}
+  .sec-head,h3{break-after:avoid}
+  .lead,.ledger>div,.road__row,.step,.note,.tablewrap,.stats,.filing{break-inside:avoid}
+  a{color:var(--ink)}
+}
+</style>
+
+<div class="page">
+
+  <header class="cover">
+    <div class="eyebrow">서비스 소개서 · 비금융 서비스 개선</div>
+    <h1>환전 이후</h1>
+    <p class="deck">환전 버튼을 누른 고객은 그 순간 여행이 확정된 사람입니다. TripTalk 은 환전 완료 화면에서 시작해, <b>환전 이후 출국까지의 빈 구간</b>을 슈퍼SOL 고객에게 무료로 채우는 여행 영어 연습 서비스입니다.</p>
+    <div class="meta">
+      <span>TripTalk</span>
+      <span>2026. 08. 31.</span>
+      <span>triptalk-next-mynode.vercel.app</span>
+      <span>신한 Tomorrow Challenge for AI 솔로프리너</span>
+    </div>
+  </header>
+
+  <dl class="filing">
+    <div><dt>공모 주제</dt><dd>비금융 서비스 개선</dd></div>
+    <div><dt>사업화 단계</dt><dd>Step 2 · MVP 보유</dd></div>
+    <div><dt>서비스 유형</dt><dd>웹 (설치 불필요)</dd></div>
+    <div><dt>이용자 과금</dt><dd>없음 · 전액 무료</dd></div>
+  </dl>
+
+  <nav class="toc">
+    <h2>목차</h2>
+    <ol>
+      <li><b>01.</b> 환전 이후 단절된 고객 경험</li>
+      <li><b>02.</b> 아는데 말이 안 나온다</li>
+      <li><b>03.</b> 떠나기 전에 미리 겪어 본다</li>
+      <li><b>04.</b> 지금 어디까지 왔나</li>
+      <li class="is-key"><b>05.</b> 슈퍼SOL 연계를 통한 기대효과<span class="sub">왜 환전인가 · 신한이 얻는 것 · 붙이는 방법</span></li>
+      <li><b>06.</b> 시장과 대상</li>
+      <li><b>07.</b> 유사·경쟁 서비스와 차별점</li>
+      <li><b>08.</b> 무료로 제공하는 데 드는 비용</li>
+      <li><b>09.</b> PoC 계획</li>
+      <li><b>10.</b> 로드맵</li>
+      <li><b>11.</b> 팀</li>
+    </ol>
+  </nav>
+
+  <!-- ── 01 ─────────────────────────────── -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>환전 이후 단절된 고객 경험</h2></div>
+
+    <div class="lead">
+      <p>환전은 <em>완결된 1회성 거래</em>입니다.</p>
+      <p>고객은 환전을 마치면 출국까지 슈퍼SOL 을 다시 열 이유가 없습니다. 여행에 드는 <strong>돈</strong>은 신한이 이미 갖췄습니다 — SOL트래블의 환전 수수료 면제, 해외 결제·ATM 수수료 면제, 공항 라운지. 비어 있는 것은 그 돈을 쓸 때 필요한 <strong>말</strong>입니다.</p>
+    </div>
+
+    <p>이 제안은 새 자리를 만들자는 것이 아니라 <strong>SOL트래블 옆에 붙는</strong> 것입니다. 환전 완료 화면에서 링크 하나로 시작하고, 고객에게는 출국 전까지 <strong>매일 한 장면, 10분짜리 방문 사유</strong>가 생깁니다.</p>
+  </section>
+
+  <!-- ── 02 ─────────────────────────────── -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>아는데 말이 안 나온다</h2></div>
+
+    <p>여행 영어의 문제는 <strong>모르는 것</strong>이 아니라 <strong>안 나오는 것</strong>입니다. 특히 <strong>돈이 걸린 순간</strong>에 부담이 가장 큽니다 — 카드가 거절됐을 때, ATM 이 카드를 삼켰을 때, 요금이 두 번 청구됐을 때. 그냥 넘어가면 손해가 나고, 말하자니 문장이 떠오르지 않습니다.</p>
+
+    <ul class="stack">
+      <li>
+        <span class="marker">▍</span>
+        <span class="t">아는데 말이 안 나온다</span>
+        <span class="d">“Can I have the bill?” 을 몰라서 못 하는 사람은 드뭅니다. 아는데 입이 안 떨어지고, 상대가 예상 밖의 말을 하면 굳습니다. <strong>읽는 연습과 말하는 연습은 다른 일입니다.</strong></span>
+      </li>
+      <li>
+        <span class="marker">▍</span>
+        <span class="t">교재는 순서대로 읽게 되어 있다</span>
+        <span class="d">여행에서 필요한 것은 “지금 이 상황”의 한 문장인데, 교재는 처음부터 끝까지 읽는 구조입니다. 출국 전에 다 읽는 사람은 거의 없습니다.</span>
+      </li>
+      <li>
+        <span class="marker">▍</span>
+        <span class="t">돈 문제는 여러 장에 흩어져 있다</span>
+        <span class="d">환전은 도착 장, 세금 환급은 쇼핑 장, 카드 분실은 사건·사고 장. <strong>“돈 때문에 곤란할 때”를 한 번에 준비할 방법이 없습니다.</strong></span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ── 03 ─────────────────────────────── -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>떠나기 전에 미리 겪어 본다</h2></div>
+
+    <p><strong>TripTalk 은 여행지에서 자주 겪는 상황을 AI 캐릭터와 소리 내어 말해보고 미리 연습해 보는 여행 영어 서비스입니다.</strong> 신한 SOL 환전 서비스를 이용한 고객은 설치도 가입도 없이 브라우저에서 바로 시작할 수 있고, 한 상황에 대한 연습은 10분이면 끝납니다.</p>
+
+    <ul class="stack">
+      <li><span class="marker">01</span><span class="t">상황을 고른다</span><span class="d">호텔 체크인, 카드 결제 거절, 택스 리펀드처럼 실제로 마주치는 장면을 고릅니다.</span></li>
+      <li><span class="marker">02</span><span class="t">캐릭터가 영어로 말을 건다</span><span class="d">사람 목소리로 읽어줍니다. 못 알아들으면 다시 듣거나 천천히 들을 수 있습니다.</span></li>
+      <li><span class="marker">03</span><span class="t">소리 내어 답한다</span><span class="d">마이크를 누르고 말합니다. 말하기 어려운 곳에서는 타이핑으로도 됩니다.</span></li>
+      <li><span class="marker">04</span><span class="t">바로 피드백을 받는다</span><span class="d">얼마나 또렷하게 전달됐는지, 더 자연스러운 표현은 무엇인지, 질문의 핵심을 놓치지 않았는지 알려줍니다.</span></li>
+    </ul>
+
+    <h3>외우는 말이 실제로 쓰는 말입니다</h3>
+    <p>대사는 교과서 문장이 아니라 <strong>원어민이 그 자리에서 실제로 쓰는 말</strong>로 썼습니다. 축약과 구어가 그대로 들어가 있고, 음성도 또박또박 읽는 낭독이 아니라 사람이 말하는 리듬입니다. 이용자가 답하면 더 자연스러운 표현을 이유와 함께 돌려주므로, <strong>통하는 영어에서 현지에서 쓰는 영어로</strong> 옮겨 갑니다.</p>
+
+    <h3>핵심은 “틀려도 되는 상대”입니다</h3>
+    <p>사람에게는 백 번 다시 말하기 어렵습니다. AI 캐릭터에게는 가능합니다. 부끄러움이 없으니 시도 횟수가 늘고, 시도가 늘어야 입이 트입니다.</p>
+  </section>
+
+  <!-- ── 04 ─────────────────────────────── -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>지금 어디까지 왔나</h2><span class="sec-tag">MVP 보유</span></div>
+
+    <p>기획안이 아니라 <strong>지금 동작하는 서비스</strong>입니다. 아래 주소에서 설치 없이 눌러보실 수 있습니다. 다만 <strong>실사용자를 통한 시장 검증은 아직 하지 못했습니다</strong> — 그것이 이 공모에 지원하는 이유이고, 09장의 PoC 계획입니다.</p>
+
+    <div class="stats">
+      <div><b>21</b><span>연습 시나리오 (각 5턴)</span></div>
+      <div><b>42</b><span>상황 카드</span></div>
+      <div><b>254</b><span>사전 생성한 캐릭터 대사</span></div>
+    </div>
+
+    <div class="ledger">
+      <div class="yes">
+        <h4>지금 동작합니다</h4>
+        <ul>
+          <li><b>배포된 서비스</b> — 설치 없이 브라우저에서 실행</li>
+          <li><b>말하기 인식과 즉시 피드백</b> — 발음·표현·핵심 확인</li>
+          <li><b>사람 목소리 음성</b> — 대사 254개 사전 생성, 실측 $0.20</li>
+          <li><b>여행 전 구간</b> — 기본 표현·공항·숙소·식사·이동·관광·쇼핑·돌발·귀국</li>
+          <li><b>💳 돈 트랙 5장면</b> — 카드 거절·ATM·환전소·택스 리펀드·카드 분실</li>
+          <li><b>연습 기록 저장</b> — 로그인하면 지난 연습을 다시 확인</li>
+          <li><b>이용자 후기</b> — 로그인한 분만, 이름은 첫 글자만 공개</li>
+          <li><b>신한 SOL 로그인 자리</b> — 다른 소셜 로그인은 내렸고, 연동 키만 들어오면 켜집니다</li>
+          <li><b>이용약관·개인정보처리방침</b> — 마이크 음성의 처리 경로까지 명시</li>
+        </ul>
+      </div>
+      <div class="no">
+        <h4>아직 아닙니다</h4>
+        <ul>
+          <li><b>실사용자 검증</b> — 공개는 되어 있으나 유입 경로가 없습니다</li>
+          <li><b>자유 대화</b> — 현재는 시나리오 대본 기반</li>
+          <li><b>음소 단위 발음 채점</b> — 아래 참고</li>
+          <li><b>계정 연동</b> — 서버 세션은 있으나 실제 신한 SOL 로그인 키는 미연동</li>
+          <li><b>영어 외 언어</b></li>
+          <li><b>상황 카드 42장 중 21장</b>이 아직 “준비 중”</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note">
+      <h4>발음 점수에 대해</h4>
+      <p>
+        현재 점수는 <b>음성 인식이 얼마나 정확히 알아들었는지</b>를 기준으로 합니다.
+        오디오를 음소 단위로 분석하는 방식이 아니므로, “th 를 ㅅ로 발음했다” 같은 진단은
+        하지 못합니다. 화면에도 이 기준을 그대로 밝히고 있습니다.
+      </p>
+      <p>
+        제대로 된 발음 평가는 별도의 음성 분석 기술이 필요하며, <b>다음 단계의 최우선
+        과제</b>로 두고 있습니다(10장).
+      </p>
+    </div>
+  </section>
+
+  <!-- ── 05 ─────────────────────────────── -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>슈퍼SOL 연계를 통한 기대효과</h2><span class="sec-tag">필수 항목</span></div>
+
+    <div class="lead">
+      <p>붙이는 것은 <em>언어가 아니라 시점</em>입니다.</p>
+      <p>환전 통화에 맞춰 언어를 바꾸자는 제안이 아닙니다. 슈퍼SOL 이 가진 것 중 결정적인 자산은 고객 수가 아니라 <strong>“이 사람이 방금 여행을 확정했다”는 신호</strong>이고, 그 신호는 은행이 세상에서 가장 먼저 봅니다.</p>
+    </div>
+
+    <h3>5.1 왜 하필 환전인가</h3>
+
+    <p>여행 영어 학습에는 준비할 수 있는 <strong>창(窓)</strong>이 있습니다. 너무 이르면 절박하지 않고, 너무 늦으면 시간이 없습니다. 문제는 <strong>그 창이 언제 열리는지를 밖에서는 알 수 없다는 것</strong>입니다.</p>
+
+    <p>검색과 찜은 신호가 약합니다. 되돌리는 데 비용이 들지 않기 때문입니다. 항공권 결제는 강하지만 우리가 볼 수 없습니다. <strong>환전은 여행 결심이 처음으로 돈으로 바뀌는 지점</strong>이고, 되돌리지 않으며, 무엇보다 신한이 그 순간을 직접 봅니다.</p>
+
+    <ul class="stack">
+      <li>
+        <span class="marker">▍</span>
+        <span class="t">환전 시점 = 출국일이 정해진 시점</span>
+        <span class="d">환전은 날짜가 잡힌 뒤에 합니다. 학습 기간을 역산할 수 있는 유일한 생활 접점입니다.</span>
+      </li>
+      <li>
+        <span class="marker">▍</span>
+        <span class="t">비영어권 여행자에게도 접점 언어는 영어</span>
+        <span class="d">호텔 프런트, 공항 카운터, 택시. 준비된 시나리오 21개가 정확히 이 자리에 있습니다. 통화가 무엇이든 이 장면들은 반복됩니다.</span>
+      </li>
+      <li>
+        <span class="marker">▍</span>
+        <span class="t">밖에서는 살 수 없는 신호</span>
+        <span class="d">“곧 출국하는 사람”을 외부에서 찾아내려면 광고로 넓게 뿌리고 추측하는 수밖에 없습니다. 은행은 그 사람을 거래로 알고 있습니다. 추측이 아니라 확인된 사실이라는 점이 다릅니다.</span>
+      </li>
+    </ul>
+
+    <div class="note">
+      <h4>여기서 분명히 해둘 것</h4>
+      <p>
+        <b>“사람들이 출국 며칠 전에 환전하는가”에 대한 공개 통계는 저희가 찾지 못했습니다.</b>
+        공개 자료로 확인되는 것은 국제선 항공권이 출발 18~29일 전 구매가 가장 저렴하다는 분석,
+        트래블 카드가 실물 발급에 3~5일 걸려 출국 일주일 전 신청이 권장된다는 정도입니다.
+        둘 다 환전 시점 자체가 아니므로, 이 제안은 특정 일수를 전제하지 않습니다.
+      </p>
+      <p>
+        <b>그 분포를 정확히 아는 곳은 신한입니다.</b> 저희가 추정으로 채울 자리가 아니라
+        <b>연계하면 확인할 수 있는 자리</b>라고 봅니다. PoC 에서 가장 먼저 확인하고 싶은 것도
+        이것입니다 — 환전 시점과 출국일의 실제 간격.
+      </p>
+    </div>
+
+    <h3>5.2 신한이 얻는 것</h3>
+
+    <p><strong>첫째, 환전 고객이 앱을 다시 열 이유.</strong> 환전을 마친 고객은 출국까지 앱을 열 이유가 없습니다. TripTalk 은 그 빈 기간에 <strong>매일 한 장면, 10분짜리 방문 사유</strong>를 만듭니다. 이미 확보한 고객의 체류를 <strong>신규 획득 비용 없이</strong> 늘리는 구간입니다.</p>
+
+    <p><strong>둘째, 금융 상품이 곧 학습 소재가 되는 구간.</strong> TripTalk 의 💳 돈 트랙 다섯 장면은 그대로 금융 접점입니다.</p>
+
+    <ul class="stack">
+      <li><span class="marker">01</span><span class="t">해외 카드 결제가 거절될 때</span><span class="d">해외 결제 사전 설정·알림 안내가 자연스럽게 놓이는 자리입니다.</span></li>
+      <li><span class="marker">02</span><span class="t">해외 ATM 앞에서</span><span class="d">수수료 구조와 인출 한도를 설명할 맥락이 이미 만들어져 있습니다.</span></li>
+      <li><span class="marker">03</span><span class="t">환전소·택스 리펀드 창구에서</span><span class="d">환급 계좌·통화 선택으로 이어집니다.</span></li>
+      <li><span class="marker">04</span><span class="t">카드를 잃어버렸을 때</span><span class="d">분실 신고 동선을 미리 익히게 하는 것은 그 자체로 사고 대응 비용을 줄입니다.</span></li>
+      <li><span class="marker">05</span><span class="t">요금이 잘못 청구되었을 때</span><span class="d">이의 제기 절차를 영어로 연습하는 과정에서 카드사 채널을 학습합니다.</span></li>
+    </ul>
+
+    <p style="margin-top:20px">광고 배너가 아니라 <strong>고객이 스스로 연습하려고 들어온 장면 안에서</strong> 상품이 설명됩니다. 거부감이 가장 낮은 형태의 접점입니다.</p>
+
+    <p><strong>셋째, 실패해도 싼 실험.</strong> 연습 1회(5턴)당 서버 원가는 약 <strong>23원</strong>입니다. PoC 규모에서 서버 비용이 의사결정 변수가 되지 않는다는 뜻입니다. 산정 근거는 08장에 있습니다.</p>
+
+    <h3>5.3 붙이는 방법</h3>
+    <p>세 단계로 나누어 제안합니다. 1단계는 <strong>오늘 배포된 상태에서 링크 하나로 성립</strong>하며, 뒤로 갈수록 양쪽의 개발이 필요합니다.</p>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step__n">1</span>
+        <span class="step__t">환전 완료 화면에서 링크로 연결</span>
+        <span class="step__tag is-now">지금 가능</span>
+        <span class="step__d">환전 완료 화면이나 SOL트래블 카드 발급 완료 화면에 “이 돈 쓸 때 필요한 영어, 하루 10분” 배너를 두고 <code>/practice?scene=exchange&amp;from=supersol&amp;until=2026-09-15</code> 로 보냅니다. 첫 값은 환전 상황으로 곧장 들어가게 하고, 둘째는 슈퍼SOL 고객이라는 표시, 셋째는 출국 예정일입니다. <strong>그 날짜까지 하루 5회</strong>가 열립니다. 셋 다 이미 동작하므로 TripTalk 쪽 추가 개발은 없습니다.</span>
+      </div>
+      <div class="step">
+        <span class="step__n">2</span>
+        <span class="step__t">환전 통화와 출국 예정일 전달</span>
+        <span class="step__tag">PoC 범위</span>
+        <span class="step__d">출국일은 1단계에서 이미 받고 있습니다. 여기에 환전 통화를 더하면 목적지에서 실제로 마주칠 장면을 앞에 배치하고, 남은 기간에 맞춰 학습량을 나눌 수 있습니다. 통화 분포는 다음에 어떤 콘텐츠를 만들지 정하는 근거도 됩니다.</span>
+      </div>
+      <div class="step">
+        <span class="step__n">3</span>
+        <span class="step__t">신한 SOL 계정 연동</span>
+        <span class="step__tag">PoC 이후</span>
+        <span class="step__d">서버 세션 발급과 연습 기록 저장은 이미 구현되어 있고, 남은 것은 실제 로그인 키 연동뿐입니다. 연결되면 “지난 여행에서 어려웠던 장면”을 다음 여행 준비에 다시 꺼낼 수 있습니다.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 06 ─────────────────────────────── -->
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>시장과 대상</h2></div>
+
+    <div class="stats">
+      <div><b>2,955만</b><span>2025년 국민 해외관광객<br>역대 최고치</span></div>
+      <div><b>165만</b><span>미국 — 4위 목적지</span></div>
+      <div><b>6·7위</b><span>필리핀 · 싱가포르<br>영어가 공용어인 나라</span></div>
+    </div>
+    <p style="font-size:13px; color:var(--ink-3)">출처: 한국관광공사 국민 해외관광객 통계(2025). 미국 164만 7,142명. 필리핀·싱가포르는 순위만 공개되어 인원은 표기하지 않았습니다.</p>
+
+    <h3>왜 여행 영어인가</h3>
+    <p>한국인이 가장 많이 가는 영어권 목적지는 <strong>미국</strong>이고, 2025년 한 해에만 <strong>165만 명</strong>이 다녀왔습니다. 상위 10위 안에 <strong>필리핀과 싱가포르</strong>도 들어 있습니다. 여기에 호주·캐나다·영국·뉴질랜드를 더하면 <strong>영어로 소통해야 하는 여행객만 연간 수백만 명</strong> 규모입니다.</p>
+
+    <p>그리고 영어가 필요한 곳은 영어권만이 아닙니다. 비영어권에서도 여행자가 실제로 부딪히는 자리 — <strong>호텔 프런트, 공항 카운터, 택시, 면세점</strong> — 에서는 대체로 영어가 오갑니다. 현지어를 몰라도 여행이 굴러가는 이유가 이것이고, 반대로 <strong>영어가 막히면 그 자리에서 멈춥니다.</strong></p>
+
+    <h3>대상</h3>
+    <p><strong>출국이 확정된 사람</strong>입니다. 영어를 배우려는 사람이 아니라, <em>여행 때문에</em> 영어가 필요해진 사람입니다. 학습 동기가 뚜렷하고 기간이 정해져 있어 짧게 집중하고 끝납니다 — 어학 시장에서 보기 드문 조건이고, <strong>슈퍼SOL 의 환전 고객이 정확히 이 사람들입니다.</strong></p>
+
+    <div class="note">
+      <h4>정직하게 짚을 것</h4>
+      <p>
+        전체 1위 목적지는 <b>일본(946만 명)</b>이고 영어권이 아닙니다. 일본·중국·베트남
+        여행객에게는 영어가 최선의 답이 아닐 수 있습니다.
+      </p>
+      <p>
+        다국어 확장은 10장 로드맵에 두었고, <b>어느 언어부터 만들지는 추측이 아니라
+        환전 통화 분포로 정하려 합니다.</b> 그 데이터는 신한이 갖고 있습니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── 07 ─────────────────────────────── -->
+  <section>
+    <div class="sec-head"><span class="sec-num">07</span><h2>유사·경쟁 서비스와 차별점</h2></div>
+
+    <div class="tablewrap">
+      <table><caption>현재 연습실의 대사는 모두 미리 생성해 파일로 내보내고 있습니다. 그래서 이용자가 백 명이든 십만 명이든 음성 비용은 위의 1회성 $0.20 에서 늘지 않습니다.</caption>
+        <thead><tr><th></th><th>기존 방식</th><th>TripTalk</th></tr></thead>
+        <tbody>
+          <tr><td>커리큘럼</td><td>레벨·문법 순서</td><td><strong>여행 일정 순서</strong> — 원하는 상황부터 연습</td></tr>
+          <tr><td>범위</td><td>여행은 여러 단원 중 하나</td><td>출국부터 귀국까지 전 구간 21개</td></tr>
+          <tr><td>돈 관련 상황</td><td>여행 단계별로 흩어짐</td><td><strong>💳 돈 트랙 5장면으로 한데 모음</strong></td></tr>
+          <tr><td>한 판의 단위</td><td>레벨을 따라 쌓는 코스</td><td>상황 하나 5턴 · <strong>10분이면 완결</strong></td></tr>
+          <tr><td>대사의 말투</td><td>교과서 문장</td><td><strong>원어민이 실제로 쓰는 말</strong> — 축약·구어 그대로</td></tr>
+          <tr><td>시작 장벽</td><td>설치·가입·결제</td><td>브라우저에서 바로, 로그인 없이 체험</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>가장 가까운 경쟁자부터</h3>
+    <p><strong>AI 회화 앱</strong>(스픽 등)은 소리 내어 말하고 피드백을 받는 <strong>형태가 같습니다.</strong> 갈라지는 곳은 커리큘럼입니다. 일상 대화와 레벨 순서로 짜여 있어, 출국까지 2주 남은 사람이 필요한 장면만 골라 쓰기 어렵습니다. <strong>어학 앱</strong>(듀오링고 등)은 장기 학습과 습관 형성이 목적이고 여행은 여러 단원 중 하나입니다. <strong>번역 앱</strong>(파파고 등)은 현장에서 대신 말해 주는 도구여서 <em>말하기 연습</em>은 일어나지 않고, 매번 휴대폰을 꺼내야 합니다.</p>
+
+    <h3>그래서 다른 점 셋</h3>
+    <ul class="stack">
+      <li>
+        <span class="marker">01</span>
+        <span class="t">커리큘럼이 레벨이 아니라 여행 일정입니다</span>
+        <span class="d">21개 시나리오가 기본 표현·공항·숙소·식사·이동·관광·쇼핑·돌발·귀국까지 여행 순서 그대로 놓여 있습니다. 처음부터 순서대로 할 필요가 없고, <strong>“다음 주에 갈 곳”부터 바로 꺼내 씁니다.</strong></span>
+      </li>
+      <li>
+        <span class="marker">02</span>
+        <span class="t">돈 때문에 곤란한 순간을 한데 모았습니다</span>
+        <span class="d">카드 결제 거절, 해외 ATM 인출 실패, 환전소, 택스 리펀드, 카드 분실 신고. 교재와 어학 앱은 이 상황들을 여행 단계별로 흩어 놓지만, 실제로 이용자가 두려워하는 것은 “돈 문제”라는 한 덩어리이고 <strong>말을 못 하면 그 자리에서 손해가 납니다.</strong> 저희가 확인한 범위에서 이 구성을 가진 서비스는 없습니다.</span>
+      </li>
+      <li>
+        <span class="marker">03</span>
+        <span class="t">외우는 문장이 원어민이 실제로 쓰는 말입니다</span>
+        <span class="d">대사를 교과서 문장으로 쓰지 않았습니다. <em>“Yep, real close. You can’t miss it.”</em> · <em>“That machine’s been acting up all week.”</em> 처럼 축약과 구어가 그대로 들어간 말입니다. 캐릭터 음성도 또박또박 읽는 낭독이 아니라 <strong>사람이 실제로 말하는 리듬</strong>으로 만들었습니다. 턴마다 모범 문장이 붙어 있고, 이용자가 한 말은 <strong>“이렇게 말하면 더 자연스럽습니다”</strong>로 왜 그런지까지 함께 돌려줍니다. 통하는 영어에서 <strong>현지에서 실제로 쓰는 영어</strong>로 넘어가는 자리입니다.</span>
+      </li>
+      <li>
+        <span class="marker">04</span>
+        <span class="t">한 판이 장면 하나로 완결됩니다</span>
+        <span class="d">상황 하나가 5턴, <strong>10분 안팎</strong>입니다. 끝나면 전달됐는지 · 더 자연스러운 표현은 무엇인지 · 질문의 핵심을 놓치지 않았는지를 리포트로 돌려주고, 그 장면은 그것으로 끝납니다. 레벨을 따라 계속 쌓아 올리는 코스가 아니라 <strong>출국까지 남은 날짜에 맞춰 필요한 장면만 골라 쓰는 구조</strong>입니다.</span>
+      </li>
+    </ul>
+
+    <p style="margin-top:22px">여기에 설치·가입·결제가 없습니다. 브라우저에서 주소만 열면 시작하고, 로그인 없이 3회 연습할 수 있습니다.</p>
+  </section>
+
+  <!-- ── 08 ─────────────────────────────── -->
+  <section>
+    <div class="sec-head"><span class="sec-num">08</span><h2>무료로 제공하는 데 드는 비용</h2></div>
+
+    <div class="lead">
+      <p>이 제안에서 TripTalk 은 <em>수익 사업이 아닙니다.</em></p>
+      <p>슈퍼SOL 고객에게 전액 무료로 제공합니다. 구독료도, 건별 과금도, 결제 수단 등록도 없습니다. 랜딩 페이지에 있던 예정 요금표는 이 방향을 확정하면서 <strong>내렸습니다</strong> — 지금 눌러 보시면 요금 안내가 없습니다. 그래서 검토하실 질문은 “얼마를 받느냐”가 아니라 <strong>“무료로 제공하는 데 얼마가 드느냐”</strong>입니다.</p>
+    </div>
+
+    <h3>지금 AI 가 맡은 일은 “목소리”뿐입니다</h3>
+    <p>오해가 없도록 적습니다. 현재 외부 AI 를 쓰는 곳은 <strong>글자를 사람 목소리로 바꾸는 것(음성 합성)</strong> 하나입니다. 캐릭터가 <em>무슨 말을 할지는 사람이 미리 쓴 대본</em>입니다. 이 선택이 아래 비용 구조를 만듭니다 — 대본이 고정이라 음성을 <strong>미리 만들어 파일로 둘 수 있었고</strong>, 그래서 이용자가 늘어도 음성 비용이 늘지 않습니다.</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>구성</th><th>비용 성격</th><th>이용자가 늘면</th><th>현재 상태</th></tr></thead>
+        <tbody>
+          <tr><td>정해진 대사 음성</td><td>사전 1회 생성 후 파일 재사용</td><td class="num">늘지 않음</td><td class="src">지금 이 방식으로 동작</td></tr>
+          <tr><td>대본에 없는 문장</td><td>호출할 때만 발생</td><td class="num">호출한 만큼</td><td class="src">예비 경로로만 사용</td></tr>
+          <tr class="is-total"><td>대사 254개 전체 생성 실비</td><td class="num">$0.20</td><td class="num">1회성</td><td class="src">실측 · 8,077토큰</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>대화까지 모델에 맡기면</h3>
+    <p>PoC 이후 실제 대화 모델을 붙이면 <strong>두 가지가 동시에 바뀝니다.</strong> 대사를 만드는 비용이 매 턴 새로 들고, 그 대사는 미리 만들어 둘 수 없으므로 <strong>지금 0인 음성 비용도 이용량에 비례하게</strong> 됩니다.</p>
+
+    <div class="tablewrap">
+      <table><caption>자체 산정입니다. 연습 1회는 캐릭터 대사 5회와 사용자 답변 5회를 기준으로 했습니다.</caption>
+        <thead><tr><th>구성</th><th>지금 (대본)</th><th>대화 모델을 붙이면</th></tr></thead>
+        <tbody>
+          <tr><td>대사를 만드는 비용</td><td class="num">0</td><td class="num">연습 1회당 약 3원</td></tr>
+          <tr><td>음성 합성</td><td class="num">1회성 $0.20</td><td class="num">연습 1회당 약 9원</td></tr>
+          <tr><td>발음 평가</td><td class="num">0</td><td class="num">연습 1회당 약 10원</td></tr>
+          <tr class="is-total"><td>연습 1회(5턴) 합계</td><td class="num">사실상 0</td><td class="num">약 23원</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="margin-top:22px">규모를 가늠하시라고 적으면, <strong>월 1만 명이 각각 10회씩 연습하면 10만 회 → 월 약 230만 원</strong>입니다. 금융 앱의 고객 접점 유지 비용으로 놓고 보면 크지 않은 값이고, 이용량에 정확히 비례하므로 상한을 두어 통제할 수 있습니다.</p>
+
+    <h3>이용 범위</h3>
+    <div class="tablewrap">
+      <table><caption>환전에서 비롯된 자격이므로 그 여행이 끝나면 근거도 끝납니다. 다음 여행의 환전 때 다시 만나는 구조이고, 하루 5회 상한은 비용을 통제하는 장치이기도 합니다.</caption>
+        <thead><tr><th>대상</th><th>제공 범위</th></tr></thead>
+        <tbody>
+          <tr><td>그냥 들어온 방문자</td><td>연습 3회 (로그인 없이)</td></tr>
+          <tr><td>슈퍼SOL 환전 고객</td><td><strong>여행 날짜까지 하루 5회</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>그러면 TripTalk 은 무엇을 얻습니까</h3>
+    <p>솔직하게 적습니다. 이 구조에서 즉각적인 매출은 없습니다. 얻는 것은 셋입니다 — <strong>실사용 데이터</strong>(어떤 장면에서 사람들이 막히는지를 추측이 아니라 기록으로), <strong>콘텐츠 우선순위의 근거</strong>(환전 통화 분포), <strong>검증된 환경에서의 운영 경험</strong>. 장기적인 수익 모델은 PoC 결과를 보고 신한과 함께 정하는 것이 맞다고 판단합니다.</p>
+  </section>
+
+  <!-- ── 09 ─────────────────────────────── -->
+  <section>
+    <div class="sec-head"><span class="sec-num">09</span><h2>PoC 계획</h2></div>
+
+    <p>MVP 는 있고 실사용 검증이 없습니다. 그래서 PoC 의 목적은 “더 만드는 것”이 아니라 <strong>가정을 확인하는 것</strong>입니다. 확인할 가정과 그 방법을 먼저 적습니다.</p>
+
+    <div class="tablewrap">
+      <table><caption>목표 수치를 지금 적지 않는 이유는, 기준선이 될 데이터를 저희가 아직 갖고 있지 않기 때문입니다. 기준선을 만드는 것이 PoC 의 첫 결과물입니다.</caption>
+        <thead><tr><th>확인할 가정</th><th>무엇을 보나</th></tr></thead>
+        <tbody>
+          <tr><td><strong>환전은 학습 창이 열리는 시점이다</strong></td><td>환전일과 출국일의 실제 간격 분포. 이 제안 전체가 여기에 걸려 있습니다.</td></tr>
+          <tr><td>환전 고객은 이 제안에 반응한다</td><td>환전 완료 화면 배너의 진입률, 첫 연습 완주율</td></tr>
+          <tr><td>출국까지 다시 온다</td><td>진입 이후 출국일까지의 재방문 횟수와 연습 횟수</td></tr>
+          <tr><td>어떤 장면이 실제로 어렵다</td><td>장면별 이탈·재시도·점수 분포 → 다음에 만들 콘텐츠의 근거</td></tr>
+          <tr><td>어떤 언어가 다음인가</td><td>환전 통화 분포와 학습 이용률의 관계</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>진행 방식</h3>
+    <ul class="stack">
+      <li><span class="marker">01</span><span class="t">연결</span><span class="d">환전 완료 화면에 배너와 링크. TripTalk 쪽 추가 개발이 없어 가장 먼저, 가장 싸게 확인됩니다.</span></li>
+      <li><span class="marker">02</span><span class="t">제한된 규모로 노출</span><span class="d">전체가 아니라 일부 고객에게. 노출 규모와 기간은 신한의 운영 기준에 맞춥니다.</span></li>
+      <li><span class="marker">03</span><span class="t">지표 확인과 콘텐츠 조정</span><span class="d">막히는 장면을 보고 시나리오를 보강합니다. 준비 중인 상황 카드의 우선순위가 여기서 정해집니다.</span></li>
+      <li><span class="marker">04</span><span class="t">계정 연동 판단</span><span class="d">재방문이 확인되면 연동해 기록을 잇습니다. 확인되지 않으면 연동하지 않는 편이 낫습니다.</span></li>
+    </ul>
+
+    <div class="note">
+      <h4>개인정보에 대해</h4>
+      <p>
+        현재 TripTalk 은 <b>회원 데이터베이스를 최소로 둡니다.</b> 로그인 정보는 서명된 세션
+        쿠키로 이용자 브라우저에만 두고, 연습 기록은 로그인한 분의 것만 저장하며 화면에서
+        직접 지울 수 있습니다. 마이크 음성의 처리 경로까지 개인정보처리방침에 적어 두었습니다.
+      </p>
+      <p>
+        연계 시 <b>슈퍼SOL 로부터 받아야 하는 값은 출국 예정일과 환전 통화</b>이며, 그 이상은
+        필요하지 않습니다. 실제 적용 범위와 방식은 신한의 기준에 따릅니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── 10 ─────────────────────────────── -->
+  <section>
+    <div class="sec-head"><span class="sec-num">10</span><h2>로드맵</h2></div>
+
+    <div class="road">
+      <div class="road__row">
+        <span class="road__when">1단계</span>
+        <span class="road__what">슈퍼SOL 연결</span>
+        <span class="road__d">환전·카드 발급 완료 화면에서 링크로 잇습니다. 지금 배포본에서 이미 동작하므로 TripTalk 쪽 추가 개발이 없습니다.</span>
+      </div>
+      <div class="road__row">
+        <span class="road__when">2단계</span>
+        <span class="road__what">발음 평가 고도화</span>
+        <span class="road__d">음소 단위 분석을 붙여 “어느 소리가 어떻게 틀렸는지”를 짚습니다. 제품이 파는 약속의 핵심입니다.</span>
+      </div>
+      <div class="road__row">
+        <span class="road__when">3단계</span>
+        <span class="road__what">자유 대화</span>
+        <span class="road__d">대본을 벗어난 답변에도 대응합니다. 대사가 매번 달라지므로 모범 문장과 힌트도 함께 생성해야 하고, 여행 상황에서 벗어나지 않게 붙잡는 장치가 필요합니다. 비용보다 이쪽이 더 큰 일입니다.</span>
+      </div>
+      <div class="road__row">
+        <span class="road__when">4단계</span>
+        <span class="road__what">다국어 확장</span>
+        <span class="road__d">자유 대화가 붙은 뒤에 하면 콘텐츠 제작 비용이 크게 줄어듭니다. <strong>어느 언어부터 만들지는 환전 통화 분포로 정합니다</strong> — 추측이 아니라 데이터로.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 11 ─────────────────────────────── -->
+  <section>
+    <div class="sec-head"><span class="sec-num">11</span><h2>팀</h2></div>
+
+    <div class="tablewrap">
+      <table><caption>제출 전에 채워야 하는 칸입니다. 3인 이하 팀 기준.</caption>
+        <thead><tr><th>구분</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>대표</td><td><span class="fill">&nbsp;</span></td></tr>
+          <tr><td>구성</td><td><span class="fill">&nbsp;</span></td></tr>
+          <tr><td>주요 이력</td><td><span class="fill">&nbsp;</span></td></tr>
+          <tr><td>연락처</td><td><span class="fill">&nbsp;</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="endnote">
+    <p><b>실행 화면</b> — <a href="https://triptalk-next-mynode.vercel.app">triptalk-next-mynode.vercel.app</a> · 설치 없이 확인하실 수 있고, 로그인 없이 3회 이용 가능합니다.</p>
+    <p>이 문서는 공모 요강이 필수로 요구한 <b>“신한 슈퍼SOL 과의 연계를 통한 기대효과”</b>를 05장에 담고 있습니다.</p>
+  </div>
+
+</div>
