@@ -183,6 +183,21 @@ caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5
 .closing p + p{margin-top:10px; font-size:15px; font-weight:400; opacity:.9}
 
 
+/* ── 화면 예시 ────────────────────────────
+   서비스의 리포트 카드를 문서 안에 그대로 옮긴 것입니다. 이미지가 아니라
+   같은 마크업이라 인쇄해도 흐려지지 않습니다. */
+.mock{margin-top:16px; padding:16px 18px; border:1px solid var(--line); border-radius:12px; background:var(--tint)}
+.mock__h{display:block; font-weight:700; font-size:13.5px; margin-bottom:6px}
+.mock__t{display:block; font-size:13.5px; color:var(--ink-2); line-height:1.6}
+.mock__menu{
+  display:block; margin-top:9px; padding:8px 11px;
+  border:1px dashed var(--ink-3); border-radius:8px; background:#fff;
+  font-size:13px; font-weight:700; color:var(--ink-2);
+}
+.mock__note{display:block; margin-top:8px; font-size:12px; line-height:1.55; color:var(--ink-3)}
+.mock__note b{color:var(--ink-2); font-weight:700}
+.mock-cap{margin-top:9px; font-size:12.5px; color:var(--ink-3); line-height:1.6}
+
 /* ── 서명 ────────────────────────────────── */
 .signoff{margin-top:26px; padding-top:18px; border-top:1px solid var(--line);
   font-size:13px; color:var(--ink-3); line-height:1.7}
@@ -207,7 +222,7 @@ caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5
      쪼개지면 안 되는 것은 카드·표뿐입니다. */
   section{padding-top:30px}
   .head,h3{break-after:avoid}
-  .leg,.persona>div,.screen,.values>div,.closing,.tablewrap{break-inside:avoid}
+  .leg,.persona>div,.screen,.values>div,.closing,.tablewrap,.mock{break-inside:avoid}
   a{color:var(--ink)}
 }
 </style>
@@ -371,8 +386,8 @@ caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5
       </div>
       <div>
         <span class="cap">상품 접점</span>
-        <b>배너가 아니라<br>고객이 먼저 찾을 때</b>
-        <span>카드 거절·ATM 수수료·분실 신고를 연습한 고객이 스스로 그 메뉴를 열 때 안내가 놓입니다.</span>
+        <b>배너가 아니라<br>연습이 끝난 리포트에</b>
+        <span>카드 거절·ATM·분실 신고를 연습한 직후, 리포트 화면에 해당 메뉴 안내가 붙습니다. <b>아래 화면 참고.</b></span>
       </div>
       <div>
         <span class="cap">카드 실사용</span>
@@ -385,6 +400,15 @@ caption{caption-side:bottom; text-align:left; padding:12px 2px 0; font-size:12.5
         <span>연습 기록이 남아 다음 여행 준비 때 다시 열립니다.<br>환전 → 학습 → 여행 → 다음 환전.</span>
       </div>
     </div>
+
+
+    <div class="mock">
+      <span class="mock__h">💳 방금 상황과 관련된 설정</span>
+      <span class="mock__t">해외에서 카드가 거절되는 가장 흔한 원인은 해외 결제 차단 설정입니다.</span>
+      <span class="mock__menu">슈퍼SOL › 카드 › 해외 결제 설정</span>
+      <span class="mock__note"><b>제안 예시 · 미연동</b> — 제휴 연계 시 이 자리에서 해당 메뉴로 바로 이동합니다.</span>
+    </div>
+    <p class="mock-cap">「카드 결제 거절」 상황을 마쳤을 때 리포트에 실제로 뜨는 안내입니다. 배포본에서 확인하실 수 있습니다.</p>
 
     <p class="tnote">네 가지 모두 PoC 에서 <b>실제로 잴 지표</b>가 정해져 있습니다 — 출국일까지의 방문 횟수, 상품 메뉴 진입률, 해외 결제 건수 차이, 다음 환전까지의 기간. 목표 수치는 기준선이 될 데이터가 아직 없어 적지 않았습니다.</p>
   </section>
