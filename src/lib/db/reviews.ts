@@ -20,10 +20,14 @@ export type Review = {
 export const BODY_MIN = 5;
 
 /**
- * 화면에 보일 이름 — **첫 글자만 남기고 가립니다.**
+ * 화면에 보일 닉네임 — **첫 글자만 남기고 가립니다.**
  *
- * 로그인 제공자가 주는 이름은 대개 실명입니다. 후기는 누구나 볼 수 있는 글이라
- * 실명이 그대로 걸리면 본인이 의도하지 않은 노출이 됩니다.
+ * 값은 이용자가 폼에 직접 적은 닉네임입니다(로그인 이름을 쓰지 않습니다 —
+ * 제공자가 주는 이름은 대개 실명이라, 후기처럼 누구나 볼 수 있는 글에 걸리면
+ * 본인이 의도하지 않은 노출이 됩니다).
+ *
+ * 닉네임인데도 가리는 이유는, 적는 칸이 있으면 **실명을 적는 사람이 반드시
+ * 있기 때문입니다.** 첫 글자만 남기면 그렇게 적어도 다치지 않습니다.
  *
  * 가린 값을 **저장합니다.** 저장한 뒤 보여줄 때만 가리면 전체 이름이 계속 남아
  * 있게 되고, 언젠가 실수로 나갑니다. 필요하지 않은 것은 처음부터 갖지 않습니다.
@@ -34,6 +38,8 @@ export function maskName(raw: string): string {
   return [...name][0] + "**";
 }
 export const BODY_MAX = 200;
+/** 닉네임 길이 상한. 어차피 첫 글자만 남지만, 긴 값을 그대로 받아 둘 이유가 없습니다. */
+export const NICK_MAX = 20;
 
 const TABLE = "reviews";
 const PUBLIC_COLUMNS = "id, author_name, rating, body, created_at";
@@ -95,7 +101,8 @@ export async function isBlocked(provider: ProviderKey, sub: string): Promise<boo
 export type ReviewInput = {
   provider: ProviderKey;
   sub: string;
-  name: string;
+  /** 이용자가 직접 적은 닉네임. 비어 있으면 "익명" 으로 보입니다. */
+  nickname: string;
   rating: number;
   body: string;
   sceneKey?: string | null;
@@ -115,7 +122,7 @@ export async function upsertReview(input: ReviewInput): Promise<Review | null> {
       {
         author_provider: input.provider,
         author_sub: input.sub,
-        author_name: maskName(input.name),
+        author_name: maskName(input.nickname),
         rating: input.rating,
         body: input.body,
         scene_key: input.sceneKey ?? null,

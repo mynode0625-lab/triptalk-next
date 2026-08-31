@@ -30,7 +30,8 @@
  */
 import type { NextRequest } from "next/server";
 import {
-  BODY_MAX, BODY_MIN, deleteMyReview, findMyReview, isBlocked, listReviews, upsertReview
+  BODY_MAX, BODY_MIN, NICK_MAX,
+  deleteMyReview, findMyReview, isBlocked, listReviews, upsertReview
 } from "@/lib/db/reviews";
 import { dbReady } from "@/lib/db/client";
 import { readSessionCookie } from "@/lib/auth/cookie";
@@ -64,7 +65,7 @@ export async function GET() {
   );
 }
 
-type Body = { rating?: unknown; body?: unknown; sceneKey?: unknown };
+type Body = { rating?: unknown; body?: unknown; sceneKey?: unknown; nickname?: unknown };
 
 const fail = (message: string, status: number) =>
   Response.json({ error: message }, { status });
@@ -98,6 +99,15 @@ export async function POST(request: NextRequest) {
   catch { return fail("잘못된 요청 본문입니다.", 400); }
 
   const body = typeof payload.body === "string" ? payload.body.trim() : "";
+
+  /* 닉네임 — **로그인 이름을 쓰지 않습니다.** 제공자가 주는 이름은 대개 실명이라,
+     그것으로 만들면 이용자가 고를 수 없는 값이 공개 글에 걸립니다.
+     줄바꿈·제어문자를 걷어냅니다. 화면에는 어차피 첫 글자만 나가지만, 저장하기
+     전에 정리해 두지 않으면 관리자 화면에서 줄이 깨집니다. */
+  const nickname = (typeof payload.nickname === "string" ? payload.nickname : "")
+    .replace(/[\u0000-\u001f\u007f]/g, " ")
+    .trim()
+    .slice(0, NICK_MAX);
   const rating = Number(payload.rating);
 
   /* 아는 장면 값만 받습니다. 아무 문자열이나 그대로 저장하면 길이 제한도 없는
@@ -115,7 +125,7 @@ export async function POST(request: NextRequest) {
   const saved = await upsertReview({
     provider: session.provider,
     sub: session.sub,
-    name: session.name,
+    nickname,
     rating,
     body,
     sceneKey

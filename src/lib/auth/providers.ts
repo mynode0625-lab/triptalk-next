@@ -26,7 +26,18 @@ export const PROVIDERS: Record<ProviderKey, ProviderMeta> = {
     avatar: "🏦",
     authUrl: process.env.NEXT_PUBLIC_SHINHAN_AUTH_URL ?? "",
     scope: process.env.NEXT_PUBLIC_SHINHAN_SCOPE ?? "",
-    demo: { name: "강선영", email: "sunyoung****@shinhan.com" }
+    /* 데모 프로필은 **비워 둡니다.**
+     *
+     * 여기에 운영자의 이름을 적어 두었더니, 데모로 로그인한 **모든 방문자**가 그
+     * 이름표를 달았습니다. 후기는 이름 첫 글자만 공개하므로(`db/reviews.ts`
+     * maskName) 남이 쓴 글이 전부 운영자와 같은 성으로 걸렸습니다 — 운영자가
+     * 자기 후기를 쓴 것처럼 보이고, 반대로 누가 무슨 글을 쓰든 운영자 이름이
+     * 붙습니다.
+     *
+     * 비워 두면 화면은 "여행자"(로그인 완료 카드)와 "익명"(후기)으로 떨어집니다.
+     * 검증된 신원이 아니므로 그렇게 밝히는 편이 사실에 맞습니다.
+     * 실제 연동 키가 들어오면 이 값은 쓰이지 않습니다(데모 경로 자체가 막힙니다). */
+    demo: { name: "", email: "" }
   }
 };
 
